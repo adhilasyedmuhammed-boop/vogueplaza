@@ -1,0 +1,266 @@
+import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import VideoHero from '../components/VideoHero';
+import CategoryMasonry from '../components/CategoryMasonry';
+import ProductSlider from '../components/ProductSlider';
+import BrandScroller from '../components/BrandScroller';
+import axios from '../api/axios';
+
+/* ── fallback product data ──────────────────────────────────── */
+const PRODUCTS = [
+  { _id: 'p1',  name: 'Cashmere Overcoat', brand: 'Armani',       category: 'womenswear', price: 129900, image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=600', image2: 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?q=80&w=600', sizes: ['S','M','L','XL'] },
+  { _id: 'p2',  name: 'Silk Slip Dress',   brand: 'Gucci',        category: 'womenswear', price: 89900,  image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=600', image2: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=600', sizes: ['XS','S','M','L'] },
+  { _id: 'p3',  name: 'Tailored Suit',     brand: 'Versace',      category: 'menswear',   price: 249900, image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600', image2: 'https://images.unsplash.com/photo-1505022610485-0249ba5b3675?q=80&w=600', sizes: ['M','L','XL'] },
+  { _id: 'p4',  name: 'Leather Biker',     brand: 'Burberry',     category: 'menswear',   price: 189900, image: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=600', image2: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?q=80&w=600', sizes: ['S','M','L'] },
+  { _id: 'p5',  name: 'Saffiano Tote',     brand: 'Prada',        category: 'accessories',price: 159900, image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', image2: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', sizes: ['One Size'] },
+  { _id: 'p6',  name: 'Stiletto Heels',    brand: 'Versace',      category: 'footwear',   price: 119900, image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=600', image2: 'https://images.unsplash.com/photo-1596702994260-8f115a12fc17?q=80&w=600', sizes: ['5','6','7','8','9'] },
+  { _id: 'p7',  name: 'Linen Blazer',      brand: 'Armani',       category: 'menswear',   price: 99900,  image: 'https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=600', image2: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600', sizes: ['M','L','XL'] },
+  { _id: 'p8',  name: 'Pearl Earrings',    brand: 'Chanel',       category: 'accessories',price: 49900,  image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600', image2: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=600', sizes: ['One Size'] },
+  { _id: 'p9',  name: 'Embroidered Kurta', brand: 'Ralph Lauren', category: 'womenswear', price: 39900,  image: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=600', image2: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=600', sizes: ['XS','S','M','L'] },
+  { _id: 'p10', name: 'Oxford Brogues',    brand: 'Burberry',     category: 'footwear',   price: 79900,  image: 'https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?q=80&w=600', image2: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=600', sizes: ['7','8','9','10'] },
+  { _id: 'p11', name: 'Trench Coat',       brand: 'Burberry',     category: 'womenswear', price: 209900, image: 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?q=80&w=600', image2: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=600', sizes: ['S','M','L'] },
+  { _id: 'p12', name: 'Quilted Jacket',    brand: 'Tommy Hilfiger',category: 'menswear',  price: 69900,  image: 'https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=600', image2: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600', sizes: ['M','L','XL'] },
+];
+
+const TRENDING = [
+  { _id: 't1', name: 'Floral Midi Dress',  brand: 'Gucci',       category: 'womenswear', price: 74900,  image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=600', image2: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=600', sizes: ['XS','S','M'] },
+  { _id: 't2', name: 'Canvas Sneakers',    brand: 'Gucci',       category: 'footwear',   price: 89900,  image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600', image2: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=600', sizes: ['6','7','8','9','10'] },
+  { _id: 't3', name: 'Raffia Straw Hat',   brand: 'Prada',       category: 'accessories',price: 34900,  image: 'https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=600', image2: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', sizes: ['One Size'] },
+  { _id: 't4', name: 'Linen Shirt',        brand: 'Hugo Boss',   category: 'menswear',   price: 29900,  image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=600', image2: 'https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=600', sizes: ['S','M','L','XL'] },
+  { _id: 't5', name: 'Leather Belt',       brand: 'Burberry',    category: 'accessories',price: 24900,  image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=600', image2: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', sizes: ['S','M','L'] },
+  { _id: 't6', name: 'Swimsuit',           brand: 'Versace',     category: 'womenswear', price: 49900,  image: 'https://images.unsplash.com/photo-1509551388413-e18d0ac5d495?q=80&w=600', image2: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=600', sizes: ['XS','S','M','L'] },
+  { _id: 't7', name: 'Polo T-Shirt',       brand: 'Ralph Lauren',category: 'menswear',   price: 19900,  image: 'https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=600', image2: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600', sizes: ['S','M','L','XL'] },
+  { _id: 't8', name: 'Sunglasses',         brand: 'Dior',        category: 'accessories',price: 39900,  image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=600', image2: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600', sizes: ['One Size'] },
+];
+
+const WOMEN_SLIDES = [
+  { img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600", text: "Haute Couture Gowns" },
+  { img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600", text: "Designer Handbags" },
+  { img: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=600", text: "Luxury Stilettos" },
+  { img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600", text: "Fine Pearl Jewelry" }
+];
+
+const MEN_SLIDES = [
+  { img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600", text: "Bespoke Italian Suits" },
+  { img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=600", text: "Handcrafted Jackets" },
+  { img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600", text: "Swiss Luxury Watches" },
+  { img: "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?q=80&w=600", text: "Oxford Leather Shoes" }
+];
+
+export default function Home() {
+  const [newArrivals, setNewArrivals] = useState(PRODUCTS);
+  const [trending,    setTrending]    = useState(TRENDING);
+  const [formData, setFormData] = useState({ name: '', mobile: '', email: '', category: '' });
+  const [submitting, setSubmitting] = useState(false);
+
+  const [womenIdx, setWomenIdx] = useState(0);
+  const [menIdx, setMenIdx] = useState(0);
+
+  const spotlightVideoRef = useRef(null);
+  const [spotlightError, setSpotlightError] = useState(false);
+
+  useEffect(() => {
+    if (spotlightVideoRef.current) {
+      spotlightVideoRef.current.play().catch(() => {});
+    }
+  }, [spotlightError]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWomenIdx(prev => (prev + 1) % WOMEN_SLIDES.length);
+    }, 1200);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMenIdx(prev => (prev + 1) % MEN_SLIDES.length);
+    }, 1400);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const [a, t] = await Promise.all([
+          axios.get('/api/products?limit=12'),
+          axios.get('/api/products?sort=trending&limit=8'),
+        ]);
+        if (a.data?.length) setNewArrivals(a.data);
+        if (t.data?.length) setTrending(t.data);
+      } catch {}
+    };
+    load();
+  }, []);
+
+  const handleContact = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try { await axios.post('/api/enquiries', formData); alert('Message sent!'); setFormData({ name: '', mobile: '', email: '', category: '' }); }
+    catch { alert('Please try again.'); }
+    setSubmitting(false);
+  };
+
+  return (
+    <>
+      <Navbar />
+
+      {/* 1 ── FULL SCREEN VIDEO ────────────────────────────── */}
+      <VideoHero />
+
+      {/* 2 ── SHOP BY CATEGORY MASONRY ────────────────────── */}
+      <CategoryMasonry />
+
+      {/* 3 ── NEW ARRIVALS SLIDER ─────────────────────────── */}
+      <ProductSlider
+        eyebrow="Just In"
+        title="New Arrivals"
+        products={newArrivals}
+        viewAllLink="/new-arrivals"
+        badge="new"
+      />
+
+      {/* 4 ── FULL-WIDTH FEATURED BRAND VIDEO BANNER ────────── */}
+      <section className="tc-editorial-banner brand-spotlight-section">
+        {!spotlightError ? (
+          <video
+            ref={spotlightVideoRef}
+            className="tc-editorial-img"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1800"
+            onError={() => setSpotlightError(true)}
+          >
+            <source
+              src="https://assets.mixkit.co/videos/preview/mixkit-model-in-a-fashion-show-1165-large.mp4"
+              type="video/mp4"
+            />
+          </video>
+        ) : (
+          <img
+            className="tc-editorial-img"
+            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1800&auto=format&fit=crop"
+            alt="Burberry Spotlight"
+          />
+        )}
+        <div className="tc-editorial-overlay">
+          <span className="tc-editorial-eyebrow">Brand Spotlight</span>
+          <h2 className="tc-editorial-title" style={{ letterSpacing: '0.15em' }}>BURBERRY</h2>
+          <p className="tc-editorial-sub">The Art of the Trench — Iconic British Heritage & Modern Tailoring</p>
+          <Link to="/products?brand=burberry" className="tc-editorial-cta">Shop Burberry Collection →</Link>
+        </div>
+      </section>
+
+      {/* 5 ── TRENDING NOW SLIDER ─────────────────────────── */}
+      <ProductSlider
+        eyebrow="Most Loved"
+        title="Trending Now"
+        products={trending}
+        viewAllLink="/products"
+      />
+
+      {/* 6 ── BRAND SCROLLER ──────────────────────────────── */}
+      <BrandScroller />
+
+      {/* 7 ── SECOND EDITORIAL — split banner ─────────────── */}
+      <section className="tc-split-banner vp-section-cream">
+        <div className="vp-container">
+          <div className="tc-split-grid">
+            <div className="tc-split-card">
+              <img
+                src={WOMEN_SLIDES[womenIdx].img}
+                alt="Women's Edit"
+                loading="lazy"
+                key={womenIdx}
+                className="animate-fadein"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.5s ease' }}
+              />
+              <div className="tc-split-overlay">
+                <span className="tc-split-label animate-fadein" key={`lbl-w-${womenIdx}`}>{WOMEN_SLIDES[womenIdx].text}</span>
+                <Link to="/products?category=womenswear" className="tc-split-btn">Shop Now →</Link>
+              </div>
+            </div>
+            <div className="tc-split-card">
+              <img
+                src={MEN_SLIDES[menIdx].img}
+                alt="Men's Edit"
+                loading="lazy"
+                key={menIdx}
+                className="animate-fadein"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.5s ease' }}
+              />
+              <div className="tc-split-overlay">
+                <span className="tc-split-label animate-fadein" key={`lbl-m-${menIdx}`}>{MEN_SLIDES[menIdx].text}</span>
+                <Link to="/products?category=menswear" className="tc-split-btn">Shop Now →</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8 ── STORE INFO + CONTACT ────────────────────────── */}
+      <section className="vp-section">
+        <div className="vp-container">
+          <div className="contact-grid">
+            <div>
+              <span className="section-eyebrow">Visit Us</span>
+              <h2 className="section-heading">Our Flagship Store</h2>
+              <p className="about-paragraph">Experience luxury fashion in person at our flagship store. Our personal stylists are ready to assist you with an unparalleled shopping experience.</p>
+              {[
+                { icon: '📍', label: 'Address',    value: '3rd Floor, City Mall, MG Road, Kochi, Kerala 682016' },
+                { icon: '📞', label: 'Phone',      value: '+91 484 123 4567' },
+                { icon: '🕐', label: 'Hours',      value: 'Mon–Thu 10am–10pm | Fri–Sun 10am–11pm' },
+                { icon: '💬', label: 'WhatsApp',   value: '+91 98765 43210' },
+              ].map(it => (
+                <div key={it.label} className="contact-info-item">
+                  <div className="contact-info-icon">{it.icon}</div>
+                  <div><div className="contact-info-label">{it.label}</div><div className="contact-info-value">{it.value}</div></div>
+                </div>
+              ))}
+            </div>
+            <div className="contact-form-card">
+              <h3 style={{ fontFamily: 'Playfair Display,serif', fontSize: '1.3rem', fontWeight: 700, marginBottom: '24px' }}>Send a Message</h3>
+              <form onSubmit={handleContact}>
+                {[['Full Name','text','name','Your full name'],['Mobile',  'tel','mobile','+91 XXXXX'],['Email',   'email','email','your@email.com']].map(([label, type, key, ph]) => (
+                  <div className="form-field" key={key}>
+                    <label className="form-label">{label}</label>
+                    <input className="form-input" type={type} placeholder={ph} value={formData[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })} required />
+                  </div>
+                ))}
+                <div className="form-field">
+                  <label className="form-label">Category</label>
+                  <select className="form-select" value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })} required>
+                    <option value="">Select…</option>
+                    {['Womenswear','Menswear','Accessories','Footwear','Kids','Home Décor'].map(c => <option key={c} value={c.toLowerCase()}>{c}</option>)}
+                  </select>
+                </div>
+                <button type="submit" className="btn-primary" disabled={submitting}>{submitting ? 'Sending…' : 'Send Message →'}</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Map */}
+      <div className="map-section">
+        <iframe
+          className="map-iframe"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.0!2d76.2673!3d9.9312!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b086d4b07ef0e41%3A0x8f7c4ce44e7b3c9a!2sMG%20Road%2C%20Kochi%2C%20Kerala!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+          allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Vogue Plaza Location"
+        />
+      </div>
+
+      <Footer />
+
+      {/* WhatsApp */}
+      <div className="whatsapp-bubble" onClick={() => window.open('https://wa.me/919876543210', '_blank')} role="button" aria-label="WhatsApp">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        <span className="whatsapp-tooltip">Chat with us</span>
+      </div>
+    </>
+  );
+}
