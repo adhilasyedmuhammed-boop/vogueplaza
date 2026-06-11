@@ -106,7 +106,19 @@ const products = [
   { name: 'Saddle Leather Shoulder Bag', brand: 'Prada', category: 'accessories', price: 1599, image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', sizes: ['One Size'], description: 'Classic tan brown leather luxury shoulder bag' },
   { name: 'Gold Oyster Chronograph', brand: 'Rolex', category: 'accessories', price: 12999, image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600', sizes: ['One Size'], description: 'Precision timepiece with 18k yellow gold casing and oyster bracelet' },
   { name: 'Classic Flap Chain Bag', brand: 'Chanel', category: 'accessories', price: 2899, image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600', sizes: ['One Size'], description: 'Quilted calfskin flap bag with gold tone hardware' },
-  { name: 'Plaid Pattern Tote Bag', brand: 'Burberry', category: 'accessories', price: 899, image: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', sizes: ['One Size'], description: 'Iconic vintage check pattern leather tote bag' }
+  { name: 'Plaid Pattern Tote Bag', brand: 'Burberry', category: 'accessories', price: 899, image: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', sizes: ['One Size'], description: 'Iconic vintage check pattern leather tote bag' },
+
+  // Lipsticks & Beauty Products
+  { name: 'Rouge Allure Liquid Lipstick', brand: 'Chanel', category: 'accessories', price: 199, image: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?q=80&w=600', sizes: ['Classic Red', 'Rosewood', 'Velvet Pink'], description: 'Intense satin-finish longwear liquid lipstick' },
+  { name: 'Dior Addict Lip Glow', brand: 'Dior', category: 'accessories', price: 179, image: 'https://images.unsplash.com/photo-1631214503008-a14a38968305?q=80&w=600', sizes: ['Pink Glow', 'Coral Glow', 'Berry Glow'], description: 'Color-awakening hydrating lip balm' },
+
+  // Shoes & Footwear
+  { name: 'Baroque Leather Heels', brand: 'Versace', category: 'footwear', price: 1199, image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=600', sizes: ['36', '37', '38', '39'], description: 'Italian-crafted high heel pumps with gold-tone accents' },
+  { name: 'GG Monogram Leather Loafers', brand: 'Gucci', category: 'footwear', price: 999, image: 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?q=80&w=600', sizes: ['41', '42', '43', '44'], description: 'Classic black leather loafers with gold horsebit hardware' },
+
+  // Watches & Sunglasses
+  { name: 'Oversized Vintage Sunglasses', brand: 'Gucci', category: 'accessories', price: 349, image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=600', sizes: ['One Size'], description: 'Premium square-frame acetate sunglasses' },
+  { name: 'Oyster Perpetual Datejust', brand: 'Rolex', category: 'accessories', price: 9599, image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=600', sizes: ['36mm', '41mm'], description: 'Luxury calendar watch in stainless steel and yellow gold' }
 ];
 
 const mongoose = require('mongoose');
