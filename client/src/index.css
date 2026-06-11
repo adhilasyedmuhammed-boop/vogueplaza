@@ -3289,11 +3289,12 @@ input, select, textarea { font-family: var(--font-sans); }
 
 @media (max-width: 768px) {
   /* Header */
-  .tc-header-bar { padding: 0 16px; height: 60px; }
+  .tc-header-bar { padding: 0 12px; height: 60px; }
   .tc-header-left .tc-util-link:not(:first-child), .tc-util-divider { display: none; }
   .hamburger-tc { display: flex; }
-  .tc-logo { font-size: 18px; }
-  .tc-login-text span { display: none; }
+  .tc-logo { font-size: 17px; letter-spacing: 0.08em; }
+  .tc-login-text { display: none !important; }
+  .tc-icon-btn { width: 34px; height: 34px; }
   .tc-nav-bar { display: none; }
 
   /* Video hero */
@@ -3330,4 +3331,11 @@ input, select, textarea { font-family: var(--font-sans); }
   /* Brands */
   .tc-brand-circle { width: 64px; height: 64px; }
   .tc-brand-initial { font-size: 15px; }
+}
+
+@media (max-width: 400px) {
+  .tc-logo { font-size: 14px; letter-spacing: 0.05em; }
+  .tc-header-bar { padding: 0 6px; }
+  .tc-icon-btn { width: 28px; height: 28px; }
+  .tc-header-left { gap: 6px; }
 }
