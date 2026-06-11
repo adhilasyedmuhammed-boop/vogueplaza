@@ -14,14 +14,28 @@ export default function Footer() {
         <div>
           <div className="footer-brand-logo">VOGUE PLAZA</div>
           <p className="footer-brand-desc">
-            India's premier destination for luxury fashion. Curating world-class brands across womenswear, menswear, kids, and lifestyle since 1991.
+            India's premium destination for luxury fashion. Curating world-class brands across womenswear, menswear, kids, and lifestyle since 1991.
           </p>
           <div className="footer-socials">
-            <a href="#" className="footer-social-icon" aria-label="Instagram">IG</a>
-            <a href="#" className="footer-social-icon" aria-label="Facebook">FB</a>
-            <a href="#" className="footer-social-icon" aria-label="Twitter">TW</a>
-            <a href="#" className="footer-social-icon" aria-label="Pinterest">PT</a>
-            <a href="#" className="footer-social-icon" aria-label="YouTube">YT</a>
+            <a href="https://instagram.com/vogueplaza" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Instagram">IG</a>
+            <a href="https://facebook.com/vogueplaza" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Facebook">FB</a>
+            <a href="https://twitter.com/vogueplaza" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Twitter">TW</a>
+            <a href="https://pinterest.com/vogueplaza" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Pinterest">PT</a>
+            <a href="https://youtube.com/vogueplaza" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="YouTube">YT</a>
+          </div>
+          <div className="footer-social-handles" style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', fontFamily: 'Inter, sans-serif', opacity: 0.85 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ color: '#B8914E' }}>●</span>
+              <span>Instagram: <a href="https://instagram.com/vogueplaza" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontWeight: '500' }}>@vogueplaza</a></span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ color: '#B8914E' }}>●</span>
+              <span>Facebook: <a href="https://facebook.com/vogueplaza" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontWeight: '500' }}>Vogue Plaza</a></span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ color: '#B8914E' }}>●</span>
+              <span>Twitter: <a href="https://twitter.com/vogueplaza" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontWeight: '500' }}>@vogueplaza</a></span>
+            </div>
           </div>
         </div>
 
