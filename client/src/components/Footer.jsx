@@ -17,11 +17,11 @@ export default function Footer() {
             India's premier destination for luxury fashion. Curating world-class brands across womenswear, menswear, kids, and lifestyle since 1991.
           </p>
           <div className="footer-socials">
-            <a href="#" className="footer-social-icon" aria-label="Instagram">IG</a>
-            <a href="#" className="footer-social-icon" aria-label="Facebook">FB</a>
-            <a href="#" className="footer-social-icon" aria-label="Twitter">TW</a>
-            <a href="#" className="footer-social-icon" aria-label="Pinterest">PT</a>
-            <a href="#" className="footer-social-icon" aria-label="YouTube">YT</a>
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Instagram">IG</a>
+            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Facebook">FB</a>
+            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Twitter">TW</a>
+            <a href="https://www.pinterest.com" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Pinterest">PT</a>
+            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="YouTube">YT</a>
           </div>
         </div>
 
