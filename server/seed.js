@@ -9,8 +9,8 @@ const Product = require('./models/Product');
 
 const defaultStoreInfo = {
   storeName: 'Vogue Plaza — Flagship City Mall',
-  address: '123 Galleria Mall, Premium Avenue, Galleria District, NY 10001',
-  phone: '+1 (555) 019-2834',
+  address: '3rd Floor, City Mall, MG Road, Kochi, Kerala 682016',
+  phone: '+91 484 123 4567',
   businessHours: [
     { day: 'Monday', open: '10:00', close: '22:00' },
     { day: 'Tuesday', open: '10:00', close: '22:00' },
@@ -28,13 +28,13 @@ const defaultStoreInfo = {
     { label: 'Happy Customers', value: '11M+' },
   ],
   paymentMethods: ['Visa', 'Mastercard', 'Amex', 'Apple Pay'],
-  coordinates: { lat: 40.7484405, lng: -73.985428 },
+  coordinates: { lat: 9.9312, lng: 76.2673 },
 };
 
 const categories = [
-  { name: 'Womenswear', slug: 'womenswear', image: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=600', isActive: true },
-  { name: 'Menswear', slug: 'menswear', image: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?q=80&w=600', isActive: true },
-  { name: 'Accessories & Beauty', slug: 'accessories', image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600', isActive: true },
+  { name: 'Womenswear', slug: 'womenswear', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600', isActive: true },
+  { name: 'Menswear', slug: 'menswear', image: 'https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=600', isActive: true },
+  { name: 'Accessories & Beauty', slug: 'accessories', image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', isActive: true },
   { name: 'Kids Corner', slug: 'kids', image: 'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=600', isActive: true },
   { name: 'Home Decor', slug: 'homedecor', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=600', isActive: true },
   { name: 'Footwear', slug: 'footwear', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=600', isActive: true },
@@ -53,27 +53,21 @@ const brands = [
 
 const posts = [
   {
-    imageUrl: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=500',
-    caption: 'Embracing the minimalist silhouette this season. Find our premium cashmere coat line in store now. #MinimalStyle #WinterWarmth',
-    postedDate: 'May 28, 2026',
+    imageUrl: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=500',
+    caption: 'Embracing the royal silhouette this season. Find our premium embroidered Anarkali line in store now. #EthnicStyle #LuxuryFashion',
+    postedDate: 'June 11, 2026',
     isActive: true,
   },
   {
-    imageUrl: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=500',
-    caption: 'Unveiling our summer resort line. Earthy tones paired with lightweight, luxury organic linens. #ResortStyle #LinenLove',
-    postedDate: 'May 25, 2026',
+    imageUrl: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=500',
+    caption: 'The art of bespoke tailoring. Experience premium wool three-piece suits handcrafted to perfection.',
+    postedDate: 'June 09, 2026',
     isActive: true,
   },
   {
-    imageUrl: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=500',
-    caption: 'Crafted to perfection. A gentleman\'s footwear collection, custom handcrafted in Italy. #ItalianLeather #DapperStyle',
-    postedDate: 'May 20, 2026',
-    isActive: true,
-  },
-  {
-    imageUrl: 'https://images.unsplash.com/photo-1495121605193-b116b5b9c5ec?q=80&w=500',
-    caption: 'New arrivals in premium evening wear. Tailored silhouettes and statement accessories for the city elite.',
-    postedDate: 'May 18, 2026',
+    imageUrl: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=500',
+    caption: 'Curated premium handbags. Timeless elegance defined in luxury leather. #Handbags #Prada',
+    postedDate: 'June 05, 2026',
     isActive: true,
   },
 ];
@@ -93,28 +87,26 @@ const reviews = [
       'High-end store with fantastic customer care. I had an issue with a designer jacket I bought, and the manager handled it immediately with no questions asked. Extremely professional. It\'s rare to see this level of dedication to service these days. Vogue Plaza remains my favorite retail destination.',
     isApproved: true,
   },
-  {
-    name: 'Adhila Syedmuhammed',
-    rating: 5,
-    comment:
-      'Elegant environment, clean store, and highly attentive staff. They helped me pick out a bespoke suit and matching shoes within an hour. The customer satisfaction team is top-notch, checking in post-purchase to ensure absolute comfort. Truly a masterclass in modern retail customer service.',
-    isApproved: true,
-  },
 ];
 
 const products = [
-  { name: 'Cashmere Coat', brand: 'Armani', category: 'womenswear', price: 1299, image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=600', sizes: ['S', 'M', 'L'], description: 'Premium cashmere coat for elegant winter style' },
-  { name: 'Silk Blouse', brand: 'Gucci', category: 'womenswear', price: 899, image: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=600', sizes: ['S', 'M', 'L'], description: 'Luxurious silk blouse with timeless design' },
-  { name: 'Tailored Suit', brand: 'Versace', category: 'menswear', price: 2499, image: 'https://images.unsplash.com/photo-1488161628813-04466f872be2?q=80&w=600', sizes: ['M', 'L', 'XL'], description: 'Impeccably tailored Italian suit' },
-  { name: 'Leather Jacket', brand: 'Burberry', category: 'menswear', price: 1899, image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=600', sizes: ['M', 'L', 'XL'], description: 'Classic leather jacket with modern fit' },
-  { name: 'Designer Handbag', brand: 'Prada', category: 'accessories', price: 1599, image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600', sizes: ['One Size'], description: 'Iconic designer handbag' },
-  { name: 'Luxury Watch', brand: 'Rolex', category: 'accessories', price: 12999, image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=600', sizes: ['One Size'], description: 'Precision timepiece with Swiss movement' },
-  { name: 'Kids Dress', brand: 'Chanel', category: 'kids', price: 499, image: 'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=600', sizes: ['4T', '5T', '6T'], description: 'Elegant dress for little fashionistas' },
-  { name: 'Boys Blazer', brand: 'Dior', category: 'kids', price: 599, image: 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?q=80&w=600', sizes: ['4T', '5T', '6T'], description: 'Sophisticated blazer for young gentlemen' },
-  { name: 'Decorative Vase', brand: 'Armani', category: 'homedecor', price: 399, image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=600', sizes: ['One Size'], description: 'Artisan ceramic vase for modern homes' },
-  { name: 'Luxury Throw', brand: 'Gucci', category: 'homedecor', price: 799, image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=600', sizes: ['One Size'], description: 'Premium cashmere throw blanket' },
-  { name: 'Designer Heels', brand: 'Versace', category: 'footwear', price: 1199, image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=600', sizes: ['6', '7', '8'], description: 'Stunning designer heels' },
-  { name: 'Leather Boots', brand: 'Burberry', category: 'footwear', price: 899, image: 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?q=80&w=600', sizes: ['6', '7', '8'], description: 'Classic leather boots with premium craftsmanship' }
+  // Womenswear (Traditional/Fusion Designer Wear)
+  { name: 'Royal Crimson Anarkali Gown', brand: 'Gucci', category: 'womenswear', price: 1299, image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600', sizes: ['S', 'M', 'L'], description: 'Deep red Anarkali gown with intricate golden zardozi embroidery' },
+  { name: 'Navy Embellished Cape Gown', brand: 'Dior', category: 'womenswear', price: 2099, image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=600', sizes: ['S', 'M', 'L'], description: 'Midnight navy evening gown featuring a faux fur collar and gold embroidered details' },
+  { name: 'Embroidered Silk Lehenga', brand: 'Armani', category: 'womenswear', price: 2499, image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=600', sizes: ['S', 'M', 'L'], description: 'Premium silk lehenga set with custom artisan work' },
+  { name: 'Baroque Pattern Silk Abaya', brand: 'Versace', category: 'womenswear', price: 1499, image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600', sizes: ['M', 'L'], description: 'Luxury silk abaya with royal gold and black baroque printing' },
+
+  // Menswear (Tailored Suits & Sherwanis)
+  { name: 'Velvet Royal Sherwani', brand: 'Armani', category: 'menswear', price: 2899, image: 'https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=600', sizes: ['M', 'L', 'XL'], description: 'Luxurious velvet sherwani in midnight black with golden details' },
+  { name: 'Bespoke Brown Wool Suit', brand: 'Versace', category: 'menswear', price: 1799, image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=600', sizes: ['48', '50', '52'], description: 'Double breasted premium wool three-piece suit in espresso brown' },
+  { name: 'Double-Breasted Tuxedo', brand: 'Burberry', category: 'menswear', price: 1899, image: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=600', sizes: ['M', 'L', 'XL'], description: 'Traditional Italian-cut tuxedo with satin lapels' },
+  { name: 'Linen Casual Shirt Set', brand: 'Burberry', category: 'menswear', price: 399, image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=600', sizes: ['M', 'L', 'XL'], description: 'Breathable linen shirt set with light beige trousers' },
+
+  // Accessories (Luxury Handbags & Watches)
+  { name: 'Saddle Leather Shoulder Bag', brand: 'Prada', category: 'accessories', price: 1599, image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', sizes: ['One Size'], description: 'Classic tan brown leather luxury shoulder bag' },
+  { name: 'Gold Oyster Chronograph', brand: 'Rolex', category: 'accessories', price: 12999, image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600', sizes: ['One Size'], description: 'Precision timepiece with 18k yellow gold casing and oyster bracelet' },
+  { name: 'Classic Flap Chain Bag', brand: 'Chanel', category: 'accessories', price: 2899, image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600', sizes: ['One Size'], description: 'Quilted calfskin flap bag with gold tone hardware' },
+  { name: 'Plaid Pattern Tote Bag', brand: 'Burberry', category: 'accessories', price: 899, image: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', sizes: ['One Size'], description: 'Iconic vintage check pattern leather tote bag' }
 ];
 
 const mongoose = require('mongoose');
@@ -139,35 +131,22 @@ const seedInitialData = async () => {
       console.log('Store info seeded');
     }
 
-    const categoryCount = await Category.countDocuments();
-    if (categoryCount === 0) {
-      await Category.create(categories);
-      console.log('Categories seeded');
-    }
+    // Drop and re-seed to apply updated product lists immediately
+    await Category.deleteMany({});
+    await Category.create(categories);
+    console.log('Categories updated');
 
-    const brandCount = await Brand.countDocuments();
-    if (brandCount === 0) {
-      await Brand.create(brands);
-      console.log('Brands seeded');
-    }
+    await Brand.deleteMany({});
+    await Brand.create(brands);
+    console.log('Brands updated');
 
-    const postCount = await Post.countDocuments();
-    if (postCount === 0) {
-      await Post.create(posts);
-      console.log('Posts seeded');
-    }
+    await Post.deleteMany({});
+    await Post.create(posts);
+    console.log('Posts updated');
 
-    const reviewCount = await Review.countDocuments();
-    if (reviewCount === 0) {
-      await Review.create(reviews);
-      console.log('Reviews seeded');
-    }
-
-    const productCount = await Product.countDocuments();
-    if (productCount === 0) {
-      await Product.create(products);
-      console.log('Products seeded');
-    }
+    await Product.deleteMany({});
+    await Product.create(products);
+    console.log('Products collection updated with premium Pinterest collections');
   } catch (error) {
     console.error('Error seeding initial data:', error.message);
   }

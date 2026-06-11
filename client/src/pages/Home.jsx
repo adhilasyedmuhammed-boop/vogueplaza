@@ -10,43 +10,39 @@ import axios from '../api/axios';
 
 /* ── fallback product data ──────────────────────────────────── */
 const PRODUCTS = [
-  { _id: 'p1',  name: 'Cashmere Overcoat', brand: 'Armani',       category: 'womenswear', price: 129900, image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=600', image2: 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?q=80&w=600', sizes: ['S','M','L','XL'] },
-  { _id: 'p2',  name: 'Silk Slip Dress',   brand: 'Gucci',        category: 'womenswear', price: 89900,  image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=600', image2: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=600', sizes: ['XS','S','M','L'] },
-  { _id: 'p3',  name: 'Tailored Suit',     brand: 'Versace',      category: 'menswear',   price: 249900, image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600', image2: 'https://images.unsplash.com/photo-1505022610485-0249ba5b3675?q=80&w=600', sizes: ['M','L','XL'] },
-  { _id: 'p4',  name: 'Leather Biker',     brand: 'Burberry',     category: 'menswear',   price: 189900, image: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=600', image2: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?q=80&w=600', sizes: ['S','M','L'] },
-  { _id: 'p5',  name: 'Saffiano Tote',     brand: 'Prada',        category: 'accessories',price: 159900, image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', image2: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', sizes: ['One Size'] },
-  { _id: 'p6',  name: 'Stiletto Heels',    brand: 'Versace',      category: 'footwear',   price: 119900, image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=600', image2: 'https://images.unsplash.com/photo-1596702994260-8f115a12fc17?q=80&w=600', sizes: ['5','6','7','8','9'] },
-  { _id: 'p7',  name: 'Linen Blazer',      brand: 'Armani',       category: 'menswear',   price: 99900,  image: 'https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=600', image2: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600', sizes: ['M','L','XL'] },
-  { _id: 'p8',  name: 'Pearl Earrings',    brand: 'Chanel',       category: 'accessories',price: 49900,  image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600', image2: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=600', sizes: ['One Size'] },
-  { _id: 'p9',  name: 'Embroidered Kurta', brand: 'Ralph Lauren', category: 'womenswear', price: 39900,  image: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=600', image2: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=600', sizes: ['XS','S','M','L'] },
-  { _id: 'p10', name: 'Oxford Brogues',    brand: 'Burberry',     category: 'footwear',   price: 79900,  image: 'https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?q=80&w=600', image2: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=600', sizes: ['7','8','9','10'] },
-  { _id: 'p11', name: 'Trench Coat',       brand: 'Burberry',     category: 'womenswear', price: 209900, image: 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?q=80&w=600', image2: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=600', sizes: ['S','M','L'] },
-  { _id: 'p12', name: 'Quilted Jacket',    brand: 'Tommy Hilfiger',category: 'menswear',  price: 69900,  image: 'https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=600', image2: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600', sizes: ['M','L','XL'] },
+  { _id: 'p1',  name: 'Royal Crimson Anarkali Gown', brand: 'Gucci',       category: 'womenswear', price: 129900, image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600', image2: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600', sizes: ['S','M','L'] },
+  { _id: 'p2',  name: 'Navy Embellished Cape Gown', brand: 'Dior',        category: 'womenswear', price: 209900, image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=600', image2: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=600', sizes: ['S','M','L'] },
+  { _id: 'p3',  name: 'Velvet Royal Sherwani',     brand: 'Armani',      category: 'menswear',   price: 289900, image: 'https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=600', image2: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=600', sizes: ['M','L','XL'] },
+  { _id: 'p4',  name: 'Bespoke Brown Wool Suit',   brand: 'Versace',     category: 'menswear',   price: 179900, image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=600', image2: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=600', sizes: ['48','50','52'] },
+  { _id: 'p5',  name: 'Saddle Leather Shoulder Bag', brand: 'Prada',       category: 'accessories',price: 159900, image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', image2: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', sizes: ['One Size'] },
+  { _id: 'p6',  name: 'Gold Oyster Chronograph',   brand: 'Rolex',       category: 'accessories',price: 1299900,image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600', image2: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=600', sizes: ['One Size'] },
+  { _id: 'p7',  name: 'Classic Flap Chain Bag',    brand: 'Chanel',      category: 'accessories',price: 289900, image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600', image2: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', sizes: ['One Size'] },
+  { _id: 'p8',  name: 'Plaid Pattern Tote Bag',    brand: 'Burberry',    category: 'accessories',price: 89900,  image: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', image2: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', sizes: ['One Size'] },
 ];
 
 const TRENDING = [
-  { _id: 't1', name: 'Floral Midi Dress',  brand: 'Gucci',       category: 'womenswear', price: 74900,  image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=600', image2: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=600', sizes: ['XS','S','M'] },
-  { _id: 't2', name: 'Canvas Sneakers',    brand: 'Gucci',       category: 'footwear',   price: 89900,  image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600', image2: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=600', sizes: ['6','7','8','9','10'] },
-  { _id: 't3', name: 'Raffia Straw Hat',   brand: 'Prada',       category: 'accessories',price: 34900,  image: 'https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=600', image2: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', sizes: ['One Size'] },
-  { _id: 't4', name: 'Linen Shirt',        brand: 'Hugo Boss',   category: 'menswear',   price: 29900,  image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=600', image2: 'https://images.unsplash.com/photo-1618886614638-80e3c103d31a?q=80&w=600', sizes: ['S','M','L','XL'] },
-  { _id: 't5', name: 'Leather Belt',       brand: 'Burberry',    category: 'accessories',price: 24900,  image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=600', image2: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', sizes: ['S','M','L'] },
-  { _id: 't6', name: 'Swimsuit',           brand: 'Versace',     category: 'womenswear', price: 49900,  image: 'https://images.unsplash.com/photo-1509551388413-e18d0ac5d495?q=80&w=600', image2: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=600', sizes: ['XS','S','M','L'] },
-  { _id: 't7', name: 'Polo T-Shirt',       brand: 'Ralph Lauren',category: 'menswear',   price: 19900,  image: 'https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=600', image2: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600', sizes: ['S','M','L','XL'] },
-  { _id: 't8', name: 'Sunglasses',         brand: 'Dior',        category: 'accessories',price: 39900,  image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=600', image2: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600', sizes: ['One Size'] },
+  { _id: 't1', name: 'Royal Crimson Anarkali Gown', brand: 'Gucci',       category: 'womenswear', price: 129900, image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600', sizes: ['S','M','L'] },
+  { _id: 't2', name: 'Navy Embellished Cape Gown', brand: 'Dior',        category: 'womenswear', price: 209900, image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=600', sizes: ['S','M','L'] },
+  { _id: 't3', name: 'Velvet Royal Sherwani',     brand: 'Armani',      category: 'menswear',   price: 289900, image: 'https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=600', sizes: ['M','L','XL'] },
+  { _id: 't4', name: 'Bespoke Brown Wool Suit',   brand: 'Versace',     category: 'menswear',   price: 179900, image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=600', sizes: ['48','50','52'] },
+  { _id: 't5', name: 'Saddle Leather Shoulder Bag', brand: 'Prada',       category: 'accessories',price: 159900, image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', sizes: ['One Size'] },
+  { _id: 't6', name: 'Gold Oyster Chronograph',   brand: 'Rolex',       category: 'accessories',price: 1299900,image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600', sizes: ['One Size'] },
+  { _id: 't7', name: 'Classic Flap Chain Bag',    brand: 'Chanel',      category: 'accessories',price: 289900, image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600', sizes: ['One Size'] },
+  { _id: 't8', name: 'Plaid Pattern Tote Bag',    brand: 'Burberry',    category: 'accessories',price: 89900,  image: 'https://images.unsplash.com/photo-1590874103328-eacb586d5c07?q=80&w=600', sizes: ['One Size'] },
 ];
 
 const WOMEN_SLIDES = [
-  { img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=600", text: "Haute Couture Gowns" },
-  { img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600", text: "Designer Handbags" },
-  { img: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=600", text: "Luxury Stilettos" },
-  { img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600", text: "Fine Pearl Jewelry" }
+  { img: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600", text: "Embroidered Royal Anarkalis" },
+  { img: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=600", text: "Luxury Cape Gowns" },
+  { img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600", text: "Baroque Silk Abayas" },
+  { img: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=600", text: "Silk Georgette Collection" }
 ];
 
 const MEN_SLIDES = [
-  { img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600", text: "Bespoke Italian Suits" },
-  { img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=600", text: "Handcrafted Jackets" },
-  { img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600", text: "Swiss Luxury Watches" },
-  { img: "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?q=80&w=600", text: "Oxford Leather Shoes" }
+  { img: "https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=600", text: "Velvet Royal Sherwanis" },
+  { img: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=600", text: "Bespoke Wool Suits" },
+  { img: "https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=600", text: "Sharp Double-Breasted Suits" },
+  { img: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=600", text: "Smart Casual Linen Sets" }
 ];
 
 export default function Home() {
