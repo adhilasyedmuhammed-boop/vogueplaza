@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { useConfirm } from '../../components/ConfirmModal';
+import { toast } from 'react-toastify';
 
 const CATEGORIES = ['womenswear', 'menswear', 'accessories', 'kids', 'homedecor', 'footwear'];
 
@@ -9,6 +11,7 @@ export default function AdminProducts() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ name: '', brand: '', category: 'womenswear', price: '', image: '', sizes: '', description: '', inStock: true });
+  const confirm = useConfirm();
 
   const token = localStorage.getItem('vp_token');
   const headers = { Authorization: `Bearer ${token}` };
@@ -39,7 +42,7 @@ export default function AdminProducts() {
       setForm({ name: '', brand: '', category: 'womenswear', price: '', image: '', sizes: '', description: '', inStock: true });
       fetchProducts();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error saving product');
+      toast.error(err.response?.data?.message || 'Error saving product');
     }
   };
 
@@ -50,12 +53,14 @@ export default function AdminProducts() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this product?')) return;
+    const ok = await confirm({ title: 'Delete Product', message: 'Are you sure you want to delete this product? This action cannot be undone.', type: 'danger' });
+    if (!ok) return;
     try {
       await axios.delete(`/admin/products/${id}`, { headers });
+      toast.success('Product deleted');
       fetchProducts();
     } catch (err) {
-      alert('Error deleting product');
+      toast.error('Error deleting product');
     }
   };
 

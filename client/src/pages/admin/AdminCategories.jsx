@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { useConfirm } from '../../components/ConfirmModal';
+import { toast } from 'react-toastify';
 
 export default function AdminCategories() {
   const [categories, setCategories] = useState([]);
@@ -7,6 +9,7 @@ export default function AdminCategories() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ name: '', slug: '', image: '', isActive: true });
+  const confirm = useConfirm();
 
   const token = localStorage.getItem('vp_token');
   const headers = { Authorization: `Bearer ${token}` };
@@ -34,7 +37,7 @@ export default function AdminCategories() {
       setForm({ name: '', slug: '', image: '', isActive: true });
       fetchCategories();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error saving category');
+      toast.error(err.response?.data?.message || 'Error saving category');
     }
   };
 
@@ -45,11 +48,13 @@ export default function AdminCategories() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this category?')) return;
+    const ok = await confirm({ title: 'Delete Category', message: 'Are you sure you want to delete this category?', type: 'danger' });
+    if (!ok) return;
     try {
       await axios.delete(`/admin/categories/${id}`, { headers });
+      toast.success('Category deleted');
       fetchCategories();
-    } catch (err) { alert('Error deleting'); }
+    } catch (err) { toast.error('Error deleting'); }
   };
 
   if (loading) return <div style={{ padding: 40 }}>Loading...</div>;

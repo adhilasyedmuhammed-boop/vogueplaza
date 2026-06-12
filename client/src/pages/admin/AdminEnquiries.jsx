@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { useConfirm } from '../../components/ConfirmModal';
+import { toast } from 'react-toastify';
 
 export default function AdminEnquiries() {
   const [enquiries, setEnquiries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const confirm = useConfirm();
 
   const token = localStorage.getItem('vp_token');
   const headers = { Authorization: `Bearer ${token}` };
@@ -22,15 +25,17 @@ export default function AdminEnquiries() {
     try {
       await axios.put(`/admin/enquiries/${id}`, { isRead: true }, { headers });
       fetchEnquiries();
-    } catch (err) { alert('Error'); }
+    } catch (err) { toast.error('Error'); }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this enquiry?')) return;
+    const ok = await confirm({ title: 'Delete Enquiry', message: 'Are you sure you want to delete this enquiry?', type: 'danger' });
+    if (!ok) return;
     try {
       await axios.delete(`/admin/enquiries/${id}`, { headers });
+      toast.success('Enquiry deleted');
       fetchEnquiries();
-    } catch (err) { alert('Error'); }
+    } catch (err) { toast.error('Error'); }
   };
 
   if (loading) return <div style={{ padding: 40 }}>Loading...</div>;

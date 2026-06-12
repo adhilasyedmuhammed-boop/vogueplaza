@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { useConfirm } from '../../components/ConfirmModal';
+import { toast } from 'react-toastify';
 
 export default function AdminReviews() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ name: '', rating: 5, comment: '', isApproved: true });
+  const confirm = useConfirm();
 
   const token = localStorage.getItem('vp_token');
   const headers = { Authorization: `Bearer ${token}` };
@@ -28,7 +31,7 @@ export default function AdminReviews() {
       setForm({ name: '', rating: 5, comment: '', isApproved: true });
       fetchReviews();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error creating review');
+      toast.error(err.response?.data?.message || 'Error creating review');
     }
   };
 
@@ -36,15 +39,17 @@ export default function AdminReviews() {
     try {
       await axios.put(`/admin/reviews/${id}`, { isApproved: !isApproved }, { headers });
       fetchReviews();
-    } catch (err) { alert('Error'); }
+    } catch (err) { toast.error('Error'); }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this review?')) return;
+    const ok = await confirm({ title: 'Delete Review', message: 'Are you sure you want to delete this review?', type: 'danger' });
+    if (!ok) return;
     try {
       await axios.delete(`/admin/reviews/${id}`, { headers });
+      toast.success('Review deleted');
       fetchReviews();
-    } catch (err) { alert('Error'); }
+    } catch (err) { toast.error('Error'); }
   };
 
   if (loading) return <div style={{ padding: 40 }}>Loading...</div>;

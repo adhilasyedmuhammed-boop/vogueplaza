@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { ConfirmProvider } from '../../components/ConfirmModal';
 
 const menuItems = [
   { path: '/admin', label: 'Dashboard', icon: '📊' },
@@ -162,7 +163,9 @@ export default function AdminLayout() {
             <span style={{ fontSize: 12, color: '#c9a96e' }}>Admin</span>
           </div>
         )}
-        <Outlet />
+        <ConfirmProvider>
+          <Outlet />
+        </ConfirmProvider>
       </main>
     </div>
   );

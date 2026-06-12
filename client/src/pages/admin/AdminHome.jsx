@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { toast } from 'react-toastify';
 
 export default function AdminHome() {
   const [data, setData] = useState(null);
@@ -31,9 +32,9 @@ export default function AdminHome() {
     setSaving(true);
     try {
       await axios.put('/admin/homedata', data, { headers });
-      alert('Home page data saved!');
+      toast.success('Home page data saved!');
     } catch (err) {
-      alert(err.response?.data?.message || 'Error saving');
+      toast.error(err.response?.data?.message || 'Error saving');
     }
     setSaving(false);
   };

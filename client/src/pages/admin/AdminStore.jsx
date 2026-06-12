@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { toast } from 'react-toastify';
 
 export default function AdminStore() {
   const [store, setStore] = useState(null);
@@ -42,10 +43,10 @@ export default function AdminStore() {
         paymentMethods: form.paymentMethods.split(',').map(s => s.trim()).filter(Boolean),
       };
       await axios.put('/admin/store', payload, { headers });
-      alert('Store info updated!');
+      toast.success('Store info updated!');
       fetchStore();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error updating store info');
+      toast.error(err.response?.data?.message || 'Error updating store info');
     }
   };
 

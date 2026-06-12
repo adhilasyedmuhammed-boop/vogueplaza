@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { useConfirm } from '../../components/ConfirmModal';
+import { toast } from 'react-toastify';
 
 export default function AdminPosts() {
   const [posts, setPosts] = useState([]);
@@ -7,6 +9,7 @@ export default function AdminPosts() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ imageUrl: '', caption: '', postedDate: '', isActive: true });
+  const confirm = useConfirm();
 
   const token = localStorage.getItem('vp_token');
   const headers = { Authorization: `Bearer ${token}` };
@@ -34,7 +37,7 @@ export default function AdminPosts() {
       setForm({ imageUrl: '', caption: '', postedDate: '', isActive: true });
       fetchPosts();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error saving post');
+      toast.error(err.response?.data?.message || 'Error saving post');
     }
   };
 
@@ -45,11 +48,13 @@ export default function AdminPosts() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this post?')) return;
+    const ok = await confirm({ title: 'Delete Post', message: 'Are you sure you want to delete this post?', type: 'danger' });
+    if (!ok) return;
     try {
       await axios.delete(`/admin/posts/${id}`, { headers });
+      toast.success('Post deleted');
       fetchPosts();
-    } catch (err) { alert('Error'); }
+    } catch (err) { toast.error('Error'); }
   };
 
   if (loading) return <div style={{ padding: 40 }}>Loading...</div>;

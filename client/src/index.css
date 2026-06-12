@@ -3654,3 +3654,71 @@ input, select, textarea { font-family: var(--font-sans); }
 .vp-section, .tc-editorial-banner, .tc-split-banner, .footer-v2 {
   animation: vp-page-in 0.4s ease;
 }
+
+/* ========== CONFIRM MODAL ========== */
+.vp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  animation: vp-fade-up 0.2s ease;
+  padding: 16px;
+}
+.vp-modal-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 36px 32px 28px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.vp-modal-icon { margin-bottom: 16px; }
+.vp-modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+.vp-modal-message {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+.vp-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.vp-modal-btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.vp-modal-btn:active { transform: scale(0.96); }
+.vp-modal-btn.cancel {
+  background: #f5f5f5;
+  color: #555;
+}
+.vp-modal-btn.cancel:hover { background: #eee; }
+.vp-modal-btn.danger {
+  background: #e74c3c;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(231,76,60,0.3);
+}
+.vp-modal-btn.danger:hover { background: #c0392b; }
+.vp-modal-btn.warning, .vp-modal-btn.confirm {
+  background: #c9a96e;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(201,169,110,0.3);
+}
+.vp-modal-btn.warning:hover, .vp-modal-btn.confirm:hover { background: #b8954f; }

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { useConfirm } from '../../components/ConfirmModal';
+import { toast } from 'react-toastify';
 
 export default function AdminBrands() {
   const [brands, setBrands] = useState([]);
@@ -7,6 +9,7 @@ export default function AdminBrands() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ name: '', slug: '', initials: '', logo: '', isActive: true });
+  const confirm = useConfirm();
 
   const token = localStorage.getItem('vp_token');
   const headers = { Authorization: `Bearer ${token}` };
@@ -34,7 +37,7 @@ export default function AdminBrands() {
       setForm({ name: '', slug: '', initials: '', logo: '', isActive: true });
       fetchBrands();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error saving brand');
+      toast.error(err.response?.data?.message || 'Error saving brand');
     }
   };
 
@@ -45,11 +48,13 @@ export default function AdminBrands() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this brand?')) return;
+    const ok = await confirm({ title: 'Delete Brand', message: 'Are you sure you want to delete this brand?', type: 'danger' });
+    if (!ok) return;
     try {
       await axios.delete(`/admin/brands/${id}`, { headers });
+      toast.success('Brand deleted');
       fetchBrands();
-    } catch (err) { alert('Error deleting'); }
+    } catch (err) { toast.error('Error deleting'); }
   };
 
   if (loading) return <div style={{ padding: 40 }}>Loading...</div>;

@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { useConfirm } from '../../components/ConfirmModal';
+import { toast } from 'react-toastify';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const confirm = useConfirm();
 
   const token = localStorage.getItem('vp_token');
   const headers = { Authorization: `Bearer ${token}` };
@@ -20,19 +23,23 @@ export default function AdminUsers() {
 
   const toggleRole = async (id, currentRole) => {
     const newRole = currentRole === 'admin' ? 'user' : 'admin';
-    if (!confirm(`Change role to ${newRole}?`)) return;
+    const ok = await confirm({ title: 'Change Role', message: `Change this user's role to ${newRole}?`, type: 'warning' });
+    if (!ok) return;
     try {
       await axios.put(`/admin/users/${id}`, { role: newRole }, { headers });
+      toast.success(`Role changed to ${newRole}`);
       fetchUsers();
-    } catch (err) { alert(err.response?.data?.message || 'Error'); }
+    } catch (err) { toast.error(err.response?.data?.message || 'Error'); }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this user? This cannot be undone.')) return;
+    const ok = await confirm({ title: 'Delete User', message: 'Are you sure you want to delete this user? This cannot be undone.', type: 'danger' });
+    if (!ok) return;
     try {
       await axios.delete(`/admin/users/${id}`, { headers });
+      toast.success('User deleted');
       fetchUsers();
-    } catch (err) { alert(err.response?.data?.message || 'Error'); }
+    } catch (err) { toast.error(err.response?.data?.message || 'Error'); }
   };
 
   if (loading) return <div style={{ padding: 40 }}>Loading...</div>;
