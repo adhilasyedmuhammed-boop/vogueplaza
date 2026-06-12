@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
@@ -9,18 +9,9 @@ export default function ProductCard({ product, badge }) {
   const { addToCart } = useCart();
 
   const wished = isInWishlist(product._id);
-  const [showSecondary, setShowSecondary] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const altImg = product.image2 || product.hoverImage || getAltImage(product.image);
-
-  useEffect(() => {
-    if (isHovered) return;
-    const interval = setInterval(() => {
-      setShowSecondary(prev => !prev);
-    }, 1200 + Math.random() * 500);
-    return () => clearInterval(interval);
-  }, [isHovered]);
 
   const handleQuickAdd = (e) => {
     e.preventDefault();
@@ -35,21 +26,16 @@ export default function ProductCard({ product, badge }) {
     toggleWishlist(product);
   };
 
-  const handleTouch = () => {
-    setShowSecondary(prev => !prev);
-  };
-
   return (
     <Link
       to={`/product/${product._id}`}
       className="product-card"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onTouchStart={handleTouch}
     >
       <div className="product-card-image-wrap">
         <img
-          src={isHovered ? altImg : (showSecondary ? altImg : product.image)}
+          src={isHovered ? altImg : product.image}
           alt={product.name}
           loading="lazy"
           className="product-card-img"
