@@ -410,4 +410,16 @@ router.put('/homedata', async (req, res) => {
   }
 });
 
+// ==================== RESEED PRODUCTS ====================
+router.post('/reseed-products', async (req, res) => {
+  try {
+    const { products } = require('../seed');
+    await Product.deleteMany({});
+    await Product.create(products);
+    res.json({ message: `Products reseeded successfully. ${products.length} products added.` });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;
