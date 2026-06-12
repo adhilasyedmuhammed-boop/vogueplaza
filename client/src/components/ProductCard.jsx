@@ -70,6 +70,14 @@ export default function ProductCard({ product, badge }) {
             <span>₹{product.price?.toLocaleString('en-IN')}</span>
           )}
         </div>
+        {product.originalPrice && product.discount > 0 && (
+          <div className="product-card-offer-text">
+            You save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')} on MRP
+          </div>
+        )}
+        {product.description && (
+          <div className="product-card-desc">{product.description}</div>
+        )}
       </div>
     </Link>
   );
