@@ -143,10 +143,13 @@ export default function Home() {
       {/* 1 ── FULL SCREEN VIDEO ────────────────────────────── */}
       <VideoHero />
 
-      {/* 2 ── SHOP BY CATEGORY MASONRY ────────────────────── */}
+      {/* 2 ── PROMO BANNERS / FLASH DEALS (right after hero) ── */}
+      <PromoBanners />
+
+      {/* 3 ── SHOP BY CATEGORY MASONRY ────────────────────── */}
       <CategoryMasonry />
 
-      {/* 3 ── NEW ARRIVALS SLIDER ─────────────────────────── */}
+      {/* 4 ── NEW ARRIVALS SLIDER ─────────────────────────── */}
       <ProductSlider
         eyebrow="Just In"
         title="New Arrivals"
@@ -155,7 +158,7 @@ export default function Home() {
         badge="new"
       />
 
-      {/* 4 ── FULL-WIDTH FEATURED BRAND VIDEO BANNER ────────── */}
+      {/* 5 ── FULL-WIDTH FEATURED BRAND VIDEO BANNER ────────── */}
       <section className="tc-editorial-banner brand-spotlight-section">
         {!spotlightError && spotlight.videoUrl ? (
           <video
@@ -188,10 +191,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5 ── PROMO BANNERS / FLASH DEALS ───────────────── */}
-      <PromoBanners />
-
-      {/* 5.5 ── TRENDING NOW SLIDER ───────────────────────── */}
+      {/* 6 ── TRENDING NOW SLIDER ───────────────────────── */}
       <ProductSlider
         eyebrow="Most Loved"
         title="Trending Now"
