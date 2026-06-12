@@ -7,6 +7,7 @@ import CategoryMasonry from '../components/CategoryMasonry';
 import ProductSlider from '../components/ProductSlider';
 import BrandScroller from '../components/BrandScroller';
 import PromoBanners from '../components/PromoBanners';
+import HeroBanner from '../components/HeroBanner';
 import axios from '../api/axios';
 
 /* ── fallback product data ──────────────────────────────────── */
@@ -139,6 +140,9 @@ export default function Home() {
   return (
     <>
       <Navbar />
+
+      {/* 0 ── HERO BANNER CAROUSEL — Sale & Offers ─────────── */}
+      <HeroBanner />
 
       {/* 1 ── HERO VIDEO — Cinematic first impression ──────── */}
       <VideoHero />

@@ -10,7 +10,7 @@ export default function AdminProducts() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ name: '', brand: '', category: 'womenswear', price: '', image: '', sizes: '', description: '', inStock: true });
+  const [form, setForm] = useState({ name: '', brand: '', category: 'womenswear', price: '', originalPrice: '', discount: '', image: '', sizes: '', description: '', inStock: true });
   const confirm = useConfirm();
 
   const token = localStorage.getItem('vp_token');
@@ -30,7 +30,7 @@ export default function AdminProducts() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { ...form, price: Number(form.price), sizes: form.sizes.split(',').map(s => s.trim()).filter(Boolean) };
+    const payload = { ...form, price: Number(form.price), originalPrice: form.originalPrice ? Number(form.originalPrice) : undefined, discount: form.discount ? Number(form.discount) : 0, sizes: form.sizes.split(',').map(s => s.trim()).filter(Boolean) };
     try {
       if (editing) {
         await axios.put(`/admin/products/${editing}`, payload, { headers });
@@ -39,7 +39,7 @@ export default function AdminProducts() {
       }
       setShowForm(false);
       setEditing(null);
-      setForm({ name: '', brand: '', category: 'womenswear', price: '', image: '', sizes: '', description: '', inStock: true });
+      setForm({ name: '', brand: '', category: 'womenswear', price: '', originalPrice: '', discount: '', image: '', sizes: '', description: '', inStock: true });
       fetchProducts();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Error saving product');
@@ -48,7 +48,7 @@ export default function AdminProducts() {
 
   const handleEdit = (p) => {
     setEditing(p._id);
-    setForm({ name: p.name, brand: p.brand, category: p.category, price: p.price, image: p.image, sizes: (p.sizes || []).join(', '), description: p.description || '', inStock: p.inStock });
+    setForm({ name: p.name, brand: p.brand, category: p.category, price: p.price, originalPrice: p.originalPrice || '', discount: p.discount || '', image: p.image, sizes: (p.sizes || []).join(', '), description: p.description || '', inStock: p.inStock });
     setShowForm(true);
   };
 
@@ -86,7 +86,9 @@ export default function AdminProducts() {
             <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} style={inputStyle}>
               {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
-            <input placeholder="Price" type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required style={inputStyle} />
+            <input placeholder="Price (Sale Price)" type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required style={inputStyle} />
+            <input placeholder="Original Price (MRP)" type="number" value={form.originalPrice} onChange={e => setForm({...form, originalPrice: e.target.value})} style={inputStyle} />
+            <input placeholder="Discount % (e.g. 30)" type="number" value={form.discount} onChange={e => setForm({...form, discount: e.target.value})} style={inputStyle} />
             <input placeholder="Image URL" value={form.image} onChange={e => setForm({...form, image: e.target.value})} required style={inputStyle} />
             <input placeholder="Sizes (comma separated)" value={form.sizes} onChange={e => setForm({...form, sizes: e.target.value})} style={inputStyle} />
           </div>

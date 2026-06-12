@@ -833,7 +833,16 @@ input, select, textarea { font-family: var(--font-sans); }
   color: var(--gray-400);
   text-decoration: line-through;
 }
-.price-sale { color: var(--red); }
+.price-sale { color: #27ae60; font-weight: 700; }
+.price-discount-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: #e74c3c;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+}
 
 /* Products Grid */
 .product-grid-4 {
