@@ -96,9 +96,15 @@ export default function ProductDetail() {
               <div className="product-detail-brand">{product.brand}</div>
               <h1 className="product-detail-name">{product.name}</h1>
               <div className="product-detail-price">
-                <span className={product.originalPrice ? 'price-sale' : ''}>₹{product.price?.toLocaleString('en-IN')}</span>
-                {product.originalPrice && <span className="price-original">₹{product.originalPrice?.toLocaleString('en-IN')}</span>}
-                {product.discount > 0 && <span className="price-discount-badge">{product.discount}% OFF</span>}
+                {product.originalPrice ? (
+                  <>
+                    <span className="price-original">₹{product.originalPrice?.toLocaleString('en-IN')}</span>
+                    <span className="price-sale">₹{product.price?.toLocaleString('en-IN')}</span>
+                    {product.discount > 0 && <span className="price-discount-badge">{product.discount}% OFF</span>}
+                  </>
+                ) : (
+                  <span>₹{product.price?.toLocaleString('en-IN')}</span>
+                )}
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '20px' }}>

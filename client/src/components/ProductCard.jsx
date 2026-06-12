@@ -60,12 +60,14 @@ export default function ProductCard({ product, badge }) {
         <div className="product-card-brand">{product.brand}</div>
         <div className="product-card-name">{product.name}</div>
         <div className="product-card-price">
-          <span className={product.originalPrice ? 'price-sale' : ''}>₹{product.price?.toLocaleString('en-IN')}</span>
-          {product.originalPrice && (
-            <span className="price-original">₹{product.originalPrice?.toLocaleString('en-IN')}</span>
-          )}
-          {product.discount > 0 && (
-            <span className="price-discount-badge">{product.discount}% OFF</span>
+          {product.originalPrice ? (
+            <>
+              <span className="price-original">₹{product.originalPrice?.toLocaleString('en-IN')}</span>
+              <span className="price-sale">₹{product.price?.toLocaleString('en-IN')}</span>
+              {product.discount > 0 && <span className="price-discount-badge">{product.discount}% OFF</span>}
+            </>
+          ) : (
+            <span>₹{product.price?.toLocaleString('en-IN')}</span>
           )}
         </div>
       </div>
