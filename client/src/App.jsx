@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
@@ -29,10 +30,14 @@ import AdminHome from './pages/admin/AdminHome';
 import AdminLogin from './components/AdminLogin';
 
 function ProtectedAdmin({ children }) {
-  const user = JSON.parse(localStorage.getItem('vp_user') || '{}');
-  const token = localStorage.getItem('vp_token');
-  if (!token || user.role !== 'admin') {
-    return <AdminLogin />;
+  const [authed, setAuthed] = useState(() => {
+    const user = JSON.parse(localStorage.getItem('vp_user') || '{}');
+    const token = localStorage.getItem('vp_token');
+    return !!(token && user.role === 'admin');
+  });
+
+  if (!authed) {
+    return <AdminLogin onSuccess={() => setAuthed(true)} />;
   }
   return children;
 }

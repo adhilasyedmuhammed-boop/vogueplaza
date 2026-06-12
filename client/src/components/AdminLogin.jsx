@@ -2,7 +2,7 @@ import { useState } from 'react';
 import api from '../api/axios';
 import { toast } from 'react-toastify';
 
-export default function AdminLogin() {
+export default function AdminLogin({ onSuccess }) {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
@@ -19,9 +19,9 @@ export default function AdminLogin() {
       localStorage.setItem('vp_token', response.data.token);
       localStorage.setItem('vp_user', JSON.stringify(response.data.user));
       toast.success('Admin login successful.');
-      window.location.reload();
+      if (onSuccess) onSuccess();
     } catch (error) {
-      toast.error('Login failed. Please check your credentials.');
+      toast.error(error?.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
