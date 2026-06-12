@@ -4,7 +4,7 @@ import { resolve } from 'path';
 
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  base: mode === 'production' ? '/client/' : '/',
+  base: '/',
   build: {
     rollupOptions: {
       input: {

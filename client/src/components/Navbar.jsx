@@ -65,6 +65,24 @@ export default function Navbar() {
     return stored ? JSON.parse(stored) : null;
   });
 
+  // Re-sync user state when localStorage changes (e.g. after login on another component)
+  useEffect(() => {
+    const syncUser = () => {
+      const stored = localStorage.getItem('vp_user');
+      setUser(stored ? JSON.parse(stored) : null);
+    };
+    window.addEventListener('storage', syncUser);
+    // Also check on focus (same-tab login won't fire 'storage')
+    window.addEventListener('focus', syncUser);
+    // Check periodically for same-tab updates
+    const interval = setInterval(syncUser, 1000);
+    return () => {
+      window.removeEventListener('storage', syncUser);
+      window.removeEventListener('focus', syncUser);
+      clearInterval(interval);
+    };
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem('vp_token');
     localStorage.removeItem('vp_user');
@@ -158,7 +176,7 @@ export default function Navbar() {
                     </Link>
                     <Link to="/cart" className="tc-user-dropdown-item" onClick={() => setUserMenuOpen(false)}>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                      My Orders
+                      My Cart
                     </Link>
                     <div className="tc-user-dropdown-divider" />
                     <button className="tc-user-dropdown-item tc-logout-btn" onClick={() => { handleLogout(); setUserMenuOpen(false); }}>

@@ -7,6 +7,12 @@ const seedInitialData = require('./seed');
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
+// Validate critical env vars
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is not set!');
+  process.exit(1);
+}
+
 const storeRoutes = require('./routes/store');
 const categoryRoutes = require('./routes/categories');
 const brandRoutes = require('./routes/brands');
@@ -22,7 +28,26 @@ const homeDataRoutes = require('./routes/homedata');
 
 const app = express();
 
-app.use(cors());
+// CORS configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.CLIENT_URL,
+  'https://vogueplaza.vercel.app',
+  'https://vogueplaza.onrender.com',
+].filter(Boolean);
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, server-to-server)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.some(allowed => origin.startsWith(allowed))) {
+      return callback(null, true);
+    }
+    callback(null, true); // Allow all for now, tighten later
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 connectDB().then(() => seedInitialData());
