@@ -56,7 +56,7 @@ export default function AdminBanners() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Hero Banners ({banners.length})</h1>
         <button onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ image: '', label: '', title: '', subtitle: '', cta: 'Shop Now', link: '/products', order: 0, isActive: true }); }}
           style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
@@ -66,7 +66,7 @@ export default function AdminBanners() {
 
       {showForm && (
         <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
             <input placeholder="Image URL (1800x800 recommended)" value={form.image} onChange={e => setForm({...form, image: e.target.value})} required style={inputStyle} />
             <input placeholder="Label (e.g. New Season)" value={form.label} onChange={e => setForm({...form, label: e.target.value})} style={inputStyle} />
             <input placeholder="Title (use \n for line break)" value={form.title} onChange={e => setForm({...form, title: e.target.value})} required style={inputStyle} />
@@ -85,7 +85,7 @@ export default function AdminBanners() {
         </form>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
         {banners.map((b) => (
           <div key={b._id} style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
             <div style={{ position: 'relative', height: 160, overflow: 'hidden' }}>

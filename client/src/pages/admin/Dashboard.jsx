@@ -77,7 +77,7 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Tables */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
         {/* Recent Enquiries */}
         <div style={{ background: '#fff', borderRadius: 10, padding: 20, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
           <h3 style={{ marginBottom: 12, fontSize: 16, color: '#1a1a1a' }}>Recent Enquiries</h3>

@@ -63,7 +63,7 @@ export default function AdminProducts() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Products ({products.length})</h1>
         <button
           onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ name: '', brand: '', category: 'womenswear', price: '', image: '', sizes: '', description: '', inStock: true }); }}
@@ -75,7 +75,7 @@ export default function AdminProducts() {
 
       {showForm && (
         <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
             <input placeholder="Product Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={inputStyle} />
             <input placeholder="Brand" value={form.brand} onChange={e => setForm({...form, brand: e.target.value})} required style={inputStyle} />
             <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} style={inputStyle}>
@@ -84,12 +84,12 @@ export default function AdminProducts() {
             <input placeholder="Price" type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required style={inputStyle} />
             <input placeholder="Image URL" value={form.image} onChange={e => setForm({...form, image: e.target.value})} required style={inputStyle} />
             <input placeholder="Sizes (comma separated)" value={form.sizes} onChange={e => setForm({...form, sizes: e.target.value})} style={inputStyle} />
-            <textarea placeholder="Description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} style={{ ...inputStyle, gridColumn: '1/3', minHeight: 80 }} />
-            <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input type="checkbox" checked={form.inStock} onChange={e => setForm({...form, inStock: e.target.checked})} />
-              In Stock
-            </label>
           </div>
+          <textarea placeholder="Description" value={form.description} onChange={e => setForm({...form, description: e.target.value})} style={{ ...inputStyle, width: '100%', minHeight: 80, marginTop: 16, boxSizing: 'border-box' }} />
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12 }}>
+            <input type="checkbox" checked={form.inStock} onChange={e => setForm({...form, inStock: e.target.checked})} />
+            In Stock
+          </label>
           <button type="submit" style={{ marginTop: 16, padding: '10px 24px', background: '#1a1a1a', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
             {editing ? 'Update Product' : 'Create Product'}
           </button>
@@ -97,7 +97,8 @@ export default function AdminProducts() {
       )}
 
       <div style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+        <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, minWidth: 600 }}>
           <thead>
             <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
               <th style={thStyle}>Image</th>
@@ -126,6 +127,7 @@ export default function AdminProducts() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

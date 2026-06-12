@@ -56,7 +56,7 @@ export default function AdminCategories() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Categories ({categories.length})</h1>
         <button onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ name: '', slug: '', image: '', isActive: true }); }}
           style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
@@ -66,7 +66,7 @@ export default function AdminCategories() {
 
       {showForm && (
         <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
             <input placeholder="Category Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={inputStyle} />
             <input placeholder="Slug (e.g. womenswear)" value={form.slug} onChange={e => setForm({...form, slug: e.target.value})} required style={inputStyle} />
             <input placeholder="Image URL" value={form.image} onChange={e => setForm({...form, image: e.target.value})} required style={inputStyle} />

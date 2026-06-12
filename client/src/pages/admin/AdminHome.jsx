@@ -66,7 +66,7 @@ export default function AdminHome() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Home Page Data</h1>
         <button onClick={handleSave} disabled={saving}
           style={{ padding: '10px 24px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600, opacity: saving ? 0.6 : 1 }}>
@@ -89,9 +89,9 @@ export default function AdminHome() {
       {/* Women's Slides */}
       <Section title="👗 Women's Split Banner Slides">
         {data.womenSlides.map((slide, i) => (
-          <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 10 }}>
-            <input placeholder="Image URL" value={slide.img} onChange={e => updateSlide('womenSlides', i, 'img', e.target.value)} style={{ ...inputStyle, flex: 2 }} />
-            <input placeholder="Text" value={slide.text} onChange={e => updateSlide('womenSlides', i, 'text', e.target.value)} style={{ ...inputStyle, flex: 1 }} />
+          <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
+            <input placeholder="Image URL" value={slide.img} onChange={e => updateSlide('womenSlides', i, 'img', e.target.value)} style={{ ...inputStyle, flex: '2 1 200px' }} />
+            <input placeholder="Text" value={slide.text} onChange={e => updateSlide('womenSlides', i, 'text', e.target.value)} style={{ ...inputStyle, flex: '1 1 120px' }} />
             <button onClick={() => removeSlide('womenSlides', i)} style={delBtnStyle}>✕</button>
           </div>
         ))}
@@ -101,9 +101,9 @@ export default function AdminHome() {
       {/* Men's Slides */}
       <Section title="🤵 Men's Split Banner Slides">
         {data.menSlides.map((slide, i) => (
-          <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 10 }}>
-            <input placeholder="Image URL" value={slide.img} onChange={e => updateSlide('menSlides', i, 'img', e.target.value)} style={{ ...inputStyle, flex: 2 }} />
-            <input placeholder="Text" value={slide.text} onChange={e => updateSlide('menSlides', i, 'text', e.target.value)} style={{ ...inputStyle, flex: 1 }} />
+          <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
+            <input placeholder="Image URL" value={slide.img} onChange={e => updateSlide('menSlides', i, 'img', e.target.value)} style={{ ...inputStyle, flex: '2 1 200px' }} />
+            <input placeholder="Text" value={slide.text} onChange={e => updateSlide('menSlides', i, 'text', e.target.value)} style={{ ...inputStyle, flex: '1 1 120px' }} />
             <button onClick={() => removeSlide('menSlides', i)} style={delBtnStyle}>✕</button>
           </div>
         ))}
@@ -144,12 +144,12 @@ function Section({ title, children }) {
 }
 
 function Grid({ children }) {
-  return <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>{children}</div>;
+  return <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14 }}>{children}</div>;
 }
 
 function Input({ label, value, onChange, full, type = 'text' }) {
   return (
-    <div style={full ? { gridColumn: '1/3' } : {}}>
+    <div style={full ? { gridColumn: '1 / -1' } : {}}>
       <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#666', marginBottom: 4, textTransform: 'uppercase' }}>{label}</label>
       <input type={type} value={value || ''} onChange={e => onChange(e.target.value)} style={inputStyle} />
     </div>

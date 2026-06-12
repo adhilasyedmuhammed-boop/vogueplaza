@@ -42,7 +42,8 @@ export default function AdminUsers() {
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>Users ({users.length})</h1>
 
       <div style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+        <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, minWidth: 550 }}>
           <thead>
             <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
               <th style={thStyle}>Name</th>
@@ -80,6 +81,7 @@ export default function AdminUsers() {
             ))}
           </tbody>
         </table>
+        </div>
         {users.length === 0 && <div style={{ padding: 30, textAlign: 'center', color: '#888' }}>No users found</div>}
       </div>
     </div>

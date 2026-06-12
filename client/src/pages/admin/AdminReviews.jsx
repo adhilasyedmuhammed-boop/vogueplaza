@@ -51,7 +51,7 @@ export default function AdminReviews() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Reviews ({reviews.length})</h1>
         <button onClick={() => setShowForm(!showForm)}
           style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
@@ -61,17 +61,17 @@ export default function AdminReviews() {
 
       {showForm && (
         <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
             <input placeholder="Reviewer Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={inputStyle} />
             <select value={form.rating} onChange={e => setForm({...form, rating: e.target.value})} style={inputStyle}>
               {[5,4,3,2,1].map(r => <option key={r} value={r}>{r} Star{r > 1 ? 's' : ''}</option>)}
             </select>
-            <textarea placeholder="Review comment..." value={form.comment} onChange={e => setForm({...form, comment: e.target.value})} required style={{ ...inputStyle, gridColumn: '1/3', minHeight: 80 }} />
-            <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          </div>
+          <textarea placeholder="Review comment..." value={form.comment} onChange={e => setForm({...form, comment: e.target.value})} required style={{ ...inputStyle, width: '100%', minHeight: 80, marginTop: 16, boxSizing: 'border-box' }} />
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12 }}>
               <input type="checkbox" checked={form.isApproved} onChange={e => setForm({...form, isApproved: e.target.checked})} />
               Approved
             </label>
-          </div>
           <button type="submit" style={{ marginTop: 16, padding: '10px 24px', background: '#1a1a1a', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
             Create Review
           </button>
@@ -79,7 +79,8 @@ export default function AdminReviews() {
       )}
 
       <div style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+        <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, minWidth: 600 }}>
           <thead>
             <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
               <th style={thStyle}>Name</th>
@@ -112,6 +113,7 @@ export default function AdminReviews() {
             ))}
           </tbody>
         </table>
+        </div>
         {reviews.length === 0 && <div style={{ padding: 30, textAlign: 'center', color: '#888' }}>No reviews yet</div>}
       </div>
     </div>

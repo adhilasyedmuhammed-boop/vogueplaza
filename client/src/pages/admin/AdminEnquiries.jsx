@@ -40,7 +40,8 @@ export default function AdminEnquiries() {
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>Enquiries ({enquiries.length})</h1>
 
       <div style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+        <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, minWidth: 700 }}>
           <thead>
             <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
               <th style={thStyle}>Name</th>
@@ -75,6 +76,7 @@ export default function AdminEnquiries() {
             ))}
           </tbody>
         </table>
+        </div>
         {enquiries.length === 0 && <div style={{ padding: 30, textAlign: 'center', color: '#888' }}>No enquiries yet</div>}
       </div>
     </div>

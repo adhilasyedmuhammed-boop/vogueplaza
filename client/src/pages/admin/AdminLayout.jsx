@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const menuItems = [
@@ -16,27 +16,51 @@ const menuItems = [
 ];
 
 export default function AdminLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (mobile) setSidebarOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Close sidebar on route change on mobile
+  useEffect(() => {
+    if (isMobile) setSidebarOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     localStorage.removeItem('vp_token');
     localStorage.removeItem('vp_user');
-    window.location.href = '/admin';
+    window.location.href = '/admin-login';
   };
 
   const user = JSON.parse(localStorage.getItem('vp_user') || '{}');
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#f5f5f0' }}>
+      {/* Mobile overlay */}
+      {isMobile && sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 99 }}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
         style={{
-          width: sidebarOpen ? 240 : 60,
+          width: sidebarOpen ? 240 : (isMobile ? 0 : 60),
           background: '#1a1a1a',
           color: '#fff',
-          transition: 'width 0.3s',
+          transition: 'all 0.3s ease',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
@@ -45,6 +69,7 @@ export default function AdminLayout() {
           left: 0,
           height: '100vh',
           zIndex: 100,
+          transform: isMobile && !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
         }}
       >
         <div style={{ padding: '20px 16px', borderBottom: '1px solid #333', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -53,10 +78,10 @@ export default function AdminLayout() {
             onClick={() => setSidebarOpen(!sidebarOpen)}
             style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 18, marginLeft: 'auto' }}
           >
-            {sidebarOpen ? '◀' : '▶'}
+            {sidebarOpen ? '✕' : '▶'}
           </button>
         </div>
-        <nav style={{ flex: 1, padding: '12px 0' }}>
+        <nav style={{ flex: 1, padding: '12px 0', overflowY: 'auto' }}>
           {menuItems.map((item) => {
             const active = location.pathname === item.path;
             return (
@@ -108,7 +133,35 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, marginLeft: sidebarOpen ? 240 : 60, transition: 'margin-left 0.3s', padding: '24px 32px' }}>
+      <main style={{
+        flex: 1,
+        marginLeft: isMobile ? 0 : (sidebarOpen ? 240 : 60),
+        transition: 'margin-left 0.3s',
+        padding: isMobile ? '16px' : '24px 32px',
+        minWidth: 0,
+      }}>
+        {/* Mobile top bar */}
+        {isMobile && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 16,
+            padding: '12px 16px',
+            background: '#1a1a1a',
+            borderRadius: 8,
+            color: '#fff',
+          }}>
+            <button
+              onClick={() => setSidebarOpen(true)}
+              style={{ background: 'none', border: 'none', color: '#fff', fontSize: 22, cursor: 'pointer' }}
+            >
+              ☰
+            </button>
+            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: 1 }}>VOGUE PLAZA</span>
+            <span style={{ fontSize: 12, color: '#c9a96e' }}>Admin</span>
+          </div>
+        )}
         <Outlet />
       </main>
     </div>

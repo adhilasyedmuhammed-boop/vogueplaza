@@ -56,7 +56,7 @@ export default function AdminPosts() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Style Feed Posts ({posts.length})</h1>
         <button onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ imageUrl: '', caption: '', postedDate: '', isActive: true }); }}
           style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
@@ -66,15 +66,15 @@ export default function AdminPosts() {
 
       {showForm && (
         <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
             <input placeholder="Image URL" value={form.imageUrl} onChange={e => setForm({...form, imageUrl: e.target.value})} required style={inputStyle} />
             <input placeholder="Posted Date (e.g. 2 hours ago)" value={form.postedDate} onChange={e => setForm({...form, postedDate: e.target.value})} required style={inputStyle} />
-            <input placeholder="Caption" value={form.caption} onChange={e => setForm({...form, caption: e.target.value})} required style={{ ...inputStyle, gridColumn: '1/3' }} />
-            <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input type="checkbox" checked={form.isActive} onChange={e => setForm({...form, isActive: e.target.checked})} />
-              Active
-            </label>
           </div>
+          <input placeholder="Caption" value={form.caption} onChange={e => setForm({...form, caption: e.target.value})} required style={{ ...inputStyle, width: '100%', marginTop: 16, boxSizing: 'border-box' }} />
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12 }}>
+            <input type="checkbox" checked={form.isActive} onChange={e => setForm({...form, isActive: e.target.checked})} />
+            Active
+          </label>
           <button type="submit" style={{ marginTop: 16, padding: '10px 24px', background: '#1a1a1a', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
             {editing ? 'Update' : 'Create'}
           </button>

@@ -56,7 +56,7 @@ export default function AdminBrands() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Brands ({brands.length})</h1>
         <button onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ name: '', slug: '', initials: '', logo: '', isActive: true }); }}
           style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
@@ -66,7 +66,7 @@ export default function AdminBrands() {
 
       {showForm && (
         <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
             <input placeholder="Brand Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={inputStyle} />
             <input placeholder="Slug" value={form.slug} onChange={e => setForm({...form, slug: e.target.value})} required style={inputStyle} />
             <input placeholder="Initials (e.g. GC)" value={form.initials} onChange={e => setForm({...form, initials: e.target.value})} required style={inputStyle} />
@@ -83,7 +83,8 @@ export default function AdminBrands() {
       )}
 
       <div style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+        <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, minWidth: 550 }}>
           <thead>
             <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
               <th style={thStyle}>Logo</th>
@@ -112,6 +113,7 @@ export default function AdminBrands() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );
