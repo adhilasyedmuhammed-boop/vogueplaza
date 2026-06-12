@@ -3670,9 +3670,19 @@ input, select, textarea { font-family: var(--font-sans); }
   .tc-header-bar { padding: 0 12px; height: 60px; }
   .tc-header-left .tc-util-link:not(:first-child), .tc-util-divider { display: none; }
   .tc-header-left { flex: 0 0 auto; }
-  .tc-header-right { flex: 0 0 auto; }
+  .tc-header-right { flex: 0 0 auto; gap: 2px; }
   .hamburger-tc { display: flex; }
-  .tc-logo { font-size: 17px; letter-spacing: 0.08em; }
+  .tc-logo {
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    position: static;
+    transform: none;
+    flex: 1;
+    text-align: center;
+    padding: 0 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .logo-mark { gap: 6px; }
   .logo-mark-icon { width: 26px; height: 26px; font-size: 12px; }
   .logo-mark-text { font-size: 14px; letter-spacing: 0.08em; }
@@ -3719,10 +3729,11 @@ input, select, textarea { font-family: var(--font-sans); }
 }
 
 @media (max-width: 400px) {
-  .tc-logo { font-size: 14px; letter-spacing: 0.05em; }
+  .tc-logo { font-size: 13px; letter-spacing: 0.04em; padding: 0 4px; }
   .tc-header-bar { padding: 0 6px; }
   .tc-icon-btn { width: 28px; height: 28px; }
-  .tc-header-left { gap: 6px; }
+  .tc-header-left { gap: 4px; }
+  .tc-header-right { gap: 1px; }
   .logo-mark-icon { width: 22px; height: 22px; font-size: 10px; }
   .logo-mark-text { font-size: 12px; letter-spacing: 0.04em; }
   .logo-mark { gap: 4px; }
