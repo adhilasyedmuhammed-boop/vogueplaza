@@ -207,11 +207,10 @@ export default function Products() {
               </p>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                 <button
-                  style={{ display: 'none', padding: '8px 14px', border: '1px solid #E8E8E8', borderRadius: '2px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', background: '#fff' }}
                   className="mobile-filter-toggle"
                   onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
                 >
-                  ⊟ Filters
+                  {mobileSidebarOpen ? '✕ Close' : '⊟ Filters'}
                 </button>
                 <select className="sort-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
                   <option value="newest">Sort: Newest</option>
