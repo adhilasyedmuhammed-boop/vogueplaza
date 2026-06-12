@@ -2404,6 +2404,76 @@ input, select, textarea { font-family: var(--font-sans); }
 }
 .tc-icon-btn:hover { background: #F5F5F5; }
 .tc-login-text { width: auto; padding: 0 12px; border-radius: 2px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* User Menu Dropdown */
+.tc-user-menu { position: relative; }
+.tc-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  min-width: 240px;
+  z-index: 9999;
+  animation: fadeDropdown 0.2s ease;
+}
+@keyframes fadeDropdown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tc-user-dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+.tc-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gold, #C5A880);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.tc-user-info { overflow: hidden; }
+.tc-user-name { font-weight: 600; font-size: 13px; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tc-user-email { font-size: 11px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.tc-user-dropdown-divider { height: 1px; background: #f0f0f0; margin: 0; }
+.tc-user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.15s;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
+}
+.tc-user-dropdown-item:hover { background: #f8f6f3; }
+.tc-logout-btn { color: var(--red, #C0392B); }
+.tc-logout-btn:hover { background: #fef2f2; }
+
+/* Drawer user info */
+.tc-drawer-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  margin-bottom: 8px;
+}
+
 .tc-badge-count {
   position: absolute;
   top: 4px; right: 4px;
@@ -3296,7 +3366,9 @@ input, select, textarea { font-family: var(--font-sans); }
   .tc-header-left .tc-util-link:not(:first-child), .tc-util-divider { display: none; }
   .hamburger-tc { display: flex; }
   .tc-logo { font-size: 17px; letter-spacing: 0.08em; }
-  .tc-login-text { display: none !important; }
+  .tc-login-text span { display: none !important; }
+  .tc-login-text { padding: 0 !important; width: 34px !important; }
+  .tc-user-dropdown { right: -40px; min-width: 220px; }
   .tc-icon-btn { width: 34px; height: 34px; }
   .tc-nav-bar { display: none; }
 

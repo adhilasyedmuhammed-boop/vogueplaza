@@ -51,7 +51,9 @@ export default function Navbar() {
   const [drawerOpen,  setDrawerOpen]  = useState(false);
   const [drawerSub,   setDrawerSub]   = useState(null);
   const [scrolled,    setScrolled]    = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const searchInputRef = useRef(null);
+  const userMenuRef = useRef(null);
   const navigate = useNavigate();
 
   const { cartItems } = useCart();
@@ -69,6 +71,17 @@ export default function Navbar() {
     setUser(null);
     navigate('/');
   };
+
+  /* close user menu on outside click */
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   /* sticky shadow */
   useEffect(() => {
@@ -124,10 +137,37 @@ export default function Navbar() {
             </button>
 
             {user ? (
-              <button className="tc-icon-btn tc-login-text" onClick={handleLogout} aria-label="Logout" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                <span>Logout</span>
-              </button>
+              <div className="tc-user-menu" ref={userMenuRef}>
+                <button className="tc-icon-btn tc-login-text" onClick={() => setUserMenuOpen(!userMenuOpen)} aria-label="Account">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <span>{user.name?.split(' ')[0] || 'Account'}</span>
+                </button>
+                {userMenuOpen && (
+                  <div className="tc-user-dropdown">
+                    <div className="tc-user-dropdown-header">
+                      <div className="tc-user-avatar">{(user.name || 'U').charAt(0).toUpperCase()}</div>
+                      <div className="tc-user-info">
+                        <div className="tc-user-name">{user.name || 'User'}</div>
+                        <div className="tc-user-email">{user.email || ''}</div>
+                      </div>
+                    </div>
+                    <div className="tc-user-dropdown-divider" />
+                    <Link to="/wishlist" className="tc-user-dropdown-item" onClick={() => setUserMenuOpen(false)}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                      My Wishlist
+                    </Link>
+                    <Link to="/cart" className="tc-user-dropdown-item" onClick={() => setUserMenuOpen(false)}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                      My Orders
+                    </Link>
+                    <div className="tc-user-dropdown-divider" />
+                    <button className="tc-user-dropdown-item tc-logout-btn" onClick={() => { handleLogout(); setUserMenuOpen(false); }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <Link to="/login" className="tc-icon-btn tc-login-text" aria-label="Login">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -221,7 +261,20 @@ export default function Navbar() {
 
           {/* Auth row */}
           <div className="tc-drawer-auth">
-            <Link to="/login" className="tc-drawer-auth-btn" onClick={() => setDrawerOpen(false)}>Log In / Register</Link>
+            {user ? (
+              <>
+                <div className="tc-drawer-user-info">
+                  <div className="tc-user-avatar">{(user.name || 'U').charAt(0).toUpperCase()}</div>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: '14px' }}>{user.name || 'User'}</div>
+                    <div style={{ fontSize: '11px', color: '#888' }}>{user.email || ''}</div>
+                  </div>
+                </div>
+                <button className="tc-drawer-auth-btn" onClick={() => { handleLogout(); setDrawerOpen(false); }}>Sign Out</button>
+              </>
+            ) : (
+              <Link to="/login" className="tc-drawer-auth-btn" onClick={() => setDrawerOpen(false)}>Log In / Register</Link>
+            )}
           </div>
 
           <nav className="tc-drawer-nav">
