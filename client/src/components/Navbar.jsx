@@ -58,6 +58,18 @@ export default function Navbar() {
   const { count: wishlistCount } = useWishlist();
   const cartCount = cartItems?.reduce((s, i) => s + (i.quantity || 1), 0) || 0;
 
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem('vp_user');
+    return stored ? JSON.parse(stored) : null;
+  });
+
+  const handleLogout = () => {
+    localStorage.removeItem('vp_token');
+    localStorage.removeItem('vp_user');
+    setUser(null);
+    navigate('/');
+  };
+
   /* sticky shadow */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
@@ -111,10 +123,17 @@ export default function Navbar() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </button>
 
-            <Link to="/login" className="tc-icon-btn tc-login-text" aria-label="Login">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              <span>Login</span>
-            </Link>
+            {user ? (
+              <button className="tc-icon-btn tc-login-text" onClick={handleLogout} aria-label="Logout" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span>Logout</span>
+              </button>
+            ) : (
+              <Link to="/login" className="tc-icon-btn tc-login-text" aria-label="Login">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span>Login</span>
+              </Link>
+            )}
 
             <Link to="/wishlist" className="tc-icon-btn" aria-label="Wishlist" style={{ position: 'relative' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
