@@ -71,7 +71,7 @@ export default function AdminProducts() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Products ({products.length})</h1>
         <button
-          onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ name: '', brand: '', category: 'womenswear', price: '', image: '', sizes: '', description: '', inStock: true }); }}
+          onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ name: '', brand: '', category: 'womenswear', price: '', originalPrice: '', discount: '', image: '', sizes: '', description: '', inStock: true }); }}
           style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}
         >
           {showForm ? 'Cancel' : '+ Add Product'}
