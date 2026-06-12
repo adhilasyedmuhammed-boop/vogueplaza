@@ -32,6 +32,10 @@ export function ConfirmProvider({ children }) {
                 <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#e74c3c" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                 </svg>
+              ) : state.type === 'warning' ? (
+                <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#f39c12" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
               ) : (
                 <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#c9a96e" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M12 18.75h.007v.008H12v-.008z" />
@@ -43,7 +47,7 @@ export function ConfirmProvider({ children }) {
             <div className="vp-modal-actions">
               <button className="vp-modal-btn cancel" onClick={handleCancel}>Cancel</button>
               <button className={`vp-modal-btn ${state.type}`} onClick={handleConfirm}>
-                {state.type === 'danger' ? 'Delete' : 'Confirm'}
+                {state.type === 'danger' ? 'Delete' : state.type === 'warning' ? 'Continue' : 'Confirm'}
               </button>
             </div>
           </div>

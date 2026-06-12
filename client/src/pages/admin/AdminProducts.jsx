@@ -34,8 +34,10 @@ export default function AdminProducts() {
     try {
       if (editing) {
         await axios.put(`/admin/products/${editing}`, payload, { headers });
+        toast.success('Product updated successfully ✓');
       } else {
         await axios.post('/admin/products', payload, { headers });
+        toast.success('Product created successfully ✓');
       }
       setShowForm(false);
       setEditing(null);
@@ -46,7 +48,9 @@ export default function AdminProducts() {
     }
   };
 
-  const handleEdit = (p) => {
+  const handleEdit = async (p) => {
+    const ok = await confirm({ title: 'Edit Product', message: `You are about to edit "${p.name}". Make sure to save your changes.`, type: 'warning' });
+    if (!ok) return;
     setEditing(p._id);
     setForm({ name: p.name, brand: p.brand, category: p.category, price: p.price, originalPrice: p.originalPrice || '', discount: p.discount || '', image: p.image, sizes: (p.sizes || []).join(', '), description: p.description || '', inStock: p.inStock });
     setShowForm(true);
@@ -123,6 +127,8 @@ export default function AdminProducts() {
               <th style={thStyle}>Brand</th>
               <th style={thStyle}>Category</th>
               <th style={thStyle}>Price</th>
+              <th style={thStyle}>MRP</th>
+              <th style={thStyle}>Discount</th>
               <th style={thStyle}>Stock</th>
               <th style={thStyle}>Actions</th>
             </tr>
@@ -134,7 +140,15 @@ export default function AdminProducts() {
                 <td style={tdStyle}>{p.name}</td>
                 <td style={tdStyle}>{p.brand}</td>
                 <td style={tdStyle}>{p.category}</td>
-                <td style={tdStyle}>₹{p.price}</td>
+                <td style={tdStyle}>
+                  <span style={{ fontWeight: 600, color: p.originalPrice && p.discount ? '#27ae60' : '#111' }}>₹{p.price?.toLocaleString('en-IN')}</span>
+                </td>
+                <td style={tdStyle}>
+                  {p.originalPrice ? <span style={{ textDecoration: 'line-through', color: '#999', fontSize: 12 }}>₹{p.originalPrice?.toLocaleString('en-IN')}</span> : <span style={{ color: '#ccc' }}>—</span>}
+                </td>
+                <td style={tdStyle}>
+                  {p.discount > 0 ? <span style={{ background: '#fff3e0', color: '#e65100', padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>{p.discount}% OFF</span> : <span style={{ color: '#ccc' }}>—</span>}
+                </td>
                 <td style={tdStyle}><span style={{ color: p.inStock ? '#27ae60' : '#e74c3c' }}>{p.inStock ? '✓' : '✗'}</span></td>
                 <td style={tdStyle}>
                   <button onClick={() => handleEdit(p)} style={btnStyle}>Edit</button>
