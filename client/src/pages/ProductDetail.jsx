@@ -20,6 +20,11 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState('');
   const [mainImage, setMainImage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState([]);
+  const [reviewStats, setReviewStats] = useState({ total: 0, avgRating: 0, distribution: { 5:0,4:0,3:0,2:0,1:0 } });
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, title: '', comment: '' });
+  const [submittingReview, setSubmittingReview] = useState(false);
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
 
@@ -38,6 +43,12 @@ export default function ProductDetail() {
         setMainImage(found.image);
         setRelated(FALLBACK.filter(p => p._id !== found._id).slice(0, 4));
       }
+      // Fetch reviews
+      try {
+        const revRes = await axios.get(`/reviews/product/${id}`);
+        setReviews(revRes.data.reviews || []);
+        setReviewStats(revRes.data.stats || { total: 0, avgRating: 0, distribution: { 5:0,4:0,3:0,2:0,1:0 } });
+      } catch { /* no reviews yet */ }
       setLoading(false);
     };
     fetchProduct();
@@ -108,8 +119,11 @@ export default function ProductDetail() {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '20px' }}>
-                <span style={{ color: '#B8914E', fontSize: '14px', letterSpacing: '2px' }}>★★★★★</span>
-                <span style={{ fontSize: '12px', color: '#888' }}>(48 reviews)</span>
+                <span style={{ color: '#B8914E', fontSize: '14px', letterSpacing: '2px' }}>
+                  {'★'.repeat(Math.round(reviewStats.avgRating || 5))}{'☆'.repeat(5 - Math.round(reviewStats.avgRating || 5))}
+                </span>
+                <span style={{ fontSize: '13px', fontWeight: 600 }}>{reviewStats.avgRating || '5.0'}</span>
+                <span style={{ fontSize: '12px', color: '#888' }}>({reviewStats.total || 0} reviews)</span>
               </div>
 
               <div className="product-detail-divider" />
@@ -151,6 +165,109 @@ export default function ProductDetail() {
                 <span>🚚 Free Shipping over ₹5,000</span>
                 <span>↩ 15-Day Returns</span>
               </div>
+            </div>
+          </div>
+
+          {/* Reviews Section */}
+          <div className="product-reviews-section">
+            <div className="section-header-center">
+              <span className="section-eyebrow">Customer Feedback</span>
+              <h2 className="section-heading">Ratings & Reviews</h2>
+            </div>
+
+            <div className="reviews-overview">
+              {/* Rating Summary */}
+              <div className="reviews-summary">
+                <div className="reviews-avg">
+                  <span className="reviews-avg-number">{reviewStats.avgRating || '0'}</span>
+                  <div className="reviews-avg-stars">
+                    {'★'.repeat(Math.round(reviewStats.avgRating || 0))}{'☆'.repeat(5 - Math.round(reviewStats.avgRating || 0))}
+                  </div>
+                  <span className="reviews-avg-count">{reviewStats.total} {reviewStats.total === 1 ? 'Review' : 'Reviews'}</span>
+                </div>
+                <div className="reviews-distribution">
+                  {[5,4,3,2,1].map(star => (
+                    <div key={star} className="reviews-dist-row">
+                      <span className="reviews-dist-label">{star}★</span>
+                      <div className="reviews-dist-bar">
+                        <div className="reviews-dist-fill" style={{ width: reviewStats.total > 0 ? `${(reviewStats.distribution[star] / reviewStats.total) * 100}%` : '0%' }}/>
+                      </div>
+                      <span className="reviews-dist-count">{reviewStats.distribution[star] || 0}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Write Review Button */}
+              <div className="reviews-write">
+                <button className="btn-write-review" onClick={() => setShowReviewForm(!showReviewForm)}>
+                  {showReviewForm ? '✕ Cancel' : '✍ Write a Review'}
+                </button>
+              </div>
+            </div>
+
+            {/* Review Form */}
+            {showReviewForm && (
+              <div className="review-form-card">
+                <h3 className="review-form-title">Share Your Experience</h3>
+                <div className="review-form-rating">
+                  <span style={{ fontSize: '13px', fontWeight: 600 }}>Your Rating:</span>
+                  <div className="star-selector">
+                    {[1,2,3,4,5].map(star => (
+                      <button key={star} className={`star-select-btn${reviewForm.rating >= star ? ' active' : ''}`} onClick={() => setReviewForm({...reviewForm, rating: star})}>
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <input type="text" className="review-form-input" placeholder="Your Name" value={reviewForm.name} onChange={e => setReviewForm({...reviewForm, name: e.target.value})} />
+                <input type="text" className="review-form-input" placeholder="Review Title (e.g., Excellent quality!)" value={reviewForm.title} onChange={e => setReviewForm({...reviewForm, title: e.target.value})} />
+                <textarea className="review-form-textarea" placeholder="Write your review here... What did you like? How was the quality? Would you recommend this product?" value={reviewForm.comment} onChange={e => setReviewForm({...reviewForm, comment: e.target.value})} rows={4} />
+                <button className="btn-primary" disabled={submittingReview} onClick={async () => {
+                  if (!reviewForm.name || !reviewForm.comment) { toast.error('Please fill name and review'); return; }
+                  setSubmittingReview(true);
+                  try {
+                    await axios.post(`/reviews/product/${id}`, reviewForm);
+                    toast.success('Review submitted! Thank you 🎉');
+                    setShowReviewForm(false);
+                    setReviewForm({ name: '', rating: 5, title: '', comment: '' });
+                    // Refresh reviews
+                    const revRes = await axios.get(`/reviews/product/${id}`);
+                    setReviews(revRes.data.reviews || []);
+                    setReviewStats(revRes.data.stats || reviewStats);
+                  } catch { toast.error('Failed to submit review'); }
+                  setSubmittingReview(false);
+                }}>
+                  {submittingReview ? 'Submitting...' : 'Submit Review'}
+                </button>
+              </div>
+            )}
+
+            {/* Reviews List */}
+            <div className="reviews-list">
+              {reviews.length === 0 ? (
+                <div className="reviews-empty">
+                  <p>No reviews yet for this product. Be the first to share your experience!</p>
+                </div>
+              ) : (
+                reviews.map((rev) => (
+                  <div key={rev._id} className="review-card">
+                    <div className="review-card-header">
+                      <div className="review-avatar">{rev.name.charAt(0).toUpperCase()}</div>
+                      <div className="review-header-info">
+                        <div className="review-author">{rev.name}</div>
+                        <div className="review-date">{new Date(rev.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+                      </div>
+                      <div className="review-stars">
+                        {'★'.repeat(rev.rating)}{'☆'.repeat(5 - rev.rating)}
+                      </div>
+                    </div>
+                    {rev.title && <div className="review-title">{rev.title}</div>}
+                    <p className="review-comment">{rev.comment}</p>
+                    {rev.isVerifiedPurchase && <span className="review-verified">✓ Verified Purchase</span>}
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
