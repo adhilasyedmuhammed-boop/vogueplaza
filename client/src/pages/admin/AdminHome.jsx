@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { useConfirm } from '../../components/ConfirmModal';
 import { toast } from 'react-toastify';
 
 export default function AdminHome() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const confirm = useConfirm();
 
   const token = localStorage.getItem('vp_token');
   const headers = { Authorization: `Bearer ${token}` };
@@ -57,9 +59,12 @@ export default function AdminHome() {
     setData({ ...data, [type]: [...data[type], { img: '', text: '' }] });
   };
 
-  const removeSlide = (type, index) => {
+  const removeSlide = async (type, index) => {
+    const ok = await confirm({ title: 'Remove Slide', message: 'Are you sure you want to remove this slide?', type: 'danger' });
+    if (!ok) return;
     const slides = data[type].filter((_, i) => i !== index);
     setData({ ...data, [type]: slides });
+    toast.info('Slide removed. Click "Save All Changes" to apply.');
   };
 
   if (loading) return <div style={{ padding: 40 }}>Loading...</div>;

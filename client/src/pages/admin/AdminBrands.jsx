@@ -29,8 +29,10 @@ export default function AdminBrands() {
     try {
       if (editing) {
         await axios.put(`/admin/brands/${editing}`, form, { headers });
+        toast.success('Brand updated successfully ✓');
       } else {
         await axios.post('/admin/brands', form, { headers });
+        toast.success('Brand created successfully ✓');
       }
       setShowForm(false);
       setEditing(null);
@@ -41,7 +43,9 @@ export default function AdminBrands() {
     }
   };
 
-  const handleEdit = (b) => {
+  const handleEdit = async (b) => {
+    const ok = await confirm({ title: 'Edit Brand', message: `You are about to edit "${b.name}". Make sure to save your changes.`, type: 'warning' });
+    if (!ok) return;
     setEditing(b._id);
     setForm({ name: b.name, slug: b.slug, initials: b.initials, logo: b.logo || '', isActive: b.isActive });
     setShowForm(true);

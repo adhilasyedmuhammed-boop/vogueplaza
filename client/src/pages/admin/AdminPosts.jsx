@@ -29,8 +29,10 @@ export default function AdminPosts() {
     try {
       if (editing) {
         await axios.put(`/admin/posts/${editing}`, form, { headers });
+        toast.success('Post updated successfully ✓');
       } else {
         await axios.post('/admin/posts', form, { headers });
+        toast.success('Post created successfully ✓');
       }
       setShowForm(false);
       setEditing(null);
@@ -41,7 +43,9 @@ export default function AdminPosts() {
     }
   };
 
-  const handleEdit = (p) => {
+  const handleEdit = async (p) => {
+    const ok = await confirm({ title: 'Edit Post', message: `You are about to edit this post. Make sure to save your changes.`, type: 'warning' });
+    if (!ok) return;
     setEditing(p._id);
     setForm({ imageUrl: p.imageUrl, caption: p.caption, postedDate: p.postedDate, isActive: p.isActive });
     setShowForm(true);

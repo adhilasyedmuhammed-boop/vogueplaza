@@ -29,8 +29,10 @@ export default function AdminBanners() {
     try {
       if (editing) {
         await axios.put(`/admin/banners/${editing}`, form, { headers });
+        toast.success('Banner updated successfully ✓');
       } else {
         await axios.post('/admin/banners', form, { headers });
+        toast.success('Banner created successfully ✓');
       }
       setShowForm(false);
       setEditing(null);
@@ -41,7 +43,9 @@ export default function AdminBanners() {
     }
   };
 
-  const handleEdit = (b) => {
+  const handleEdit = async (b) => {
+    const ok = await confirm({ title: 'Edit Banner', message: `You are about to edit "${b.title || 'this banner'}". Make sure to save your changes.`, type: 'warning' });
+    if (!ok) return;
     setEditing(b._id);
     setForm({ image: b.image, label: b.label, title: b.title, subtitle: b.subtitle, cta: b.cta, link: b.link, order: b.order, isActive: b.isActive });
     setShowForm(true);

@@ -29,8 +29,10 @@ export default function AdminCategories() {
     try {
       if (editing) {
         await axios.put(`/admin/categories/${editing}`, form, { headers });
+        toast.success('Category updated successfully ✓');
       } else {
         await axios.post('/admin/categories', form, { headers });
+        toast.success('Category created successfully ✓');
       }
       setShowForm(false);
       setEditing(null);
@@ -41,7 +43,9 @@ export default function AdminCategories() {
     }
   };
 
-  const handleEdit = (c) => {
+  const handleEdit = async (c) => {
+    const ok = await confirm({ title: 'Edit Category', message: `You are about to edit "${c.name}". Make sure to save your changes.`, type: 'warning' });
+    if (!ok) return;
     setEditing(c._id);
     setForm({ name: c.name, slug: c.slug, image: c.image, isActive: c.isActive });
     setShowForm(true);
