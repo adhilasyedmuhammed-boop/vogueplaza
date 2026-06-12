@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { ToastContainer } from 'react-toastify';
@@ -32,7 +32,7 @@ function ProtectedAdmin({ children }) {
   const user = JSON.parse(localStorage.getItem('vp_user') || '{}');
   const token = localStorage.getItem('vp_token');
   if (!token || user.role !== 'admin') {
-    return <Navigate to="/admin-login" replace />;
+    return <AdminLogin />;
   }
   return children;
 }
@@ -50,7 +50,7 @@ function App() {
           <Route path="/login" element={<LoginRegister />} />
           <Route path="/brands" element={<Brands />} />
           <Route path="/new-arrivals" element={<NewArrivals />} />
-          <Route path="/admin-login" element={<AdminLogin />} />
+          {/* Admin login is now shown directly at /admin when not authenticated */}
 
           {/* Admin Panel */}
           <Route path="/admin" element={<ProtectedAdmin><AdminLayout /></ProtectedAdmin>}>

@@ -23,7 +23,8 @@ export default function AdminLayout() {
   const handleLogout = () => {
     localStorage.removeItem('vp_token');
     localStorage.removeItem('vp_user');
-    navigate('/login');
+    navigate('/admin');
+    window.location.reload();
   };
 
   const user = JSON.parse(localStorage.getItem('vp_user') || '{}');

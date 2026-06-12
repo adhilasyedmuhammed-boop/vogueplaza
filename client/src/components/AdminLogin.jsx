@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import api from '../api/axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
 
 export default function AdminLogin() {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -17,11 +15,11 @@ export default function AdminLogin() {
     event.preventDefault();
     setLoading(true);
     try {
-      const response = await api.post('/auth/login', credentials);
+      const response = await api.post('/auth/admin-login', credentials);
       localStorage.setItem('vp_token', response.data.token);
       localStorage.setItem('vp_user', JSON.stringify(response.data.user));
       toast.success('Admin login successful.');
-      navigate('/admin');
+      window.location.reload();
     } catch (error) {
       toast.error('Login failed. Please check your credentials.');
     } finally {

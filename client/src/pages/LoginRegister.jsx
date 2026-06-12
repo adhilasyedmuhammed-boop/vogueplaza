@@ -20,11 +20,7 @@ export default function LoginRegister() {
       localStorage.setItem('vp_token', res.data.token);
       localStorage.setItem('vp_user', JSON.stringify(res.data.user));
       toast.success(`Welcome back, ${res.data.user?.name || 'User'}! 👋`);
-      if (res.data.user?.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
+      navigate('/');
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Login failed. Please check your credentials.');
     }
