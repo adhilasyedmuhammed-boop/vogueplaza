@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const quickLinks = ['New Arrivals', 'Women', 'Men', 'Kids', 'Home Décor', 'Brands', 'Sale'];
 const helpLinks = ['Track Order', 'Returns & Exchanges', 'Size Guide', 'Contact Us', 'Store Locator', 'FAQs'];
@@ -6,6 +8,17 @@ const policyLinks = ['Privacy Policy', 'Terms & Conditions', 'Shipping Policy', 
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+
+  const handleNewsletter = (e) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) {
+      toast.error('Please enter a valid email');
+      return;
+    }
+    toast.success('Subscribed successfully! Welcome aboard.');
+    setEmail('');
+  };
 
   return (
     <footer className="footer-v2">
@@ -75,8 +88,10 @@ export default function Footer() {
               type="email"
               placeholder="Your email address"
               className="footer-email-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <button className="footer-email-btn">Join</button>
+            <button className="footer-email-btn" onClick={handleNewsletter}>Join</button>
           </div>
           <div style={{ marginTop: '24px' }}>
             <div className="footer-col-title" style={{ marginBottom: '12px' }}>Download App</div>

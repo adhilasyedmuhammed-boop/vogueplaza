@@ -1,18 +1,40 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
 
+const PROMO_CODES = {
+  'VOGUE10': { discount: 10, label: '10% off' },
+  'LUXURY20': { discount: 20, label: '20% off' },
+  'FIRST15': { discount: 15, label: '15% off — First Order' },
+};
+
 export default function Cart() {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
-  const shipping = subtotal >= 5000 ? 0 : 499;
-  const total = subtotal + shipping;
+  const promoDiscount = appliedPromo ? Math.round(subtotal * appliedPromo.discount / 100) : 0;
+  const afterDiscount = subtotal - promoDiscount;
+  const shipping = afterDiscount >= 5000 ? 0 : 499;
+  const total = afterDiscount + shipping;
 
   const fmtPrice = (p) => `₹${p.toLocaleString('en-IN')}`;
+
+  const handleApplyPromo = () => {
+    const code = promoCode.trim().toUpperCase();
+    if (PROMO_CODES[code]) {
+      setAppliedPromo(PROMO_CODES[code]);
+      toast.success(`Promo applied: ${PROMO_CODES[code].label}`);
+    } else {
+      toast.error('Invalid promo code');
+      setAppliedPromo(null);
+    }
+  };
 
   if (cartItems.length === 0) {
     return (
@@ -79,22 +101,31 @@ export default function Cart() {
               <div className="cart-summary-title">Order Summary</div>
 
               <div className="cart-promo-row">
-                <input type="text" className="cart-promo-input" placeholder="Promo / Gift Code" />
-                <button className="cart-promo-btn">Apply</button>
+                <input type="text" className="cart-promo-input" placeholder="Promo / Gift Code" value={promoCode} onChange={e => setPromoCode(e.target.value)} />
+                <button className="cart-promo-btn" onClick={handleApplyPromo}>Apply</button>
               </div>
+              {appliedPromo && (
+                <div style={{ fontSize: '12px', color: '#27ae60', marginBottom: '12px', fontWeight: 600 }}>
+                  ✓ {appliedPromo.label} applied
+                  <button onClick={() => { setAppliedPromo(null); setPromoCode(''); }} style={{ marginLeft: '8px', background: 'none', border: 'none', color: '#e74c3c', cursor: 'pointer', fontSize: '11px', textDecoration: 'underline' }}>Remove</button>
+                </div>
+              )}
 
               <div className="cart-summary-row"><span>Subtotal</span><span>{fmtPrice(subtotal)}</span></div>
+              {appliedPromo && (
+                <div className="cart-summary-row"><span>Discount ({appliedPromo.label})</span><span style={{ color: '#27ae60' }}>−{fmtPrice(promoDiscount)}</span></div>
+              )}
               <div className="cart-summary-row">
                 <span>Shipping</span>
                 <span>{shipping === 0 ? <span style={{ color: '#27AE60' }}>Free</span> : fmtPrice(shipping)}</span>
               </div>
               {shipping > 0 && (
                 <div style={{ fontSize: '11px', color: '#888', marginBottom: '8px' }}>
-                  Add {fmtPrice(5000 - subtotal)} more for free shipping
+                  Add {fmtPrice(5000 - afterDiscount)} more for free shipping
                 </div>
               )}
-              <div className="cart-summary-row"><span>Tax (GST 18%)</span><span>{fmtPrice(Math.round(subtotal * 0.18))}</span></div>
-              <div className="cart-summary-row total"><span>Total</span><span>{fmtPrice(total + Math.round(subtotal * 0.18))}</span></div>
+              <div className="cart-summary-row"><span>Tax (GST 18%)</span><span>{fmtPrice(Math.round(afterDiscount * 0.18))}</span></div>
+              <div className="cart-summary-row total"><span>Total</span><span>{fmtPrice(total + Math.round(afterDiscount * 0.18))}</span></div>
 
               <button className="cart-checkout-btn" onClick={() => navigate('/checkout')}>
                 Proceed to Checkout →

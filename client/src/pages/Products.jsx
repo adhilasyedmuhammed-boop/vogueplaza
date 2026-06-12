@@ -69,7 +69,11 @@ export default function Products() {
     fetchProducts();
     setSelectedCat(searchParams.get('category') || 'all');
     const brandParam = searchParams.get('brand');
-    if (brandParam) setSelectedBrands([brandParam]);
+    if (brandParam) {
+      // Match URL param (lowercase) to BRANDS array (capitalized)
+      const matched = BRANDS.find(b => b.toLowerCase() === brandParam.toLowerCase());
+      setSelectedBrands(matched ? [matched] : [brandParam]);
+    }
   }, [searchParams]);
 
   const handleCatChange = (id) => {
@@ -149,7 +153,7 @@ export default function Products() {
                 <div className="filter-group-body">
                   {CATEGORIES.filter(c => c.id !== 'all').map(cat => (
                     <label key={cat.id} className="filter-checkbox-item">
-                      <input type="checkbox" checked={selectedCat === cat.id} onChange={() => handleCatChange(cat.id)} />
+                      <input type="radio" name="category" checked={selectedCat === cat.id} onChange={() => handleCatChange(cat.id)} />
                       <span className="filter-checkbox-label">{cat.name}</span>
                     </label>
                   ))}

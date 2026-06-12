@@ -110,7 +110,16 @@ export default function ProductDetail() {
           <div className="product-detail-grid">
             {/* Images */}
             <div>
-              <div className="product-images-main">
+              <div
+                className="product-images-main product-zoom-container"
+                onMouseMove={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const x = ((e.clientX - rect.left) / rect.width) * 100;
+                  const y = ((e.clientY - rect.top) / rect.height) * 100;
+                  e.currentTarget.style.setProperty('--zoom-x', `${x}%`);
+                  e.currentTarget.style.setProperty('--zoom-y', `${y}%`);
+                }}
+              >
                 <img src={mainImage} alt={product.name} />
               </div>
               <div className="product-thumbnails">
