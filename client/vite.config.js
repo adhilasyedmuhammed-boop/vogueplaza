@@ -2,8 +2,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
+  base: mode === 'production' ? '/client/' : '/',
   build: {
     rollupOptions: {
       input: {
@@ -18,4 +19,4 @@ export default defineConfig({
       '/api': 'http://localhost:5000',
     },
   },
-});
+}));
