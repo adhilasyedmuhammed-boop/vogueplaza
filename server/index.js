@@ -16,6 +16,9 @@ const enquiryRoutes = require('./routes/enquiries');
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const wishlistRoutes = require('./routes/wishlist');
+const adminRoutes = require('./routes/admin');
+const bannerRoutes = require('./routes/banners');
+const homeDataRoutes = require('./routes/homedata');
 
 const app = express();
 
@@ -37,6 +40,9 @@ app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/banners', bannerRoutes);
+app.use('/api/homedata', homeDataRoutes);
+app.use('/api/admin', adminRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

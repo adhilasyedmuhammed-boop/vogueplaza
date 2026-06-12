@@ -1,23 +1,33 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../api/axios';
 
-const brands = [
-  { slug: 'armani', name: 'Armani', initial: 'AR' },
-  { slug: 'gucci', name: 'Gucci', initial: 'GU' },
-  { slug: 'versace', name: 'Versace', initial: 'VS' },
-  { slug: 'burberry', name: 'Burberry', initial: 'BB' },
-  { slug: 'prada', name: 'Prada', initial: 'PR' },
-  { slug: 'chanel', name: 'Chanel', initial: 'CH' },
-  { slug: 'dior', name: 'Dior', initial: 'CD' },
-  { slug: 'hugo-boss', name: 'Hugo Boss', initial: 'HB' },
-  { slug: 'tommy', name: 'Tommy Hilfiger', initial: 'TH' },
-  { slug: 'calvin', name: 'Calvin Klein', initial: 'CK' },
-  { slug: 'ralph', name: 'Ralph Lauren', initial: 'RL' },
-  { slug: 'michael-kors', name: 'Michael Kors', initial: 'MK' },
+const fallbackBrands = [
+  { slug: 'armani', name: 'Armani', initials: 'AR' },
+  { slug: 'gucci', name: 'Gucci', initials: 'GU' },
+  { slug: 'versace', name: 'Versace', initials: 'VE' },
+  { slug: 'burberry', name: 'Burberry', initials: 'BU' },
+  { slug: 'prada', name: 'Prada', initials: 'PR' },
+  { slug: 'chanel', name: 'Chanel', initials: 'CH' },
+  { slug: 'dior', name: 'Dior', initials: 'DI' },
+  { slug: 'rolex', name: 'Rolex', initials: 'RO' },
 ];
 
 export default function BrandScroller() {
   const scrollRef = useRef(null);
+  const [brands, setBrands] = useState(fallbackBrands);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const res = await api.get('/brands');
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setBrands(res.data);
+        }
+      } catch {}
+    };
+    fetchBrands();
+  }, []);
 
   const scroll = (dir) => {
     scrollRef.current?.scrollBy({ left: dir * 260, behavior: 'smooth' });
@@ -58,7 +68,11 @@ export default function BrandScroller() {
             {brands.map((brand) => (
               <Link key={brand.slug} to={`/products?brand=${brand.slug}`} className="tc-brand-item">
                 <div className="tc-brand-circle">
-                  <span className="tc-brand-initial">{brand.initial}</span>
+                  {brand.logo ? (
+                    <img src={brand.logo} alt={brand.name} style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
+                  ) : (
+                    <span className="tc-brand-initial">{brand.initials}</span>
+                  )}
                 </div>
                 <span className="tc-brand-name">{brand.name}</span>
               </Link>

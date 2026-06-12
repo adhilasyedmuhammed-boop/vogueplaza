@@ -6,6 +6,8 @@ const Brand = require('./models/Brand');
 const Post = require('./models/Post');
 const Review = require('./models/Review');
 const Product = require('./models/Product');
+const Banner = require('./models/Banner');
+const HomeData = require('./models/HomeData');
 
 const defaultStoreInfo = {
   storeName: 'Vogue Plaza — Flagship City Mall',
@@ -87,6 +89,34 @@ const reviews = [
       'High-end store with fantastic customer care. I had an issue with a designer jacket I bought, and the manager handled it immediately with no questions asked. Extremely professional. It\'s rare to see this level of dedication to service these days. Vogue Plaza remains my favorite retail destination.',
     isApproved: true,
   },
+  {
+    name: 'Aisha Patel',
+    rating: 4,
+    comment:
+      'Wonderful collection of ethnic wear. Found the perfect lehenga for my sister\'s wedding. The staff were very knowledgeable about fabrics and helped me choose the right size. Slightly expensive but you get what you pay for in terms of quality.',
+    isApproved: true,
+  },
+  {
+    name: 'Daniel Thompson',
+    rating: 5,
+    comment:
+      'Best menswear section I\'ve seen in Kerala. The sherwani collection is outstanding — got my wedding outfit here and received countless compliments. The tailoring alterations were done perfectly within 3 days.',
+    isApproved: true,
+  },
+  {
+    name: 'Priya Nair',
+    rating: 4,
+    comment:
+      'Love the accessories collection! Got a Chanel bag that I had been looking for everywhere. The authenticity guarantee gives real peace of mind. Would recommend to anyone looking for genuine luxury brands.',
+    isApproved: true,
+  },
+  {
+    name: 'Rajesh Kumar',
+    rating: 3,
+    comment:
+      'Good store with premium brands but the pricing is on the higher side compared to online. However, the in-store experience and being able to try things on makes up for it. Parking can be difficult during weekends.',
+    isApproved: false,
+  },
 ];
 
 const products = [
@@ -121,6 +151,39 @@ const products = [
   { name: 'Oyster Perpetual Datejust', brand: 'Rolex', category: 'accessories', price: 9599, image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=600', sizes: ['36mm', '41mm'], description: 'Luxury calendar watch in stainless steel and yellow gold' }
 ];
 
+const banners = [
+  {
+    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1800&auto=format&fit=crop',
+    label: 'New Season',
+    title: 'Summer\nCollection 2026',
+    subtitle: 'Discover our curated edit of the finest luxury fashion from around the world.',
+    cta: 'Explore Now',
+    link: '/new-arrivals',
+    order: 1,
+    isActive: true,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1800&auto=format&fit=crop',
+    label: "Women's Edit",
+    title: 'Effortless\nElegance',
+    subtitle: 'Premium womenswear crafted to perfection by the world\'s finest designers.',
+    cta: 'Shop Women',
+    link: '/products?category=womenswear',
+    order: 2,
+    isActive: true,
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1800&auto=format&fit=crop',
+    label: "Men's Collection",
+    title: 'Modern\nMasculinity',
+    subtitle: 'Sophisticated menswear for the discerning gentleman who demands excellence.',
+    cta: 'Shop Men',
+    link: '/products?category=menswear',
+    order: 3,
+    isActive: true,
+  },
+];
+
 const mongoose = require('mongoose');
 
 const seedInitialData = async () => {
@@ -143,22 +206,81 @@ const seedInitialData = async () => {
       console.log('Store info seeded');
     }
 
-    // Drop and re-seed to apply updated product lists immediately
-    await Category.deleteMany({});
-    await Category.create(categories);
-    console.log('Categories updated');
+    // Only seed if collections are empty (preserve admin-added data)
+    const existingCategories = await Category.countDocuments();
+    if (existingCategories === 0) {
+      await Category.create(categories);
+      console.log('Categories seeded');
+    }
 
-    await Brand.deleteMany({});
-    await Brand.create(brands);
-    console.log('Brands updated');
+    const existingBrands = await Brand.countDocuments();
+    if (existingBrands === 0) {
+      await Brand.create(brands);
+      console.log('Brands seeded');
+    }
 
-    await Post.deleteMany({});
-    await Post.create(posts);
-    console.log('Posts updated');
+    const existingPosts = await Post.countDocuments();
+    if (existingPosts === 0) {
+      await Post.create(posts);
+      console.log('Posts seeded');
+    }
 
-    await Product.deleteMany({});
-    await Product.create(products);
-    console.log('Products collection updated with premium Pinterest collections');
+    const existingProducts = await Product.countDocuments();
+    if (existingProducts === 0) {
+      await Product.create(products);
+      console.log('Products seeded');
+    }
+
+    const existingBanners = await Banner.countDocuments();
+    if (existingBanners === 0) {
+      await Banner.create(banners);
+      console.log('Banners seeded');
+    }
+
+    const existingReviews = await Review.countDocuments();
+    if (existingReviews === 0) {
+      await Review.create(reviews);
+      console.log('Reviews seeded');
+    }
+
+    // Home Data
+    const existingHome = await HomeData.findOne();
+    if (!existingHome) {
+      await HomeData.create({
+        spotlight: {
+          brandName: 'BURBERRY',
+          tagline: 'The Art of the Trench — Iconic British Heritage & Modern Tailoring',
+          eyebrow: 'Brand Spotlight',
+          videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-model-in-a-fashion-show-1165-large.mp4',
+          posterImage: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1800',
+          link: '/products?brand=burberry',
+        },
+        womenSlides: [
+          { img: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600', text: 'Embroidered Royal Anarkalis' },
+          { img: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=600', text: 'Luxury Cape Gowns' },
+          { img: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=600', text: 'Baroque Silk Abayas' },
+          { img: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=600', text: 'Silk Georgette Collection' },
+        ],
+        menSlides: [
+          { img: 'https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=600', text: 'Velvet Royal Sherwanis' },
+          { img: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=600', text: 'Bespoke Wool Suits' },
+          { img: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=600', text: 'Sharp Double-Breasted Suits' },
+          { img: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=600', text: 'Smart Casual Linen Sets' },
+        ],
+        contact: {
+          heading: 'Our Flagship Store',
+          description: 'Experience luxury fashion in person at our flagship store. Our personal stylists are ready to assist you with an unparalleled shopping experience.',
+          address: '3rd Floor, City Mall, MG Road, Kochi, Kerala 682016',
+          phone: '+91 484 123 4567',
+          hours: 'Mon–Thu 10am–10pm | Fri–Sun 10am–11pm',
+          whatsapp: '+91 98765 43210',
+          mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.0!2d76.2673!3d9.9312!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b086d4b07ef0e41%3A0x8f7c4ce44e7b3c9a!2sMG%20Road%2C%20Kochi%2C%20Kerala!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin',
+        },
+        newArrivalsLimit: 12,
+        trendingLimit: 8,
+      });
+      console.log('Home data seeded');
+    }
   } catch (error) {
     console.error('Error seeding initial data:', error.message);
   }

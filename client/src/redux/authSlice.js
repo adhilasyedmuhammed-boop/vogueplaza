@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const token = localStorage.getItem('vogueplaza-token');
-const userInfo = localStorage.getItem('vogueplaza-user');
+const token = localStorage.getItem('vp_token');
+const userInfo = localStorage.getItem('vp_user');
 
 const initialState = {
   token: token || null,

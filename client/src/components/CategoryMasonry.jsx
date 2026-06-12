@@ -1,12 +1,14 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../api/axios';
 
-const categories = [
+const fallbackCategories = [
   {
     slug: 'womenswear',
     name: 'Women',
     sub: 'New Season',
     image: 'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=900&auto=format&fit=crop',
-    span: 'large', // takes more space
+    span: 'large',
   },
   {
     slug: 'menswear',
@@ -39,6 +41,32 @@ const categories = [
 ];
 
 export default function CategoryMasonry() {
+  const [categories, setCategories] = useState(fallbackCategories);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get('/categories');
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          // Map DB categories to masonry layout format
+          const spanMap = { 0: 'large', 1: 'medium', 2: 'small', 3: 'small', 4: 'medium' };
+          const subMap = { womenswear: 'New Season', menswear: 'Summer Edit', accessories: 'Icon Pieces', kids: 'Little Luxuries', footwear: 'Step Up', homedecor: 'Living' };
+          const mapped = res.data.slice(0, 5).map((cat, i) => ({
+            slug: cat.slug,
+            name: cat.name,
+            sub: subMap[cat.slug] || 'Explore',
+            image: cat.image,
+            span: spanMap[i] || 'small',
+          }));
+          setCategories(mapped);
+        }
+      } catch (err) {
+        // fallback stays
+      }
+    };
+    fetchCategories();
+  }, []);
+
   return (
     <section className="tc-category-section">
       <div className="vp-container">

@@ -18,9 +18,10 @@ export default function AdminLogin() {
     setLoading(true);
     try {
       const response = await api.post('/auth/login', credentials);
-      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('vp_token', response.data.token);
+      localStorage.setItem('vp_user', JSON.stringify(response.data.user));
       toast.success('Admin login successful.');
-      navigate('/');
+      navigate('/admin');
     } catch (error) {
       toast.error('Login failed. Please check your credentials.');
     } finally {

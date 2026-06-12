@@ -54,7 +54,7 @@ export default function Products() {
       try {
         const cat = searchParams.get('category') || 'all';
         const q = searchParams.get('search') || '';
-        const res = await axios.get(`/api/products?category=${cat}&search=${q}`);
+        const res = await axios.get(`/products?category=${cat}&search=${q}`);
         if (res.data?.length) setProducts(res.data);
         else setProducts(fallback);
       } catch {

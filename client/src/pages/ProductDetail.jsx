@@ -9,8 +9,8 @@ import { toast } from 'react-toastify';
 import axios from '../api/axios';
 
 const FALLBACK = [
-  { _id: '1', name: 'Cashmere Coat', brand: 'Armani', category: 'womenswear', price: 129900, image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=800', description: 'A timeless cashmere coat crafted from the finest Mongolian cashmere. Features a clean, minimal silhouette with subtle tonal buttons and a beautifully structured collar. Available in a range of classic and seasonal colours.', sizes: ['XS','S','M','L','XL'] },
-  { _id: '2', name: 'Silk Dress', brand: 'Gucci', category: 'womenswear', price: 89900, image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', description: 'A luxurious silk dress with delicate draping and a fluid silhouette. Crafted from 100% pure silk, this piece is perfect for any occasion from daytime elegance to evening sophistication.', sizes: ['XS','S','M','L'] },
+  { _id: '1', name: 'Cashmere Coat', brand: 'Armani', category: 'womenswear', price: 1299, image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=800', description: 'A timeless cashmere coat crafted from the finest Mongolian cashmere. Features a clean, minimal silhouette with subtle tonal buttons and a beautifully structured collar. Available in a range of classic and seasonal colours.', sizes: ['XS','S','M','L','XL'] },
+  { _id: '2', name: 'Silk Dress', brand: 'Gucci', category: 'womenswear', price: 899, image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', description: 'A luxurious silk dress with delicate draping and a fluid silhouette. Crafted from 100% pure silk, this piece is perfect for any occasion from daytime elegance to evening sophistication.', sizes: ['XS','S','M','L'] },
 ];
 
 export default function ProductDetail() {
@@ -27,10 +27,10 @@ export default function ProductDetail() {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`/api/products/${id}`);
+        const res = await axios.get(`/products/${id}`);
         setProduct(res.data);
         setMainImage(res.data.image);
-        const relRes = await axios.get(`/api/products?category=${res.data.category}&limit=4`);
+        const relRes = await axios.get(`/products?category=${res.data.category}&limit=4`);
         setRelated(relRes.data.filter(p => p._id !== id).slice(0, 4));
       } catch {
         const found = FALLBACK.find(p => p._id === id) || FALLBACK[0];

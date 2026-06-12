@@ -3,7 +3,7 @@ import api from '../api/axios';
 import { toast } from 'react-toastify';
 
 export default function ContactForm() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', mobile: '', category: 'womenswear', message: '' });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
@@ -17,7 +17,7 @@ export default function ContactForm() {
     try {
       await api.post('/enquiries', form);
       toast.success('Your enquiry has been sent. We will respond shortly.');
-      setForm({ name: '', email: '', phone: '', message: '' });
+      setForm({ name: '', email: '', mobile: '', category: 'womenswear', message: '' });
     } catch (error) {
       toast.error('Unable to send enquiry. Please try again later.');
     } finally {
@@ -43,10 +43,23 @@ export default function ContactForm() {
               <input name="email" type="email" value={form.email} onChange={handleChange} required />
             </label>
           </div>
-          <label>
-            Phone Number
-            <input name="phone" value={form.phone} onChange={handleChange} />
-          </label>
+          <div className="form-row">
+            <label>
+              Mobile Number
+              <input name="mobile" value={form.mobile} onChange={handleChange} required />
+            </label>
+            <label>
+              Category
+              <select name="category" value={form.category} onChange={handleChange} required>
+                <option value="womenswear">Womenswear</option>
+                <option value="menswear">Menswear</option>
+                <option value="accessories">Accessories</option>
+                <option value="kids">Kids</option>
+                <option value="homedecor">Home Decor</option>
+                <option value="footwear">Footwear</option>
+              </select>
+            </label>
+          </div>
           <label>
             Message
             <textarea name="message" rows="5" value={form.message} onChange={handleChange} required />

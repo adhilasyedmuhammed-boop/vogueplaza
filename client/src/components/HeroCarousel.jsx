@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../api/axios';
 
-const slides = [
+const fallbackSlides = [
   {
     image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1800&auto=format&fit=crop',
     label: 'New Season',
@@ -29,12 +30,27 @@ const slides = [
 ];
 
 export default function HeroCarousel() {
+  const [slides, setSlides] = useState(fallbackSlides);
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);
 
-  const next = useCallback(() => setCurrent(c => (c + 1) % slides.length), []);
-  const prev = useCallback(() => setCurrent(c => (c - 1 + slides.length) % slides.length), []);
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const res = await api.get('/banners');
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setSlides(res.data);
+        }
+      } catch (err) {
+        // fallback stays
+      }
+    };
+    fetchBanners();
+  }, []);
+
+  const next = useCallback(() => setCurrent(c => (c + 1) % slides.length), [slides.length]);
+  const prev = useCallback(() => setCurrent(c => (c - 1 + slides.length) % slides.length), [slides.length]);
 
   useEffect(() => {
     if (!paused) {

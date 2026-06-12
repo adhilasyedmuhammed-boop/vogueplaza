@@ -24,7 +24,7 @@ export default function NewArrivals() {
     const fetch = async () => {
       setLoading(true);
       try {
-        const res = await axios.get('/api/products?sort=newest&limit=16');
+        const res = await axios.get('/products?sort=newest&limit=16');
         if (res.data?.length) setProducts(res.data);
       } catch {}
       setLoading(false);

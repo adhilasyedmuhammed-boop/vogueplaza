@@ -1,30 +1,35 @@
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import axios from '../api/axios';
 
-const brands = [
-  { slug: 'armani', name: 'Giorgio Armani', initial: 'GA', desc: 'Italian luxury fashion house', count: 48 },
-  { slug: 'gucci', name: 'Gucci', initial: 'GU', desc: 'Florentine luxury brand', count: 62 },
-  { slug: 'versace', name: 'Versace', initial: 'VS', desc: 'Italian fashion house', count: 35 },
-  { slug: 'burberry', name: 'Burberry', initial: 'BB', desc: 'British luxury fashion', count: 54 },
-  { slug: 'prada', name: 'Prada', initial: 'PR', desc: 'Italian luxury fashion', count: 41 },
-  { slug: 'rolex', name: 'Rolex', initial: 'RX', desc: 'Swiss luxury watches', count: 28 },
-  { slug: 'chanel', name: 'Chanel', initial: 'CH', desc: 'French fashion house', count: 33 },
-  { slug: 'dior', name: 'Christian Dior', initial: 'CD', desc: 'Parisian luxury house', count: 45 },
-  { slug: 'hugo-boss', name: 'Hugo Boss', initial: 'HB', desc: 'German luxury fashion', count: 72 },
-  { slug: 'tommy', name: 'Tommy Hilfiger', initial: 'TH', desc: 'American fashion brand', count: 88 },
-  { slug: 'calvin', name: 'Calvin Klein', initial: 'CK', desc: 'American fashion house', count: 65 },
-  { slug: 'ralph', name: 'Ralph Lauren', initial: 'RL', desc: 'American luxury brand', count: 79 },
-  { slug: 'mcm', name: 'MCM', initial: 'MC', desc: 'German luxury goods', count: 22 },
-  { slug: 'coach', name: 'Coach', initial: 'CO', desc: 'American luxury house', count: 37 },
-  { slug: 'michael-kors', name: 'Michael Kors', initial: 'MK', desc: 'American luxury fashion', count: 58 },
-  { slug: 'longchamp', name: 'Longchamp', initial: 'LC', desc: 'French luxury goods', count: 19 },
-  { slug: 'salvatore', name: 'Salvatore Ferragamo', initial: 'SF', desc: 'Italian luxury brand', count: 31 },
-  { slug: 'ted-baker', name: 'Ted Baker', initial: 'TB', desc: 'British fashion brand', count: 44 },
+const fallbackBrands = [
+  { slug: 'armani', name: 'Giorgio Armani', initials: 'AR', logo: '' },
+  { slug: 'gucci', name: 'Gucci', initials: 'GU', logo: '' },
+  { slug: 'versace', name: 'Versace', initials: 'VE', logo: '' },
+  { slug: 'burberry', name: 'Burberry', initials: 'BU', logo: '' },
+  { slug: 'prada', name: 'Prada', initials: 'PR', logo: '' },
+  { slug: 'rolex', name: 'Rolex', initials: 'RO', logo: '' },
+  { slug: 'chanel', name: 'Chanel', initials: 'CH', logo: '' },
+  { slug: 'dior', name: 'Dior', initials: 'DI', logo: '' },
 ];
 
 export default function Brands() {
   const navigate = useNavigate();
+  const [brands, setBrands] = useState(fallbackBrands);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const res = await axios.get('/brands');
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setBrands(res.data);
+        }
+      } catch {}
+    };
+    fetchBrands();
+  }, []);
 
   return (
     <>
@@ -51,10 +56,13 @@ export default function Brands() {
                 onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.12)'; e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = '#000'; }}
                 onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = '#E8E8E8'; }}
               >
-                <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', fontWeight: 700, color: '#111', marginBottom: '10px', lineHeight: 1 }}>{brand.initial}</div>
+                {brand.logo ? (
+                  <img src={brand.logo} alt={brand.name} style={{ height: '40px', objectFit: 'contain', marginBottom: '10px' }} />
+                ) : (
+                  <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '28px', fontWeight: 700, color: '#111', marginBottom: '10px', lineHeight: 1 }}>{brand.initials}</div>
+                )}
                 <div style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.06em', color: '#111', marginBottom: '4px' }}>{brand.name}</div>
-                <div style={{ fontSize: '11px', color: '#888', marginBottom: '10px' }}>{brand.desc}</div>
-                <div style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.1em', color: '#B8914E', textTransform: 'uppercase' }}>{brand.count} Products</div>
+                <div style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.1em', color: '#B8914E', textTransform: 'uppercase' }}>Shop Now →</div>
               </div>
             ))}
           </div>
