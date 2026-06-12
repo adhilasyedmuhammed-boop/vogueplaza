@@ -72,14 +72,13 @@ export default function Navbar() {
       setUser(stored ? JSON.parse(stored) : null);
     };
     window.addEventListener('storage', syncUser);
-    // Also check on focus (same-tab login won't fire 'storage')
     window.addEventListener('focus', syncUser);
-    // Check periodically for same-tab updates
-    const interval = setInterval(syncUser, 1000);
+    // Listen for custom event from same-tab login
+    window.addEventListener('vp-auth-change', syncUser);
     return () => {
       window.removeEventListener('storage', syncUser);
       window.removeEventListener('focus', syncUser);
-      clearInterval(interval);
+      window.removeEventListener('vp-auth-change', syncUser);
     };
   }, []);
 

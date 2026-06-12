@@ -19,7 +19,8 @@ export default function LoginRegister() {
       const res = await axios.post('/auth/login', loginData);
       localStorage.setItem('vp_token', res.data.token);
       localStorage.setItem('vp_user', JSON.stringify(res.data.user));
-      toast.success(`Welcome back, ${res.data.user?.name || 'User'}! 👋`);
+      window.dispatchEvent(new Event('vp-auth-change'));
+      toast.success(`Welcome back, ${res.data.user?.name || 'User'}`);
       navigate('/');
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Login failed. Please check your credentials.');
@@ -35,7 +36,8 @@ export default function LoginRegister() {
       const res = await axios.post('/auth/register', { name: regData.name, email: regData.email, password: regData.password });
       localStorage.setItem('vp_token', res.data.token);
       localStorage.setItem('vp_user', JSON.stringify(res.data.user));
-      toast.success('Account created successfully! Welcome to Vogue Plaza 🎉');
+      window.dispatchEvent(new Event('vp-auth-change'));
+      toast.success('Account created successfully! Welcome to Vogue Plaza');
       navigate('/');
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Registration failed. Please try again.');

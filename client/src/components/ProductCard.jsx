@@ -17,7 +17,7 @@ export default function ProductCard({ product, badge }) {
     e.preventDefault();
     e.stopPropagation();
     addToCart({ ...product, size: product.sizes?.[0] || 'One Size' });
-    toast.success('Added to cart 🛍️');
+    toast.success('Added to cart');
   };
 
   const handleWishlist = (e) => {

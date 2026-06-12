@@ -95,7 +95,7 @@ export default function Checkout() {
       setStep(3);
       clearCart();
       window.scrollTo(0, 0);
-      toast.success('Order placed successfully! 🎉');
+      toast.success('Order placed successfully!');
     }, 2000);
   };
 

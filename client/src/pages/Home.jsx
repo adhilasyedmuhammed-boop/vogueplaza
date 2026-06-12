@@ -252,10 +252,10 @@ export default function Home() {
               <h2 className="section-heading">{contact.heading}</h2>
               <p className="about-paragraph">{contact.description}</p>
               {[
-                { icon: '📍', label: 'Address',    value: contact.address },
-                { icon: '📞', label: 'Phone',      value: contact.phone },
-                { icon: '🕐', label: 'Hours',      value: contact.hours },
-                { icon: '💬', label: 'WhatsApp',   value: contact.whatsapp },
+                { icon: '○', label: 'Address',    value: contact.address },
+                { icon: '○', label: 'Phone',      value: contact.phone },
+                { icon: '○', label: 'Hours',      value: contact.hours },
+                { icon: '○', label: 'WhatsApp',   value: contact.whatsapp },
               ].map(it => (
                 <div key={it.label} className="contact-info-item">
                   <div className="contact-info-icon">{it.icon}</div>
