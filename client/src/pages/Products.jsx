@@ -36,11 +36,12 @@ export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initCat = searchParams.get('category') || 'all';
   const initSearch = searchParams.get('search') || '';
+  const initBrand = searchParams.get('brand') || '';
 
   const [products, setProducts] = useState(fallback);
   const [loading, setLoading] = useState(true);
   const [selectedCat, setSelectedCat] = useState(initCat);
-  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState(initBrand ? [initBrand] : []);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
@@ -54,7 +55,10 @@ export default function Products() {
       try {
         const cat = searchParams.get('category') || 'all';
         const q = searchParams.get('search') || '';
-        const res = await axios.get(`/products?category=${cat}&search=${q}`);
+        const brand = searchParams.get('brand') || '';
+        let url = `/products?category=${cat}&search=${q}`;
+        if (brand) url += `&brand=${brand}`;
+        const res = await axios.get(url);
         if (res.data?.length) setProducts(res.data);
         else setProducts(fallback);
       } catch {
@@ -64,6 +68,8 @@ export default function Products() {
     };
     fetchProducts();
     setSelectedCat(searchParams.get('category') || 'all');
+    const brandParam = searchParams.get('brand');
+    if (brandParam) setSelectedBrands([brandParam]);
   }, [searchParams]);
 
   const handleCatChange = (id) => {
@@ -80,7 +86,7 @@ export default function Products() {
 
   const filtered = products
     .filter(p => selectedCat === 'all' || p.category === selectedCat)
-    .filter(p => selectedBrands.length === 0 || selectedBrands.includes(p.brand))
+    .filter(p => selectedBrands.length === 0 || selectedBrands.some(b => p.brand?.toLowerCase() === b.toLowerCase()))
     .filter(p => selectedSizes.length === 0 || p.sizes?.some(s => selectedSizes.includes(s)))
     .filter(p => !priceMin || p.price >= Number(priceMin) * 100)
     .filter(p => !priceMax || p.price <= Number(priceMax) * 100)
@@ -105,7 +111,9 @@ export default function Products() {
 
       <div className="page-banner">
         <h1 className="page-banner-title">
-          {selectedCat === 'all' ? 'All Products' : CATEGORIES.find(c => c.id === selectedCat)?.name || 'Products'}
+          {searchParams.get('brand')
+            ? `${searchParams.get('brand').charAt(0).toUpperCase() + searchParams.get('brand').slice(1)} Collection`
+            : selectedCat === 'all' ? 'All Products' : CATEGORIES.find(c => c.id === selectedCat)?.name || 'Products'}
         </h1>
         <p className="page-banner-sub">{filtered.length} items found</p>
       </div>
