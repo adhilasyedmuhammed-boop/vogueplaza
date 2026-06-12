@@ -138,6 +138,16 @@ export default function ProductDetail() {
                 )}
               </div>
 
+              {product.originalPrice && product.discount > 0 && (
+                <div className="product-offer-box">
+                  <div className="product-offer-title">🎉 Special Offer</div>
+                  <div className="product-offer-detail">
+                    MRP <span className="product-offer-mrp">₹{product.originalPrice?.toLocaleString('en-IN')}</span> — Get it for just <strong>₹{product.price?.toLocaleString('en-IN')}</strong>
+                  </div>
+                  <div className="product-offer-saving">You save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')} ({product.discount}% off)</div>
+                </div>
+              )}
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '20px' }}>
                 <span style={{ color: '#B8914E', fontSize: '14px', letterSpacing: '2px' }}>
                   {'★'.repeat(Math.round(reviewStats.avgRating || 5))}{'☆'.repeat(5 - Math.round(reviewStats.avgRating || 5))}

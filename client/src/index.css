@@ -1249,11 +1249,43 @@ input, select, textarea { font-family: var(--font-sans); }
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--dark);
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 12px;
 }
+
+/* Offer box on product detail */
+.product-offer-box {
+  background: linear-gradient(135deg, #f8fff8, #f0fdf0);
+  border: 1px solid #c8e6c9;
+  border-left: 4px solid #27ae60;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+.product-offer-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+.product-offer-detail {
+  font-size: 13px;
+  color: #444;
+  line-height: 1.5;
+}
+.product-offer-mrp {
+  text-decoration: line-through;
+  color: #999;
+}
+.product-offer-saving {
+  font-size: 13px;
+  font-weight: 700;
+  color: #27ae60;
+  margin-top: 4px;
+}
+
 .product-detail-divider {
   height: 1px;
   background: var(--gray-200);
