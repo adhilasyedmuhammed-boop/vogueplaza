@@ -3270,15 +3270,16 @@ input, select, textarea { font-family: var(--font-sans); }
 }
 .tc-brand-item:hover .tc-brand-initial { color: #111; }
 .tc-brand-name {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #333;
+  color: #111;
   text-align: center;
-  transition: color 0.25s ease;
+  transition: all 0.25s ease;
+  font-family: 'Playfair Display', serif;
 }
-.tc-brand-item:hover .tc-brand-name { color: var(--black); }
+.tc-brand-item:hover .tc-brand-name { color: #B8914E; }
 
 /* -- RESPONSIVE -------------------------------------------------- */
 @media (max-width: 1024px) {
