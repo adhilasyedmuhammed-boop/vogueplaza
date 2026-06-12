@@ -188,7 +188,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5 ── TRENDING NOW SLIDER ─────────────────────────── */}
+      {/* 5 ── PROMO BANNERS / FLASH DEALS ───────────────── */}
+      <PromoBanners />
+
+      {/* 5.5 ── TRENDING NOW SLIDER ───────────────────────── */}
       <ProductSlider
         eyebrow="Most Loved"
         title="Trending Now"
@@ -198,9 +201,6 @@ export default function Home() {
 
       {/* 6 ── BRAND SCROLLER ──────────────────────────────── */}
       <BrandScroller />
-
-      {/* 6.5 ── PROMO BANNERS / FLASH DEALS ───────────────── */}
-      <PromoBanners />
 
       {/* 7 ── SECOND EDITORIAL — split banner ─────────────── */}
       <section className="tc-split-banner vp-section-cream">
