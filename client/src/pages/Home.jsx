@@ -6,6 +6,7 @@ import VideoHero from '../components/VideoHero';
 import CategoryMasonry from '../components/CategoryMasonry';
 import ProductSlider from '../components/ProductSlider';
 import BrandScroller from '../components/BrandScroller';
+import PromoBanners from '../components/PromoBanners';
 import axios from '../api/axios';
 
 /* ── fallback product data ──────────────────────────────────── */
@@ -197,6 +198,9 @@ export default function Home() {
 
       {/* 6 ── BRAND SCROLLER ──────────────────────────────── */}
       <BrandScroller />
+
+      {/* 6.5 ── PROMO BANNERS / FLASH DEALS ───────────────── */}
+      <PromoBanners />
 
       {/* 7 ── SECOND EDITORIAL — split banner ─────────────── */}
       <section className="tc-split-banner vp-section-cream">
