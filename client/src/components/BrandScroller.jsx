@@ -30,7 +30,7 @@ export default function BrandScroller() {
   }, []);
 
   const scroll = (dir) => {
-    scrollRef.current?.scrollBy({ left: dir * 260, behavior: 'smooth' });
+    scrollRef.current?.scrollBy({ left: dir * 320, behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -40,9 +40,9 @@ export default function BrandScroller() {
       if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 10) {
         track.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        track.scrollBy({ left: 260, behavior: 'smooth' });
+        track.scrollBy({ left: 320, behavior: 'smooth' });
       }
-    }, 1200);
+    }, 2500);
     return () => clearInterval(timer);
   }, []);
 
@@ -69,7 +69,7 @@ export default function BrandScroller() {
               <Link key={brand.slug} to={`/products?brand=${brand.slug}`} className="tc-brand-item">
                 <div className="tc-brand-circle">
                   {brand.logo ? (
-                    <img src={brand.logo} alt={brand.name} style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
+                    <img src={brand.logo} alt={brand.name} style={{ width: '60px', height: '60px', objectFit: 'contain' }} />
                   ) : (
                     <span className="tc-brand-initial">{brand.initials}</span>
                   )}
