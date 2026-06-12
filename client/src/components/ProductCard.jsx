@@ -62,19 +62,14 @@ export default function ProductCard({ product, badge }) {
         <div className="product-card-price">
           {product.originalPrice ? (
             <>
-              <span className="price-original">₹{product.originalPrice?.toLocaleString('en-IN')}</span>
-              <span className="price-sale">₹{product.price?.toLocaleString('en-IN')}</span>
-              {product.discount > 0 && <span className="price-discount-badge">{product.discount}% OFF</span>}
+              <span className="price-current">₹{product.price?.toLocaleString('en-IN')}</span>
+              <span className="price-mrp">₹{product.originalPrice?.toLocaleString('en-IN')}</span>
+              {product.discount > 0 && <span className="price-off">{product.discount}%</span>}
             </>
           ) : (
-            <span>₹{product.price?.toLocaleString('en-IN')}</span>
+            <span className="price-current">₹{product.price?.toLocaleString('en-IN')}</span>
           )}
         </div>
-        {product.originalPrice && product.discount > 0 && (
-          <div className="product-card-offer-text">
-            You save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')}
-          </div>
-        )}
       </div>
     </Link>
   );
