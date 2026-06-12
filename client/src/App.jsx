@@ -13,6 +13,7 @@ import LoginRegister from './pages/LoginRegister';
 import Brands from './pages/Brands';
 import NewArrivals from './pages/NewArrivals';
 import Checkout from './pages/Checkout';
+import BottomNav from './components/BottomNav';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           {/* Fallback */}
           <Route path="*" element={<Home />} />
         </Routes>
+        <BottomNav />
         <ToastContainer
           position="top-right"
           autoClose={2500}
