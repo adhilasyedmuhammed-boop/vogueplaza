@@ -15,8 +15,8 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.js" },
+    { "src": "/brands/(.*)", "dest": "/client/brands/$1" },
     { "handle": "filesystem" },
-    { "src": "/admin(.*)", "dest": "/client/admin.html" },
     { "src": "/(.*)", "dest": "/client/index.html" }
   ]
 }
