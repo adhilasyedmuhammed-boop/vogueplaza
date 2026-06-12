@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
 
 export default function Cart() {
+  const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
@@ -95,7 +96,7 @@ export default function Cart() {
               <div className="cart-summary-row"><span>Tax (GST 18%)</span><span>{fmtPrice(Math.round(subtotal * 0.18))}</span></div>
               <div className="cart-summary-row total"><span>Total</span><span>{fmtPrice(total + Math.round(subtotal * 0.18))}</span></div>
 
-              <button className="cart-checkout-btn" onClick={() => toast.info('Checkout coming soon!')}>
+              <button className="cart-checkout-btn" onClick={() => navigate('/checkout')}>
                 Proceed to Checkout →
               </button>
 

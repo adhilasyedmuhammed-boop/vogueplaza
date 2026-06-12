@@ -12,6 +12,7 @@ import Wishlist from './pages/Wishlist';
 import LoginRegister from './pages/LoginRegister';
 import Brands from './pages/Brands';
 import NewArrivals from './pages/NewArrivals';
+import Checkout from './pages/Checkout';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/login" element={<LoginRegister />} />
           <Route path="/brands" element={<Brands />} />
