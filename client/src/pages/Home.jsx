@@ -199,7 +199,10 @@ export default function Home() {
         viewAllLink="/products"
       />
 
-      {/* 7 ── WOMEN & MEN EDITORIAL — Split banner ─────────── */}
+      {/* 7 ── BRAND SCROLLER — Trusted brands ─────────────── */}
+      <BrandScroller />
+
+      {/* 8 ── WOMEN & MEN EDITORIAL — Split banner ─────────── */}
       <section className="tc-split-banner vp-section-cream">
         <div className="vp-container">
           <div className="tc-split-grid">
@@ -234,9 +237,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* 8 ── BRAND SCROLLER — Trusted brands ─────────────── */}
-      <BrandScroller />
 
       {/* 9 ── STORE INFO + CONTACT ────────────────────────── */}
       <section className="vp-section">
