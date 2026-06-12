@@ -3579,3 +3579,44 @@ input, select, textarea { font-family: var(--font-sans); }
   font-weight: 600;
   letter-spacing: 0.02em;
 }
+
+/* ========== BACK TO TOP BUTTON ========== */
+.vp-back-to-top {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  z-index: 9990;
+  transition: transform 0.2s, opacity 0.3s;
+  animation: vp-fade-up 0.3s ease;
+}
+.vp-back-to-top:hover { transform: translateY(-3px); background: #c9a96e; }
+
+@media (max-width: 768px) {
+  .vp-back-to-top { bottom: 80px; left: 16px; width: 36px; height: 36px; }
+}
+
+@keyframes vp-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== SMOOTH PAGE TRANSITIONS ========== */
+@keyframes vp-page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.vp-section, .tc-editorial-banner, .tc-split-banner, .footer-v2 {
+  animation: vp-page-in 0.4s ease;
+}

@@ -90,14 +90,14 @@ export default function Home() {
   useEffect(() => {
     const interval = setInterval(() => {
       setWomenIdx(prev => (prev + 1) % womenSlides.length);
-    }, 1200);
+    }, 3000);
     return () => clearInterval(interval);
   }, [womenSlides.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setMenIdx(prev => (prev + 1) % menSlides.length);
-    }, 1400);
+    }, 3500);
     return () => clearInterval(interval);
   }, [menSlides.length]);
 

@@ -14,11 +14,14 @@ import Brands from './pages/Brands';
 import NewArrivals from './pages/NewArrivals';
 import Checkout from './pages/Checkout';
 import BottomNav from './components/BottomNav';
+import ScrollToTop from './components/ScrollToTop';
+import BackToTop from './components/BackToTop';
 
 function App() {
   return (
     <CartProvider>
       <WishlistProvider>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
@@ -34,6 +37,7 @@ function App() {
           <Route path="*" element={<Home />} />
         </Routes>
         <BottomNav />
+        <BackToTop />
         <ToastContainer
           position="top-right"
           autoClose={2500}
