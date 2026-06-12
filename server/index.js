@@ -27,9 +27,11 @@ app.use(express.json());
 
 connectDB().then(() => seedInitialData());
 
-app.get('/', (req, res) => {
-  res.send('Vogue Plaza API is running');
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.get('/', (req, res) => {
+    res.send('Vogue Plaza API is running');
+  });
+}
 
 app.use('/api/store', storeRoutes);
 app.use('/api/categories', categoryRoutes);
@@ -43,6 +45,14 @@ app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/homedata', homeDataRoutes);
 app.use('/api/admin', adminRoutes);
+
+// Serve frontend in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/dist/index.html'));
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

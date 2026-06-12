@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: vogueplaza
+    runtime: node
+    buildCommand: cd server && npm install && cd ../client && npm install && npm run build
+    startCommand: cd server && node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
