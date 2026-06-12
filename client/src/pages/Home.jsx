@@ -155,10 +155,7 @@ export default function Home() {
         badge="new"
       />
 
-      {/* 4 ── PROMO BANNERS — Offers & Flash Deals ─────────── */}
-      <PromoBanners />
-
-      {/* 5 ── BRAND SPOTLIGHT — Featured brand video ────────── */}
+      {/* 4 ── BRAND SPOTLIGHT — Featured brand video ────────── */}
       <section className="tc-editorial-banner brand-spotlight-section">
         {!spotlightError && spotlight.videoUrl ? (
           <video
@@ -190,6 +187,9 @@ export default function Home() {
           <Link to={spotlight.link} className="tc-editorial-cta">Shop {spotlight.brandName} Collection →</Link>
         </div>
       </section>
+
+      {/* 5 ── PROMO BANNERS — Offers & Flash Deals ─────────── */}
+      <PromoBanners />
 
       {/* 6 ── TRENDING NOW — Popular products ──────────────── */}
       <ProductSlider
