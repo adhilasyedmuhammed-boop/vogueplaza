@@ -9,6 +9,7 @@ import ProductSlider from '../components/ProductSlider';
 import BrandScroller from '../components/BrandScroller';
 import PromoBanners from '../components/PromoBanners';
 import HeroBanner from '../components/HeroBanner';
+import SEO from '../components/SEO';
 import axios from '../api/axios';
 
 /* ── fallback product data ──────────────────────────────────── */
@@ -140,6 +141,7 @@ export default function Home() {
 
   return (
     <>
+      <SEO title="Home" description="Shop premium luxury fashion brands — Gucci, Prada, Versace, Armani, Burberry, Rolex, Chanel & Dior at Vogue Plaza Kerala. Authentic designer clothing, shoes, bags, watches, perfumes & accessories." />
       <Navbar />
 
       {/* 0 ── HERO BANNER CAROUSEL — Sale & Offers ─────────── */}

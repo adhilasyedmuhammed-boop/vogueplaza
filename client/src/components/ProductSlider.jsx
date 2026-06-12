@@ -123,7 +123,7 @@ function SliderCard({ product, badge }) {
     e.preventDefault();
     e.stopPropagation();
     addToCart({ ...product, size: product.sizes?.[0] || 'One Size' });
-    toast.success('Added to cart');
+    toast.success('Item added to your bag');
   };
 
   const handleWish = (e) => {

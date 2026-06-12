@@ -25,6 +25,8 @@ const wishlistRoutes = require('./routes/wishlist');
 const adminRoutes = require('./routes/admin');
 const bannerRoutes = require('./routes/banners');
 const homeDataRoutes = require('./routes/homedata');
+const orderRoutes = require('./routes/orders');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -70,6 +72,8 @@ app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/homedata', homeDataRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/user', userRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === 'production') {

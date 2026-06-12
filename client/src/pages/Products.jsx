@@ -113,7 +113,7 @@ export default function Products() {
     <>
       <Navbar />
 
-      <div className="page-banner">
+      <div className="page-banner page-enter">
         <h1 className="page-banner-title">
           {searchParams.get('brand')
             ? `${searchParams.get('brand').charAt(0).toUpperCase() + searchParams.get('brand').slice(1)} Collection`

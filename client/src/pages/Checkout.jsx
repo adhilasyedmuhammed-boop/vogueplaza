@@ -53,7 +53,7 @@ export default function Checkout() {
       localStorage.setItem('vp_user', JSON.stringify(res.data.user));
       setUser(res.data.user);
       setStep(1);
-      toast.success(`Welcome, ${res.data.user?.name || 'User'}! Continue with your order.`);
+      toast.success(`Welcome, ${res.data.user?.name || 'valued customer'}. Please continue with your order.`);
     } catch (err) {
       toast.error(err?.response?.data?.message || 'Login failed. Please check your credentials.');
     }
@@ -89,14 +89,37 @@ export default function Checkout() {
       return;
     }
     setLoading(true);
-    // Simulate payment processing
-    setTimeout(() => {
-      setLoading(false);
-      setStep(3);
-      clearCart();
-      window.scrollTo(0, 0);
-      toast.success('Order placed successfully!');
-    }, 2000);
+    // Place order in database
+    const orderData = {
+      items: cartItems.map(item => ({
+        product: item._id,
+        name: item.name,
+        brand: item.brand,
+        image: item.image,
+        price: item.price,
+        size: item.size,
+        quantity: item.quantity || 1,
+      })),
+      shippingAddress: address,
+      paymentMethod,
+      subtotal,
+      shipping,
+      tax,
+      total,
+    };
+
+    axios.post('/orders', orderData)
+      .then(() => {
+        setLoading(false);
+        setStep(3);
+        clearCart();
+        window.scrollTo(0, 0);
+        toast.success('Order placed successfully!');
+      })
+      .catch((err) => {
+        setLoading(false);
+        toast.error(err?.response?.data?.message || 'Failed to place order. Please try again.');
+      });
   };
 
   // Step 0: Login Required
@@ -217,7 +240,7 @@ export default function Checkout() {
   return (
     <>
       <Navbar />
-      <div className="vp-container">
+      <div className="vp-container page-enter">
         <div className="checkout-page">
           <h1 className="checkout-title">Checkout</h1>
 
@@ -296,7 +319,7 @@ export default function Checkout() {
                       <input type="radio" name="payment" value="upi" checked={paymentMethod === 'upi'} onChange={() => setPaymentMethod('upi')} />
                       <div className="payment-option-content">
                         <div className="payment-option-header">
-                          <span className="payment-icon">📱</span>
+                          <span className="payment-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
                           <div>
                             <div className="payment-option-title">UPI</div>
                             <div className="payment-option-desc">Google Pay, PhonePe, Paytm, BHIM UPI</div>
@@ -320,7 +343,7 @@ export default function Checkout() {
                       <input type="radio" name="payment" value="card" checked={paymentMethod === 'card'} onChange={() => setPaymentMethod('card')} />
                       <div className="payment-option-content">
                         <div className="payment-option-header">
-                          <span className="payment-icon">💳</span>
+                          <span className="payment-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
                           <div>
                             <div className="payment-option-title">Credit / Debit Card</div>
                             <div className="payment-option-desc">Visa, Mastercard, Rupay, Amex</div>
@@ -344,7 +367,7 @@ export default function Checkout() {
                       <input type="radio" name="payment" value="netbanking" checked={paymentMethod === 'netbanking'} onChange={() => setPaymentMethod('netbanking')} />
                       <div className="payment-option-content">
                         <div className="payment-option-header">
-                          <span className="payment-icon">🏦</span>
+                          <span className="payment-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
                           <div>
                             <div className="payment-option-title">Net Banking</div>
                             <div className="payment-option-desc">All major banks supported</div>
@@ -375,7 +398,7 @@ export default function Checkout() {
                       <input type="radio" name="payment" value="emi" checked={paymentMethod === 'emi'} onChange={() => setPaymentMethod('emi')} />
                       <div className="payment-option-content">
                         <div className="payment-option-header">
-                          <span className="payment-icon">📅</span>
+                          <span className="payment-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
                           <div>
                             <div className="payment-option-title">EMI</div>
                             <div className="payment-option-desc">No-cost & low-cost EMI available</div>
@@ -407,7 +430,7 @@ export default function Checkout() {
                       <input type="radio" name="payment" value="cod" checked={paymentMethod === 'cod'} onChange={() => setPaymentMethod('cod')} />
                       <div className="payment-option-content">
                         <div className="payment-option-header">
-                          <span className="payment-icon">💰</span>
+                          <span className="payment-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
                           <div>
                             <div className="payment-option-title">Cash on Delivery</div>
                             <div className="payment-option-desc">Pay when you receive your order</div>

@@ -18,10 +18,10 @@ export function WishlistProvider({ children }) {
   const addToWishlist = (product) => {
     setWishlist(prev => {
       if (prev.find(p => p._id === product._id)) {
-        toast.info('Already in wishlist');
+        toast.info('This item is already in your wishlist');
         return prev;
       }
-      toast.success('Added to wishlist ♥');
+      toast.success('Added to your wishlist');
       return [...prev, product];
     });
   };

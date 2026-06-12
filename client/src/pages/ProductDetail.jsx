@@ -3,6 +3,10 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
+import SizeGuideModal from '../components/SizeGuideModal';
+import ShareButton from '../components/ShareButton';
+import RecentlyViewed, { addToRecentlyViewed } from '../components/RecentlyViewed';
+import SEO from '../components/SEO';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { toast } from 'react-toastify';
@@ -35,6 +39,7 @@ export default function ProductDetail() {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, title: '', comment: '' });
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
 
@@ -45,6 +50,7 @@ export default function ProductDetail() {
         const res = await axios.get(`/products/${id}`);
         setProduct(res.data);
         setMainImage(res.data.image);
+        addToRecentlyViewed(res.data);
         const relRes = await axios.get(`/products?category=${res.data.category}&limit=4`);
         setRelated(relRes.data.filter(p => p._id !== id).slice(0, 4));
       } catch {
@@ -82,11 +88,11 @@ export default function ProductDetail() {
 
   const handleAddToCart = () => {
     if (!selectedSize && product.sizes?.length > 0) {
-      toast.warning('Please select a size');
+      toast.warning('Please select your preferred size');
       return;
     }
     addToCart({ ...product, size: selectedSize || 'One Size' });
-    toast.success('Added to cart');
+    toast.success('Item added to your bag');
   };
 
   const thumbnails = [product.image, 
@@ -96,8 +102,14 @@ export default function ProductDetail() {
 
   return (
     <>
+      <SEO
+        title={`${product.name} by ${product.brand}`}
+        description={product.description}
+        image={product.image}
+        url={`${window.location.origin}/product/${product._id}`}
+      />
       <Navbar />
-      <div className="vp-container">
+      <div className="vp-container page-enter">
         <div className="product-detail-page">
           {/* Breadcrumb */}
           <div className="breadcrumb">
@@ -171,7 +183,7 @@ export default function ProductDetail() {
                 <>
                   <div className="product-size-label">
                     Select Size
-                    <span className="size-guide-link">Size Guide</span>
+                    <span className="size-guide-link" onClick={() => setSizeGuideOpen(true)}>Size Guide</span>
                   </div>
                   <div className="product-sizes">
                     {product.sizes.map(s => (
@@ -182,10 +194,14 @@ export default function ProductDetail() {
               )}
 
               <div className="product-actions">
-                <button className="btn-add-cart" onClick={handleAddToCart}>🛍️ Add to Cart</button>
-                <button className={`btn-wishlist${wished ? ' active' : ''}`} onClick={() => toggleWishlist(product)}>
-                  {wished ? '♥ In Wishlist' : '♡ Add to Wishlist'}
+                <button className="btn-add-cart" onClick={handleAddToCart}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                  Add to Bag
                 </button>
+                <button className={`btn-wishlist${wished ? ' active' : ''}`} onClick={() => toggleWishlist(product)}>
+                  {wished ? '♥ Saved' : '♡ Save'}
+                </button>
+                <ShareButton product={product} />
               </div>
 
               <div className="product-detail-divider" />
@@ -200,9 +216,10 @@ export default function ProductDetail() {
               </div>
 
               <div className="product-detail-divider" />
-              <div style={{ display: 'flex', gap: '20px', fontSize: '12px', color: '#888' }}>
-                <span>🚚 Free Shipping over ₹5,000</span>
-                <span>↩ 15-Day Returns</span>
+              <div className="product-detail-perks">
+                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Complimentary Shipping over ₹5,000</span>
+                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg> 15-Day Easy Returns</span>
+                <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Authenticity Guaranteed</span>
               </div>
             </div>
           </div>
@@ -316,8 +333,14 @@ export default function ProductDetail() {
               </div>
             </div>
           )}
+
+          {/* Recently Viewed */}
+          <RecentlyViewed excludeId={product._id} />
         </div>
       </div>
+
+      {/* Size Guide Modal */}
+      {sizeGuideOpen && <SizeGuideModal category={product.category} onClose={() => setSizeGuideOpen(false)} />}
 
       <Footer />
       <div className="whatsapp-bubble" onClick={() => window.open('https://wa.me/919876543210','_blank')} role="button">

@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const CartContext = createContext();
+const MAX_QTY_PER_ITEM = 5;
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -25,6 +27,10 @@ export const CartProvider = ({ children }) => {
       const key = `${product._id}-${product.size || 'default'}`;
       const existing = prev.find(i => `${i._id}-${i.size || 'default'}` === key);
       if (existing) {
+        if ((existing.quantity || 1) >= MAX_QTY_PER_ITEM) {
+          toast.warning(`Maximum ${MAX_QTY_PER_ITEM} per item allowed`);
+          return prev;
+        }
         return prev.map(i =>
           `${i._id}-${i.size || 'default'}` === key
             ? { ...i, quantity: (i.quantity || 1) + 1 }
@@ -41,6 +47,7 @@ export const CartProvider = ({ children }) => {
 
   const updateQuantity = (productId, size, newQty) => {
     if (newQty < 1) { removeFromCart(productId, size); return; }
+    if (newQty > MAX_QTY_PER_ITEM) { toast.warning(`Maximum ${MAX_QTY_PER_ITEM} per item allowed`); return; }
     setCartItems(prev =>
       prev.map(i =>
         i._id === productId && (i.size === size || (!size && !i.size))
