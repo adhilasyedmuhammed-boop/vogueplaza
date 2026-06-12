@@ -3,8 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-// Load env
-require('dotenv').config({ path: path.resolve(__dirname, '../server/.env') });
+// Load env only in non-production (Vercel sets env vars automatically)
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: path.resolve(__dirname, '../server/.env') });
+}
 
 const app = express();
 
