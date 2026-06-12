@@ -1,15 +1,30 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
+import axios from '../api/axios';
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { cartItems, clearCart } = useCart();
-  const [step, setStep] = useState(1); // 1=address, 2=payment, 3=confirmation
+  const [step, setStep] = useState(0); // 0=login check, 1=address, 2=payment, 3=confirmation
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  // Check if user is logged in
+  useEffect(() => {
+    const stored = localStorage.getItem('vp_user');
+    if (stored) {
+      setUser(JSON.parse(stored));
+      setStep(1);
+    } else {
+      setStep(0);
+    }
+  }, []);
 
   const [address, setAddress] = useState({
     fullName: '', phone: '', email: '',
@@ -23,6 +38,27 @@ export default function Checkout() {
   const tax = Math.round(subtotal * 0.18);
   const total = subtotal + shipping + tax;
   const fmtPrice = (p) => `₹${(p / 100).toLocaleString('en-IN', { minimumFractionDigits: 0 })}`;
+
+  // Handle login from checkout
+  const handleCheckoutLogin = async (e) => {
+    e.preventDefault();
+    if (!loginData.email || !loginData.password) {
+      toast.error('Please enter email and password');
+      return;
+    }
+    setLoginLoading(true);
+    try {
+      const res = await axios.post('/auth/login', loginData);
+      localStorage.setItem('vp_token', res.data.token);
+      localStorage.setItem('vp_user', JSON.stringify(res.data.user));
+      setUser(res.data.user);
+      setStep(1);
+      toast.success(`Welcome, ${res.data.user?.name || 'User'}! Continue with your order.`);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Login failed. Please check your credentials.');
+    }
+    setLoginLoading(false);
+  };
 
   if (cartItems.length === 0 && step !== 3) {
     navigate('/cart');
@@ -62,6 +98,76 @@ export default function Checkout() {
       toast.success('Order placed successfully! 🎉');
     }, 2000);
   };
+
+  // Step 0: Login Required
+  if (step === 0) {
+    return (
+      <>
+        <Navbar />
+        <div className="vp-container">
+          <div className="checkout-page">
+            <div className="checkout-login-required">
+              <div className="checkout-login-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" strokeWidth="1.5">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <h1 className="checkout-login-title">Sign In to Continue</h1>
+              <p className="checkout-login-text">
+                Please sign in to your account to proceed with checkout. This helps us track your orders and provide a better shopping experience.
+              </p>
+
+              <form onSubmit={handleCheckoutLogin} className="checkout-login-form">
+                <div className="checkout-field">
+                  <label>Email Address</label>
+                  <input type="email" placeholder="your@email.com" value={loginData.email} onChange={e => setLoginData({...loginData, email: e.target.value})} required />
+                </div>
+                <div className="checkout-field">
+                  <label>Password</label>
+                  <input type="password" placeholder="Enter your password" value={loginData.password} onChange={e => setLoginData({...loginData, password: e.target.value})} required />
+                </div>
+                <button type="submit" className="btn-primary" disabled={loginLoading} style={{ width: '100%', marginTop: '8px' }}>
+                  {loginLoading ? 'Signing in...' : 'Sign In & Continue →'}
+                </button>
+              </form>
+
+              <div className="checkout-login-divider">
+                <span>or</span>
+              </div>
+
+              <div className="checkout-login-options">
+                <Link to="/login" className="checkout-login-register-link">
+                  New to Vogue Plaza? <strong>Create an account</strong>
+                </Link>
+                <button className="checkout-login-back" onClick={() => navigate('/cart')}>
+                  ← Back to Cart
+                </button>
+              </div>
+
+              {/* Cart summary preview */}
+              <div className="checkout-login-cart-preview">
+                <div style={{ fontSize: '12px', fontWeight: 600, marginBottom: '8px', color: '#666' }}>Your Cart ({cartItems.length} items)</div>
+                {cartItems.slice(0, 3).map(item => (
+                  <div key={`${item._id}-${item.size}`} style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '6px' }}>
+                    <img src={item.image} alt="" style={{ width: 32, height: 40, objectFit: 'cover', borderRadius: 3 }} />
+                    <span style={{ fontSize: '12px', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>
+                    <span style={{ fontSize: '12px', fontWeight: 600 }}>{fmtPrice(item.price)}</span>
+                  </div>
+                ))}
+                {cartItems.length > 3 && <div style={{ fontSize: '11px', color: '#888' }}>+{cartItems.length - 3} more items</div>}
+                <div style={{ borderTop: '1px solid #f0f0f0', marginTop: '8px', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: '13px' }}>
+                  <span>Total</span>
+                  <span>{fmtPrice(total)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   // Step 3: Order Confirmation
   if (step === 3) {

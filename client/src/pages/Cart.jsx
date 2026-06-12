@@ -9,10 +9,10 @@ export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
-  const shipping = subtotal >= 500000 ? 0 : 49900;
+  const shipping = subtotal >= 5000 ? 0 : 499;
   const total = subtotal + shipping;
 
-  const fmtPrice = (p) => `₹${(p / 100).toLocaleString('en-IN', { minimumFractionDigits: 0 })}`;
+  const fmtPrice = (p) => `₹${p.toLocaleString('en-IN')}`;
 
   if (cartItems.length === 0) {
     return (
@@ -22,7 +22,7 @@ export default function Cart() {
           <div className="cart-page">
             <h1 className="cart-page-title">Shopping Bag</h1>
             <div className="cart-empty">
-              <div className="cart-empty-icon">🛍️</div>
+              <div className="cart-empty-icon" style={{ fontSize: '48px', opacity: 0.3 }}>○</div>
               <div className="cart-empty-title">Your bag is empty</div>
               <p className="cart-empty-text">Looks like you haven't added anything to your bag yet. Start exploring our luxury collections.</p>
               <Link to="/products" className="btn-primary" style={{ width: 'auto', padding: '0 36px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: '50px' }}>
@@ -90,7 +90,7 @@ export default function Cart() {
               </div>
               {shipping > 0 && (
                 <div style={{ fontSize: '11px', color: '#888', marginBottom: '8px' }}>
-                  Add {fmtPrice(500000 - subtotal)} more for free shipping
+                  Add {fmtPrice(5000 - subtotal)} more for free shipping
                 </div>
               )}
               <div className="cart-summary-row"><span>Tax (GST 18%)</span><span>{fmtPrice(Math.round(subtotal * 0.18))}</span></div>
@@ -105,8 +105,8 @@ export default function Cart() {
               </div>
 
               <div style={{ marginTop: '20px', display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                {['💳 Cards', '📱 UPI', '🏦 NetBanking', '💰 EMI'].map(m => (
-                  <span key={m} style={{ fontSize: '11px', padding: '4px 10px', background: '#F5F5F5', borderRadius: '4px', color: '#555' }}>{m}</span>
+                {['Cards', 'UPI', 'Net Banking', 'EMI'].map(m => (
+                  <span key={m} style={{ fontSize: '11px', padding: '4px 10px', background: '#F5F5F5', borderRadius: '4px', color: '#555', letterSpacing: '0.02em' }}>{m}</span>
                 ))}
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import VideoHero from '../components/VideoHero';
@@ -132,8 +133,8 @@ export default function Home() {
   const handleContact = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    try { await axios.post('/enquiries', formData); alert('Message sent!'); setFormData({ name: '', mobile: '', email: '', category: '', message: '' }); }
-    catch { alert('Please try again.'); }
+    try { await axios.post('/enquiries', formData); toast.success('Message sent successfully'); setFormData({ name: '', mobile: '', email: '', category: '', message: '' }); }
+    catch { toast.error('Something went wrong. Please try again.'); }
     setSubmitting(false);
   };
 

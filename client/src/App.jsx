@@ -13,6 +13,7 @@ import LoginRegister from './pages/LoginRegister';
 import Brands from './pages/Brands';
 import NewArrivals from './pages/NewArrivals';
 import Checkout from './pages/Checkout';
+import NotFound from './pages/NotFound';
 import BottomNav from './components/BottomNav';
 import ScrollToTop from './components/ScrollToTop';
 import BackToTop from './components/BackToTop';
@@ -34,7 +35,7 @@ function App() {
           <Route path="/new-arrivals" element={<NewArrivals />} />
 
           {/* Fallback */}
-          <Route path="*" element={<Home />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <BottomNav />
         <BackToTop />

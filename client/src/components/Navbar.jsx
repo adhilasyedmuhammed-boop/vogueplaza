@@ -134,7 +134,7 @@ export default function Navbar() {
             <button className="hamburger-tc" onClick={() => setDrawerOpen(true)} aria-label="Menu">
               <span /><span /><span />
             </button>
-            <Link to="/store-locator" className="tc-util-link">
+            <Link to="/" className="tc-util-link">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Stores
             </Link>
@@ -323,7 +323,7 @@ export default function Navbar() {
 
           <div className="tc-drawer-bottom">
             <Link to="/wishlist" className="tc-drawer-bottom-link" onClick={() => setDrawerOpen(false)}>Wishlist ({wishlistCount})</Link>
-            <Link to="/store-locator" className="tc-drawer-bottom-link" onClick={() => setDrawerOpen(false)}>Find a Store</Link>
+            <Link to="/" className="tc-drawer-bottom-link" onClick={() => setDrawerOpen(false)}>Find a Store</Link>
             <a href="tel:+918001234567" className="tc-drawer-bottom-link">1800-123-4567</a>
           </div>
         </div>
