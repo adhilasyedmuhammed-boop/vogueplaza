@@ -37,9 +37,9 @@ const categories = [
   { name: 'Womenswear', slug: 'womenswear', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600', isActive: true },
   { name: 'Menswear', slug: 'menswear', image: 'https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=600', isActive: true },
   { name: 'Accessories & Beauty', slug: 'accessories', image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=600', isActive: true },
+  { name: 'Footwear', slug: 'footwear', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=600', isActive: true },
   { name: 'Kids Corner', slug: 'kids', image: 'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=600', isActive: true },
   { name: 'Home Decor', slug: 'homedecor', image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=600', isActive: true },
-  { name: 'Footwear', slug: 'footwear', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=600', isActive: true },
 ];
 
 const brands = [
@@ -148,7 +148,40 @@ const products = [
 
   // Watches & Sunglasses
   { name: 'Oversized Vintage Sunglasses', brand: 'Gucci', category: 'accessories', price: 349, image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=600', sizes: ['One Size'], description: 'Premium square-frame acetate sunglasses' },
-  { name: 'Oyster Perpetual Datejust', brand: 'Rolex', category: 'accessories', price: 9599, image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=600', sizes: ['36mm', '41mm'], description: 'Luxury calendar watch in stainless steel and yellow gold' }
+  { name: 'Oyster Perpetual Datejust', brand: 'Rolex', category: 'accessories', price: 9599, image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=600', sizes: ['36mm', '41mm'], description: 'Luxury calendar watch in stainless steel and yellow gold' },
+
+  // Perfumes & Fragrances
+  { name: 'Bleu de Chanel Parfum', brand: 'Chanel', category: 'accessories', price: 899, image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=600', sizes: ['50ml', '100ml', '150ml'], description: 'Woody aromatic fragrance for the modern man' },
+  { name: 'J\'adore Eau de Parfum', brand: 'Dior', category: 'accessories', price: 799, image: 'https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?q=80&w=600', sizes: ['30ml', '50ml', '100ml'], description: 'Iconic floral bouquet with magnolia and rose notes' },
+  { name: 'Eros Pour Homme', brand: 'Versace', category: 'accessories', price: 649, image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=600', sizes: ['50ml', '100ml'], description: 'Fresh oriental fragrance with mint and green apple' },
+
+  // Belts & Wallets
+  { name: 'GG Supreme Leather Belt', brand: 'Gucci', category: 'accessories', price: 599, image: 'https://images.unsplash.com/photo-1624222247344-550fb60583dc?q=80&w=600', sizes: ['85cm', '90cm', '95cm', '100cm'], description: 'Iconic double-G buckle belt in premium brown leather' },
+  { name: 'Saffiano Leather Bifold Wallet', brand: 'Prada', category: 'accessories', price: 449, image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?q=80&w=600', sizes: ['One Size'], description: 'Classic black saffiano leather wallet with multiple card slots' },
+  { name: 'TB Monogram Cardholder', brand: 'Burberry', category: 'accessories', price: 299, image: 'https://images.unsplash.com/photo-1606503153255-59d5a0e01456?q=80&w=600', sizes: ['One Size'], description: 'E-canvas cardholder with vintage check pattern' },
+
+  // More Footwear
+  { name: 'Medusa Platform Sneakers', brand: 'Versace', category: 'footwear', price: 1399, image: 'https://images.unsplash.com/photo-1600269452121-4f2416e55c28?q=80&w=600', sizes: ['40', '41', '42', '43', '44'], description: 'White leather platform sneakers with gold Medusa head detail' },
+  { name: 'Ace Embroidered Sneakers', brand: 'Gucci', category: 'footwear', price: 1099, image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=600', sizes: ['39', '40', '41', '42', '43'], description: 'White leather sneakers with embroidered bee motif' },
+  { name: 'Re-Nylon Chelsea Boots', brand: 'Prada', category: 'footwear', price: 1599, image: 'https://images.unsplash.com/photo-1638247025967-b4e38f787b76?q=80&w=600', sizes: ['40', '41', '42', '43', '44'], description: 'Recycled nylon and brushed leather Chelsea boots' },
+  { name: 'Vintage Check Rain Boots', brand: 'Burberry', category: 'footwear', price: 799, image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=600', sizes: ['36', '37', '38', '39', '40'], description: 'Waterproof rubber boots with iconic Burberry check lining' },
+
+  // Jewellery
+  { name: 'GG Running 18k Gold Necklace', brand: 'Gucci', category: 'accessories', price: 2499, image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=600', sizes: ['One Size'], description: '18k yellow gold chain necklace with interlocking G pendant' },
+  { name: 'Medusa Crystal Stud Earrings', brand: 'Versace', category: 'accessories', price: 399, image: 'https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?q=80&w=600', sizes: ['One Size'], description: 'Gold-tone metal earrings with Medusa head and crystal accents' },
+  { name: 'Coco Crush Diamond Ring', brand: 'Chanel', category: 'accessories', price: 3999, image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=600', sizes: ['5', '6', '7', '8'], description: '18k white gold ring with quilted pattern and diamond pavé' },
+
+  // More Womenswear (Modern/Western)
+  { name: 'Monogram Trench Coat', brand: 'Burberry', category: 'womenswear', price: 2199, image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=600', sizes: ['XS', 'S', 'M', 'L'], description: 'The iconic Burberry trench in honey beige with check lining' },
+  { name: 'Medusa Chain Mini Dress', brand: 'Versace', category: 'womenswear', price: 1799, image: 'https://images.unsplash.com/photo-1612336307429-8a898d10e223?q=80&w=600', sizes: ['XS', 'S', 'M'], description: 'Black mini dress with gold chain-link detail and Medusa hardware' },
+
+  // More Menswear
+  { name: 'Logo Polo Shirt', brand: 'Burberry', category: 'menswear', price: 499, image: 'https://images.unsplash.com/photo-1625910513413-5fc420e7cf1d?q=80&w=600', sizes: ['S', 'M', 'L', 'XL'], description: 'Classic cotton piqué polo shirt with embroidered knight logo' },
+  { name: 'Leather Bomber Jacket', brand: 'Prada', category: 'menswear', price: 3499, image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=600', sizes: ['M', 'L', 'XL'], description: 'Soft nappa leather bomber with ribbed collar and cuffs' },
+
+  // Kids
+  { name: 'Mini Check Cotton Dress', brand: 'Burberry', category: 'kids', price: 399, image: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?q=80&w=600', sizes: ['2-3Y', '4-5Y', '6-7Y'], description: 'Adorable cotton dress with vintage check trim and bow details' },
+  { name: 'Junior Logo T-Shirt', brand: 'Gucci', category: 'kids', price: 249, image: 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?q=80&w=600', sizes: ['3-4Y', '5-6Y', '7-8Y', '9-10Y'], description: 'Soft organic cotton tee with vintage Gucci logo print' },
 ];
 
 const banners = [
