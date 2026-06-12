@@ -140,16 +140,13 @@ export default function Home() {
     <>
       <Navbar />
 
-      {/* 1 ── FULL SCREEN VIDEO ────────────────────────────── */}
+      {/* 1 ── HERO VIDEO — Cinematic first impression ──────── */}
       <VideoHero />
 
-      {/* 2 ── PROMO BANNERS / FLASH DEALS (right after hero) ── */}
-      <PromoBanners />
-
-      {/* 3 ── SHOP BY CATEGORY MASONRY ────────────────────── */}
+      {/* 2 ── SHOP BY CATEGORY — Quick navigation ─────────── */}
       <CategoryMasonry />
 
-      {/* 4 ── NEW ARRIVALS SLIDER ─────────────────────────── */}
+      {/* 3 ── NEW ARRIVALS — Fresh products ────────────────── */}
       <ProductSlider
         eyebrow="Just In"
         title="New Arrivals"
@@ -158,7 +155,10 @@ export default function Home() {
         badge="new"
       />
 
-      {/* 5 ── FULL-WIDTH FEATURED BRAND VIDEO BANNER ────────── */}
+      {/* 4 ── PROMO BANNERS — Offers & Flash Deals ─────────── */}
+      <PromoBanners />
+
+      {/* 5 ── BRAND SPOTLIGHT — Featured brand video ────────── */}
       <section className="tc-editorial-banner brand-spotlight-section">
         {!spotlightError && spotlight.videoUrl ? (
           <video
@@ -191,7 +191,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6 ── TRENDING NOW SLIDER ───────────────────────── */}
+      {/* 6 ── TRENDING NOW — Popular products ──────────────── */}
       <ProductSlider
         eyebrow="Most Loved"
         title="Trending Now"
@@ -199,10 +199,7 @@ export default function Home() {
         viewAllLink="/products"
       />
 
-      {/* 6 ── BRAND SCROLLER ──────────────────────────────── */}
-      <BrandScroller />
-
-      {/* 7 ── SECOND EDITORIAL — split banner ─────────────── */}
+      {/* 7 ── WOMEN & MEN EDITORIAL — Split banner ─────────── */}
       <section className="tc-split-banner vp-section-cream">
         <div className="vp-container">
           <div className="tc-split-grid">
@@ -238,7 +235,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 8 ── STORE INFO + CONTACT ────────────────────────── */}
+      {/* 8 ── BRAND SCROLLER — Trusted brands ─────────────── */}
+      <BrandScroller />
+
+      {/* 9 ── STORE INFO + CONTACT ────────────────────────── */}
       <section className="vp-section">
         <div className="vp-container">
           <div className="contact-grid">
