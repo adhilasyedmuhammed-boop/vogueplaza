@@ -48,6 +48,8 @@ export default function Products() {
   const [sortBy, setSortBy] = useState('newest');
   const [filterOpen, setFilterOpen] = useState({ category: true, brand: true, price: true, size: false });
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({ total: 0, totalPages: 1 });
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -56,11 +58,16 @@ export default function Products() {
         const cat = searchParams.get('category') || 'all';
         const q = searchParams.get('search') || '';
         const brand = searchParams.get('brand') || '';
-        let url = `/products?category=${cat}&search=${q}`;
+        let url = `/products?category=${cat}&search=${q}&page=${page}&limit=12&sort=${sortBy}`;
         if (brand) url += `&brand=${brand}`;
         const res = await axios.get(url);
-        if (res.data?.length) setProducts(res.data);
-        else setProducts(fallback);
+        if (res.data?.products?.length) {
+          setProducts(res.data.products);
+          setPagination(res.data.pagination);
+        } else {
+          setProducts(fallback);
+          setPagination({ total: 0, totalPages: 1 });
+        }
       } catch {
         setProducts(fallback);
       }
@@ -70,14 +77,14 @@ export default function Products() {
     setSelectedCat(searchParams.get('category') || 'all');
     const brandParam = searchParams.get('brand');
     if (brandParam) {
-      // Match URL param (lowercase) to BRANDS array (capitalized)
       const matched = BRANDS.find(b => b.toLowerCase() === brandParam.toLowerCase());
       setSelectedBrands(matched ? [matched] : [brandParam]);
     }
-  }, [searchParams]);
+  }, [searchParams, page, sortBy]);
 
   const handleCatChange = (id) => {
     setSelectedCat(id);
+    setPage(1);
     const params = new URLSearchParams(searchParams);
     if (id === 'all') params.delete('category');
     else params.set('category', id);
@@ -250,6 +257,24 @@ export default function Products() {
                 {filtered.map((p, i) => (
                   <ProductCard key={p._id} product={p} badge={i < 2 ? 'new' : undefined} />
                 ))}
+              </div>
+            )}
+
+            {/* Pagination */}
+            {pagination.totalPages > 1 && !loading && (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, padding: '32px 0' }}>
+                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1} className="pagination-btn" style={{ opacity: page <= 1 ? 0.5 : 1 }}>← Prev</button>
+                {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
+                  .filter(num => num === 1 || num === pagination.totalPages || Math.abs(num - page) <= 2)
+                  .reduce((acc, num, i, arr) => {
+                    if (i > 0 && num - arr[i - 1] > 1) acc.push('...');
+                    acc.push(num);
+                    return acc;
+                  }, [])
+                  .map((item, i) => item === '...' ? <span key={`dots-${i}`} style={{ padding: '0 4px', color: '#999' }}>...</span> : (
+                    <button key={item} onClick={() => setPage(item)} className={`pagination-btn${item === page ? ' active' : ''}`}>{item}</button>
+                  ))}
+                <button onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages} className="pagination-btn" style={{ opacity: page >= pagination.totalPages ? 0.5 : 1 }}>Next →</button>
               </div>
             )}
           </div>

@@ -2448,6 +2448,44 @@ input, select, textarea { font-family: var(--font-sans); }
   text-transform: uppercase;
 }
 
+/* Skeleton Loading */
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.skeleton-img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 4px;
+}
+.skeleton-text {
+  height: 12px;
+  width: 80%;
+}
+.skeleton-text-sm {
+  height: 10px;
+  width: 50%;
+}
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (min-width: 768px) {
+  .skeleton-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; }
+}
+
 /* ============================================================
    TOAST / NOTIFICATION OVERRIDES
    ============================================================ */
@@ -2601,7 +2639,7 @@ input, select, textarea { font-family: var(--font-sans); }
   .price-mrp { font-size: 11px; }
   .price-off { font-size: 11px; }
   .product-card-quick-add { padding: 9px; font-size: 10px; }
-  .product-wishlist-btn { width: 30px; height: 30px; font-size: 14px; }
+  .product-wishlist-btn { width: 36px; height: 36px; font-size: 15px; top: 6px; right: 6px; }
   
   /* Auth */
   .auth-card { padding: 28px 20px; }
@@ -3951,3 +3989,18 @@ input, select, textarea { font-family: var(--font-sans); }
   box-shadow: 0 4px 12px rgba(201,169,110,0.3);
 }
 .vp-modal-btn.warning:hover, .vp-modal-btn.confirm:hover { background: #b8954f; }
+
+/* Pagination */
+.pagination-btn {
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pagination-btn:hover:not(:disabled) { background: #f5f5f5; border-color: #c9a96e; }
+.pagination-btn.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+.pagination-btn:disabled { cursor: not-allowed; }

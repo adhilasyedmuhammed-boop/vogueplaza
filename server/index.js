@@ -1,6 +1,8 @@
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const seedInitialData = require('./seed');
@@ -30,27 +32,52 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
+// Security headers
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: false, // Disabled for SPA flexibility
+}));
+
+// Rate limiting
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  message: { message: 'Too many requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { message: 'Too many login attempts. Please try again after 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // CORS configuration
 const allowedOrigins = [
   'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://localhost:5176',
   'http://localhost:3000',
   process.env.CLIENT_URL,
   'https://vogueplaza.vercel.app',
-  'https://vogueplaza.onrender.com',
 ].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, server-to-server)
     if (!origin) return callback(null, true);
     if (allowedOrigins.some(allowed => origin.startsWith(allowed))) {
       return callback(null, true);
     }
-    callback(null, true); // Allow all for now, tighten later
+    callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
 }));
-app.use(express.json());
+
+app.use(express.json({ limit: '10mb' }));
 
 connectDB().then(() => seedInitialData());
 
@@ -64,16 +91,19 @@ app.use('/api/store', storeRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/brands', brandRoutes);
 app.use('/api/posts', postRoutes);
-app.use('/api/reviews', reviewRoutes);
-app.use('/api/enquiries', enquiryRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/reviews', apiLimiter, reviewRoutes);
+app.use('/api/enquiries', apiLimiter, enquiryRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/homedata', homeDataRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/orders', orderRoutes);
+app.use('/api/orders', apiLimiter, orderRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/upload', require('./routes/upload'));
+app.use('/api/newsletter', apiLimiter, require('./routes/newsletter'));
+app.use('/api/promo', require('./routes/promo'));
 
 // Serve frontend in production
 if (process.env.NODE_ENV === 'production') {

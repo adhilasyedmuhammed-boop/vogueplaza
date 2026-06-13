@@ -2,33 +2,51 @@ const express = require('express');
 const Product = require('../models/Product');
 const router = express.Router();
 
-// GET /api/products — with filters: category, brand, search, limit, sort
+// Escape regex special chars to prevent ReDoS
+const escapeRegex = (str) => String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&').slice(0, 100);
+
+// GET /api/products — with filters: category, brand, search, limit, sort, page
 router.get('/', async (req, res) => {
   try {
-    const { category, brand, search, limit, sort, sale } = req.query;
+    const { category, brand, search, limit, sort, sale, page } = req.query;
     let query = {};
 
-    if (category && category !== 'all') query.category = category;
-    if (brand) query.brand = { $regex: new RegExp(brand, 'i') };
+    if (category && category !== 'all') query.category = String(category).slice(0, 50);
+    if (brand) query.brand = { $regex: new RegExp(escapeRegex(brand), 'i') };
     if (sale === 'true') query.onSale = true;
     if (search) {
+      const safeSearch = escapeRegex(search);
       query.$or = [
-        { name: { $regex: new RegExp(search, 'i') } },
-        { brand: { $regex: new RegExp(search, 'i') } },
-        { description: { $regex: new RegExp(search, 'i') } },
+        { name: { $regex: new RegExp(safeSearch, 'i') } },
+        { brand: { $regex: new RegExp(safeSearch, 'i') } },
+        { description: { $regex: new RegExp(safeSearch, 'i') } },
       ];
     }
 
-    let q = Product.find(query);
+    // Server-side pagination
+    const pageNum = parseInt(page) || 1;
+    const perPage = parseInt(limit) || 10;
+    const skip = (pageNum - 1) * perPage;
 
-    if (sort === 'price-asc') q = q.sort({ price: 1 });
-    else if (sort === 'price-desc') q = q.sort({ price: -1 });
-    else q = q.sort({ createdAt: -1 }); // newest first by default
+    let sortOption = { createdAt: -1 };
+    if (sort === 'price-asc') sortOption = { price: 1 };
+    else if (sort === 'price-desc') sortOption = { price: -1 };
 
-    if (limit) q = q.limit(parseInt(limit));
+    const total = await Product.countDocuments(query);
+    const products = await Product.find(query)
+      .sort(sortOption)
+      .skip(skip)
+      .limit(perPage);
 
-    const products = await q;
-    res.json(products);
+    res.json({
+      products,
+      pagination: {
+        page: pageNum,
+        limit: perPage,
+        total,
+        totalPages: Math.ceil(total / perPage)
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

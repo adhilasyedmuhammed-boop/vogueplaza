@@ -69,8 +69,12 @@ router.get('/dashboard', async (req, res) => {
 // ==================== PRODUCTS ====================
 router.get('/products', async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
-    res.json(products);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const total = await Product.countDocuments();
+    const products = await Product.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
+    res.json({ products, pagination: { page, limit, total, totalPages: Math.ceil(total / limit) } });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

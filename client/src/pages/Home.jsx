@@ -124,8 +124,8 @@ export default function Home() {
           axios.get('/products?limit=12'),
           axios.get('/products?sort=trending&limit=8'),
         ]);
-        if (a.data?.length) setNewArrivals(a.data);
-        if (t.data?.length) setTrending(t.data);
+        if (a.data?.products?.length) setNewArrivals(a.data.products);
+        if (t.data?.products?.length) setTrending(t.data.products);
       } catch {}
     };
     load();

@@ -24,7 +24,7 @@ const orderSchema = new mongoose.Schema(
       pincode: String,
       landmark: String,
     },
-    paymentMethod: { type: String, enum: ['cod', 'upi', 'card', 'netbanking', 'razorpay'], default: 'cod' },
+    paymentMethod: { type: String, enum: ['cod', 'upi', 'card', 'netbanking', 'emi', 'razorpay'], default: 'cod' },
     paymentStatus: { type: String, enum: ['pending', 'paid', 'failed', 'refunded'], default: 'pending' },
     razorpayOrderId: String,
     razorpayPaymentId: String,
@@ -34,10 +34,18 @@ const orderSchema = new mongoose.Schema(
     total: Number,
     status: {
       type: String,
-      enum: ['placed', 'confirmed', 'shipped', 'delivered', 'cancelled'],
+      enum: ['placed', 'confirmed', 'packed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled', 'returned'],
       default: 'placed',
     },
     trackingNumber: String,
+    trackingHistory: [
+      {
+        status: String,
+        message: String,
+        timestamp: { type: Date, default: Date.now },
+      }
+    ],
+    estimatedDelivery: Date,
   },
   { timestamps: true }
 );

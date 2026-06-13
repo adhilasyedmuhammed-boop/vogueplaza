@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
+  productCode: {
+    type: String,
+    unique: true
+  },
   name: {
     type: String,
     required: true
@@ -22,6 +26,9 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  image2: String,
+  image3: String,
+  image4: String,
   sizes: [{
     type: String
   }],
@@ -41,6 +48,16 @@ const productSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true
+});
+
+// Auto-generate productCode before save
+productSchema.pre('save', async function(next) {
+  if (!this.productCode) {
+    const count = await mongoose.model('Product').countDocuments();
+    const prefix = this.category ? this.category.substring(0, 3).toUpperCase() : 'VP';
+    this.productCode = `${prefix}-${String(count + 1).padStart(5, '0')}`;
+  }
+  next();
 });
 
 module.exports = mongoose.model('Product', productSchema);

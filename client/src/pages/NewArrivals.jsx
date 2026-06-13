@@ -25,7 +25,7 @@ export default function NewArrivals() {
       setLoading(true);
       try {
         const res = await axios.get('/products?sort=newest&limit=16');
-        if (res.data?.length) setProducts(res.data);
+        if (res.data?.products?.length) setProducts(res.data.products);
       } catch {}
       setLoading(false);
     };
