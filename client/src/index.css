@@ -2608,6 +2608,60 @@ input, select, textarea { font-family: var(--font-sans); }
   
   /* Section heading */
   .section-heading { font-size: 1.4rem; }
+
+  /* Cart mobile */
+  .cart-page { padding: 24px 0 60px; }
+  .cart-page-title { font-size: 1.4rem; }
+  .cart-item { grid-template-columns: 80px 1fr; gap: 14px; padding: 16px 0; }
+  .cart-item-img { width: 80px; height: 100px; }
+  .cart-item-name { font-size: 13px; }
+  .cart-item-price { font-size: 14px; }
+  .qty-btn { width: 28px; height: 28px; font-size: 14px; }
+  .qty-value { font-size: 13px; min-width: 28px; }
+  .cart-summary { padding: 20px; }
+  .cart-promo-row { flex-direction: column; gap: 8px; }
+  .cart-promo-input { width: 100%; }
+  .cart-checkout-btn { font-size: 13px; }
+  .cart-empty { padding: 48px 16px; }
+  .cart-empty-title { font-size: 1.2rem; }
+
+  /* Wishlist */
+  .wishlist-page { padding: 24px 0 60px; }
+  .wishlist-page-title { font-size: 1.4rem; margin-bottom: 20px; }
+
+  /* Product Detail mobile */
+  .product-detail-page { padding: 20px 0 60px; }
+  .product-detail-brand { font-size: 11px; }
+  .product-detail-name { font-size: 1.3rem; }
+  .product-detail-price { font-size: 1.2rem; gap: 8px; }
+  .product-offer-box { padding: 12px 14px; }
+  .product-offer-title { font-size: 13px; }
+  .product-offer-detail { font-size: 12px; }
+  .product-offer-saving { font-size: 12px; }
+  .btn-add-cart { height: 48px; font-size: 13px; }
+  .btn-wishlist { height: 44px; font-size: 12px; }
+  .product-detail-meta { font-size: 13px; }
+  .breadcrumb { font-size: 11px; flex-wrap: wrap; margin-bottom: 16px; }
+  
+  /* Product zoom disabled on mobile (touch) */
+  .product-images-main:hover img { transform: none; }
+
+  /* Brands page */
+  .page-banner { padding: 24px 16px; }
+  .page-banner-title { font-size: 1.3rem; }
+  .page-banner-sub { font-size: 12px; }
+
+  /* Contact section */
+  .contact-form-card { padding: 24px 16px; }
+  .form-input, .form-select { font-size: 14px; padding: 12px; }
+  .form-label { font-size: 12px; }
+
+  /* Map */
+  .map-section { height: 250px; }
+  .map-iframe { height: 250px; }
+
+  /* NewArrivals */
+  .new-arrivals-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 }
 
 /* ============================================================
