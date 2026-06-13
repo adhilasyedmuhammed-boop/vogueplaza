@@ -164,7 +164,6 @@ export default function PromoBanners() {
           marginBottom: '28px',
           flexWrap: 'wrap',
         }}>
-          <span style={{ fontSize: '32px' }}>🔥</span>
           <h2 style={{
             fontFamily: "'Playfair Display', Georgia, serif",
             fontSize: 'clamp(28px, 5vw, 42px)',
@@ -173,7 +172,6 @@ export default function PromoBanners() {
             color: '#111',
             margin: 0,
           }}>Flash Deals</h2>
-          <span style={{ fontSize: '32px' }}>🔥</span>
           <div style={{
             marginLeft: '20px',
             background: '#111',

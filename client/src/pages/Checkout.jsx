@@ -34,10 +34,10 @@ export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('');
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
-  const shipping = subtotal >= 500000 ? 0 : 49900;
+  const shipping = subtotal >= 5000 ? 0 : 499;
   const tax = Math.round(subtotal * 0.18);
   const total = subtotal + shipping + tax;
-  const fmtPrice = (p) => `₹${(p / 100).toLocaleString('en-IN', { minimumFractionDigits: 0 })}`;
+  const fmtPrice = (p) => `₹${p.toLocaleString('en-IN')}`;
 
   // Handle login from checkout
   const handleCheckoutLogin = async (e) => {
@@ -490,7 +490,7 @@ export default function Checkout() {
                   <div style={{ fontSize: '12px', fontWeight: 600, marginBottom: '6px' }}>Delivering to:</div>
                   <div style={{ fontSize: '12px', color: '#555' }}>{address.fullName}</div>
                   <div style={{ fontSize: '11px', color: '#888' }}>{address.street}, {address.city}, {address.state} - {address.pincode}</div>
-                  <div style={{ fontSize: '11px', color: '#888' }}>📞 {address.phone}</div>
+                  <div style={{ fontSize: '11px', color: '#888' }}>{address.phone}</div>
                 </div>
               )}
 
