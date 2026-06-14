@@ -82,7 +82,7 @@ export default function AdminLayout() {
         </div>
         <nav className="admin-sidebar-nav">
           {menuItems.map((item) => (
-            <Link key={item.path} to={item.path} className={`admin-nav-item${location.pathname === item.path ? ' active' : ''}`}>
+            <Link key={item.path} to={item.path} className={`admin-nav-item${location.pathname === item.path ? ' active' : ''}`} onClick={() => setSidebarOpen(false)}>
               <span className="admin-nav-icon">{item.icon}</span>
               <span>{item.label}</span>
             </Link>
