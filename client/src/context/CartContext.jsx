@@ -25,11 +25,16 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('vp_cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Sync cart to server (debounced)
+  // Check if an ID is a valid MongoDB ObjectId (24 hex chars)
+  const isValidId = (id) => /^[a-f\d]{24}$/i.test(id);
+
+  // Sync cart to server (only valid product IDs)
   const syncToServer = useCallback(async (items) => {
     if (!isLoggedIn()) return;
+    const validItems = items.filter(i => isValidId(i._id));
+    if (validItems.length === 0) return;
     try {
-      await api.put('/cart', { items });
+      await api.put('/cart', { items: validItems });
     } catch { /* silent */ }
   }, []);
 
@@ -38,9 +43,9 @@ export const CartProvider = ({ children }) => {
     if (!isLoggedIn()) return;
     try {
       const localCart = JSON.parse(localStorage.getItem('vp_cart') || '[]');
-      if (localCart.length > 0) {
-        // Push local cart to server (merge)
-        await api.put('/cart', { items: localCart });
+      const validLocal = localCart.filter(i => isValidId(i._id));
+      if (validLocal.length > 0) {
+        await api.put('/cart', { items: validLocal });
       }
       const res = await api.get('/cart');
       if (Array.isArray(res.data) && res.data.length > 0) {
