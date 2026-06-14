@@ -911,6 +911,60 @@
   }
 }
 
+/* Visual Grid Cards (Categories, Banners, Posts) */
+.admin-grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.admin-visual-card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.admin-visual-card-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-visual-card-body {
+  padding: 12px;
+}
+
+.admin-visual-card-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.admin-visual-card-sub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.admin-visual-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+@media (min-width: 769px) {
+  .admin-grid-cards {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .admin-visual-card-img {
+    height: 140px;
+  }
+}
+
 /* Desktop: hide cards, show table */
 @media (min-width: 769px) {
   .admin-card-list {

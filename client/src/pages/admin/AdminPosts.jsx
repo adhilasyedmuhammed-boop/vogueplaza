@@ -65,52 +65,50 @@ export default function AdminPosts() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700 }}>Style Feed Posts ({posts.length})</h1>
+      <div className="admin-page-header">
+        <h1 className="admin-page-title">Style Feed Posts <span className="admin-page-count">({posts.length})</span></h1>
         <button onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ imageUrl: '', caption: '', postedDate: '', isActive: true }); }}
-          style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
+          className={`admin-btn ${showForm ? 'admin-btn-outline' : 'admin-btn-primary'}`}>
           {showForm ? 'Cancel' : '+ Add Post'}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
-            <input placeholder="Image URL" value={form.imageUrl} onChange={e => setForm({...form, imageUrl: e.target.value})} required style={inputStyle} />
-            <input placeholder="Posted Date (e.g. 2 hours ago)" value={form.postedDate} onChange={e => setForm({...form, postedDate: e.target.value})} required style={inputStyle} />
+        <form onSubmit={handleSubmit} className="admin-form">
+          <div className="admin-form-grid">
+            <input className="admin-input" placeholder="Image URL" value={form.imageUrl} onChange={e => setForm({...form, imageUrl: e.target.value})} required />
+            <input className="admin-input" placeholder="Posted Date (e.g. 2 hours ago)" value={form.postedDate} onChange={e => setForm({...form, postedDate: e.target.value})} required />
           </div>
-          <input placeholder="Caption" value={form.caption} onChange={e => setForm({...form, caption: e.target.value})} required style={{ ...inputStyle, width: '100%', marginTop: 16, boxSizing: 'border-box' }} />
+          <input className="admin-input" placeholder="Caption" value={form.caption} onChange={e => setForm({...form, caption: e.target.value})} required style={{ width: '100%', marginTop: 16, boxSizing: 'border-box' }} />
           <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12 }}>
             <input type="checkbox" checked={form.isActive} onChange={e => setForm({...form, isActive: e.target.checked})} />
             Active
           </label>
-          <button type="submit" style={{ marginTop: 16, padding: '10px 24px', background: '#1a1a1a', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
+          <button type="submit" className="admin-btn admin-btn-dark" style={{ marginTop: 16 }}>
             {editing ? 'Update' : 'Create'}
           </button>
         </form>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 16 }}>
+      <div className="admin-grid-cards">
         {posts.map((p) => (
-          <div key={p._id} style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-            <img src={p.imageUrl} alt="" style={{ width: '100%', height: 180, objectFit: 'cover' }} />
-            <div style={{ padding: 14 }}>
-              <div style={{ fontSize: 13, color: '#333' }}>{p.caption}</div>
-              <div style={{ fontSize: 11, color: '#888', marginTop: 4 }}>{p.postedDate}</div>
-              <div style={{ fontSize: 12, marginTop: 6, color: p.isActive ? '#27ae60' : '#e74c3c' }}>
+          <div key={p._id} className="admin-visual-card">
+            <img src={p.imageUrl} alt="" className="admin-visual-card-img" style={{ height: 160 }} />
+            <div className="admin-visual-card-body">
+              <div className="admin-visual-card-title" style={{ fontSize: 13 }}>{p.caption}</div>
+              <div className="admin-visual-card-sub">{p.postedDate}</div>
+              <div style={{ fontSize: 12, marginTop: 4, color: p.isActive ? '#27ae60' : '#e74c3c' }}>
                 {p.isActive ? '● Active' : '● Inactive'}
               </div>
-              <div style={{ marginTop: 10, display: 'flex', gap: 6 }}>
-                <button onClick={() => handleEdit(p)} style={btnStyle}>Edit</button>
-                <button onClick={() => handleDelete(p._id)} style={{ ...btnStyle, background: '#e74c3c' }}>Delete</button>
+              <div className="admin-visual-card-actions">
+                <button onClick={() => handleEdit(p)} className="admin-btn admin-btn-primary admin-btn-sm">Edit</button>
+                <button onClick={() => handleDelete(p._id)} className="admin-btn admin-btn-danger admin-btn-sm">Delete</button>
               </div>
             </div>
           </div>
         ))}
+        {posts.length === 0 && <div className="admin-empty"><div className="admin-empty-icon">🖼️</div><div className="admin-empty-text">No posts yet</div></div>}
       </div>
     </div>
   );
 }
-
-const inputStyle = { padding: '10px 12px', border: '1px solid #ddd', borderRadius: 6, fontSize: 14, outline: 'none' };
-const btnStyle = { padding: '5px 12px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 };
