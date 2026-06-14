@@ -1262,6 +1262,18 @@ input, select, textarea { font-family: var(--font-sans); }
 .size-chip:hover { border-color: var(--black); color: var(--black); }
 .size-chip.selected { background: var(--black); color: var(--white); border-color: var(--black); }
 
+/* Filter Backdrop (hidden on desktop, shown on mobile when sidebar open) */
+.filter-backdrop {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
+}
+.filter-backdrop.active {
+  display: block;
+}
+
 /* Products Right Side */
 .products-right {}
 .mobile-filter-toggle {
@@ -2790,13 +2802,6 @@ input, select, textarea { font-family: var(--font-sans); }
     display: block;
     left: 0;
     box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-  }
-  .filter-backdrop {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 999;
   }
   .filter-backdrop.active {
     display: block;
