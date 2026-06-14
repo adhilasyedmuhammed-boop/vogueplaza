@@ -2991,7 +2991,7 @@ input, select, textarea { font-family: var(--font-sans); }
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 22px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--black);
   white-space: nowrap;
@@ -3985,7 +3985,7 @@ input, select, textarea { font-family: var(--font-sans); }
   .tc-header-bar { padding: 0 12px; height: 60px; }
   .tc-header-left .tc-util-link:not(:first-child), .tc-util-divider { display: none; }
   .hamburger-tc { display: flex; }
-  .tc-logo { font-size: 17px; letter-spacing: 0.08em; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+  .tc-logo { font-size: 15px; letter-spacing: 0.1em; }
   .tc-login-text span { display: none !important; }
   .tc-login-text { padding: 0 !important; width: 34px !important; }
   .tc-user-dropdown { right: -40px; min-width: 220px; }
@@ -4029,10 +4029,11 @@ input, select, textarea { font-family: var(--font-sans); }
 }
 
 @media (max-width: 400px) {
-  .tc-logo { font-size: 14px; letter-spacing: 0.05em; }
-  .tc-header-bar { padding: 0 6px; }
-  .tc-icon-btn { width: 28px; height: 28px; }
-  .tc-header-left { gap: 6px; }
+  .tc-logo { font-size: 13px; letter-spacing: 0.06em; }
+  .tc-header-bar { padding: 0 8px; }
+  .tc-icon-btn { width: 30px; height: 30px; }
+  .tc-header-left { gap: 4px; }
+  .tc-header-right { gap: 2px; }
 }
 
 /* ========== MOBILE BOTTOM NAVIGATION ========== */
