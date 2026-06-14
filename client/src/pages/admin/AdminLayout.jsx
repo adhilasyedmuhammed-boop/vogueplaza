@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ConfirmProvider } from '../../components/ConfirmModal';
+import '../../styles/admin.css';
 
 const menuItems = [
   { path: '/admin', label: 'Dashboard', icon: '📊' },
@@ -16,25 +17,31 @@ const menuItems = [
   { path: '/admin/store', label: 'Store Info', icon: '🏪' },
 ];
 
+// Bottom nav shows 4 main items + More
+const bottomNavItems = [
+  { path: '/admin', label: 'Home', icon: '📊' },
+  { path: '/admin/products', label: 'Products', icon: '👗' },
+  { path: '/admin/enquiries', label: 'Enquiries', icon: '💬' },
+  { path: '/admin/orders', label: 'Orders', icon: '📦' },
+];
+
 export default function AdminLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth <= 768;
-      setIsMobile(mobile);
-      if (mobile) setSidebarOpen(false);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Close sidebar on route change on mobile
+  // Close overlays on route change
   useEffect(() => {
-    if (isMobile) setSidebarOpen(false);
+    setSidebarOpen(false);
+    setMoreOpen(false);
   }, [location.pathname]);
 
   const handleLogout = () => {
@@ -44,129 +51,84 @@ export default function AdminLayout() {
   };
 
   const user = JSON.parse(localStorage.getItem('vp_user') || '{}');
+  const isBottomNavActive = (path) => location.pathname === path;
+  const isMoreActive = !bottomNavItems.some(item => item.path === location.pathname);
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f5f5f0' }}>
-      {/* Mobile overlay */}
+    <div className="admin-wrapper">
+      {/* Mobile Top Bar */}
+      <div className="admin-topbar">
+        <span className="admin-topbar-brand">VOGUE PLAZA</span>
+        <span className="admin-topbar-badge">Admin</span>
+      </div>
+
+      {/* Desktop Sidebar Overlay (mobile) */}
       {isMobile && sidebarOpen && (
-        <div
-          onClick={() => setSidebarOpen(false)}
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 99 }}
-        />
+        <div className="admin-overlay open" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar */}
-      <aside
-        style={{
-          width: sidebarOpen ? 240 : (isMobile ? 0 : 60),
-          background: '#1a1a1a',
-          color: '#fff',
-          transition: 'all 0.3s ease',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          height: '100vh',
-          zIndex: 100,
-          transform: isMobile && !sidebarOpen ? 'translateX(-100%)' : 'translateX(0)',
-        }}
-      >
-        <div style={{ padding: '20px 16px', borderBottom: '1px solid #333', display: 'flex', alignItems: 'center', gap: 10 }}>
-          {sidebarOpen && <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: 1 }}>VOGUE PLAZA</span>}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 18, marginLeft: 'auto' }}
-          >
-            {sidebarOpen ? '✕' : '▶'}
-          </button>
-        </div>
-        <nav style={{ flex: 1, padding: '12px 0', overflowY: 'auto' }}>
-          {menuItems.map((item) => {
-            const active = location.pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12,
-                  padding: '12px 20px',
-                  color: active ? '#c9a96e' : '#ccc',
-                  textDecoration: 'none',
-                  background: active ? '#2a2a2a' : 'transparent',
-                  borderLeft: active ? '3px solid #c9a96e' : '3px solid transparent',
-                  fontSize: 14,
-                  transition: 'all 0.2s',
-                }}
-              >
-                <span style={{ fontSize: 18 }}>{item.icon}</span>
-                {sidebarOpen && <span>{item.label}</span>}
-              </Link>
-            );
-          })}
-        </nav>
-        <div style={{ padding: '16px', borderTop: '1px solid #333' }}>
-          {sidebarOpen && (
-            <div style={{ marginBottom: 8, fontSize: 12, color: '#999' }}>
-              {user.name || 'Admin'} • {user.role}
-            </div>
+      {/* Desktop Sidebar */}
+      <aside className={`admin-sidebar${sidebarOpen ? ' open' : ''}`}>
+        <div className="admin-sidebar-header">
+          <span className="admin-sidebar-logo">VOGUE PLAZA</span>
+          {isMobile && (
+            <button onClick={() => setSidebarOpen(false)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 18, marginLeft: 'auto' }}>✕</button>
           )}
-          <button
-            onClick={handleLogout}
-            style={{
-              width: '100%',
-              padding: '8px',
-              background: '#c9a96e',
-              color: '#1a1a1a',
-              border: 'none',
-              borderRadius: 4,
-              cursor: 'pointer',
-              fontWeight: 600,
-              fontSize: 13,
-            }}
-          >
-            {sidebarOpen ? 'Logout' : '🚪'}
-          </button>
+        </div>
+        <nav className="admin-sidebar-nav">
+          {menuItems.map((item) => (
+            <Link key={item.path} to={item.path} className={`admin-nav-item${location.pathname === item.path ? ' active' : ''}`}>
+              <span className="admin-nav-icon">{item.icon}</span>
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </nav>
+        <div className="admin-sidebar-footer">
+          <div className="admin-sidebar-user">{user.name || 'Admin'} • {user.role}</div>
+          <button onClick={handleLogout} className="admin-logout-btn">Logout</button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main style={{
-        flex: 1,
-        marginLeft: isMobile ? 0 : (sidebarOpen ? 240 : 60),
-        transition: 'margin-left 0.3s',
-        padding: isMobile ? '16px' : '24px 32px',
-        minWidth: 0,
-      }}>
-        {/* Mobile top bar */}
-        {isMobile && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: 16,
-            padding: '12px 16px',
-            background: '#1a1a1a',
-            borderRadius: 8,
-            color: '#fff',
-          }}>
-            <button
-              onClick={() => setSidebarOpen(true)}
-              style={{ background: 'none', border: 'none', color: '#fff', fontSize: 22, cursor: 'pointer' }}
-            >
-              ☰
-            </button>
-            <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: 1 }}>VOGUE PLAZA</span>
-            <span style={{ fontSize: 12, color: '#c9a96e' }}>Admin</span>
-          </div>
-        )}
+      <main className="admin-main">
         <ConfirmProvider>
           <Outlet />
         </ConfirmProvider>
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="admin-bottom-nav">
+        <div className="admin-bottom-nav-inner">
+          {bottomNavItems.map(item => (
+            <Link key={item.path} to={item.path} className={`admin-bottom-nav-item${isBottomNavActive(item.path) ? ' active' : ''}`}>
+              <span className="admin-bottom-nav-icon">{item.icon}</span>
+              <span className="admin-bottom-nav-label">{item.label}</span>
+            </Link>
+          ))}
+          <button onClick={() => setMoreOpen(true)} className={`admin-bottom-nav-item${isMoreActive ? ' active' : ''}`} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+            <span className="admin-bottom-nav-icon">⋯</span>
+            <span className="admin-bottom-nav-label">More</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* More Bottom Sheet */}
+      <div className={`admin-overlay${moreOpen ? ' open' : ''}`} onClick={() => setMoreOpen(false)} />
+      <div className={`admin-more-sheet${moreOpen ? ' open' : ''}`}>
+        <div className="admin-more-sheet-handle" />
+        <div className="admin-more-sheet-grid">
+          {menuItems.filter(m => !bottomNavItems.some(b => b.path === m.path)).map(item => (
+            <Link key={item.path} to={item.path} className={`admin-more-sheet-item${location.pathname === item.path ? ' active' : ''}`} onClick={() => setMoreOpen(false)}>
+              <span className="admin-more-sheet-item-icon">{item.icon}</span>
+              <span className="admin-more-sheet-item-label">{item.label}</span>
+            </Link>
+          ))}
+          <button onClick={handleLogout} className="admin-more-sheet-item" style={{ border: 'none', cursor: 'pointer' }}>
+            <span className="admin-more-sheet-item-icon">🚪</span>
+            <span className="admin-more-sheet-item-label">Logout</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -9,6 +9,7 @@ const User = require('../models/User');
 const StoreInfo = require('../models/StoreInfo');
 const Banner = require('../models/Banner');
 const HomeData = require('../models/HomeData');
+const Order = require('../models/Order');
 const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -19,6 +20,13 @@ router.use(authMiddleware, adminMiddleware);
 // ==================== DASHBOARD STATS ====================
 router.get('/dashboard', async (req, res) => {
   try {
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekStart = new Date(todayStart); weekStart.setDate(weekStart.getDate() - 7);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
     const [
       totalProducts,
       totalCategories,
@@ -29,6 +37,15 @@ router.get('/dashboard', async (req, res) => {
       totalReviews,
       pendingReviews,
       totalPosts,
+      totalOrders,
+      todayOrders,
+      weekOrders,
+      monthOrders,
+      lastMonthOrders,
+      lowStockProducts,
+      outOfStockProducts,
+      newUsersThisMonth,
+      newUsersLastMonth,
     ] = await Promise.all([
       Product.countDocuments(),
       Category.countDocuments(),
@@ -39,11 +56,72 @@ router.get('/dashboard', async (req, res) => {
       Review.countDocuments(),
       Review.countDocuments({ isApproved: false }),
       Post.countDocuments(),
+      Order.countDocuments(),
+      Order.countDocuments({ createdAt: { $gte: todayStart } }),
+      Order.countDocuments({ createdAt: { $gte: weekStart } }),
+      Order.countDocuments({ createdAt: { $gte: monthStart } }),
+      Order.countDocuments({ createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd } }),
+      Product.countDocuments({ inStock: true, $expr: { $lt: ['$stockQuantity', 5] } }).catch(() => 0),
+      Product.countDocuments({ inStock: false }),
+      User.countDocuments({ createdAt: { $gte: monthStart } }),
+      User.countDocuments({ createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd } }),
     ]);
 
+    // Revenue calculations
+    const revenueAgg = await Order.aggregate([
+      { $match: { status: { $nin: ['cancelled', 'returned'] } } },
+      { $group: { _id: null, total: { $sum: '$total' } } }
+    ]).catch(() => []);
+    const totalRevenue = revenueAgg[0]?.total || 0;
+
+    const monthRevenueAgg = await Order.aggregate([
+      { $match: { createdAt: { $gte: monthStart }, status: { $nin: ['cancelled', 'returned'] } } },
+      { $group: { _id: null, total: { $sum: '$total' } } }
+    ]).catch(() => []);
+    const monthRevenue = monthRevenueAgg[0]?.total || 0;
+
+    const lastMonthRevenueAgg = await Order.aggregate([
+      { $match: { createdAt: { $gte: lastMonthStart, $lte: lastMonthEnd }, status: { $nin: ['cancelled', 'returned'] } } },
+      { $group: { _id: null, total: { $sum: '$total' } } }
+    ]).catch(() => []);
+    const lastMonthRevenue = lastMonthRevenueAgg[0]?.total || 0;
+
+    // Daily sales for last 7 days (for chart)
+    const dailySales = await Order.aggregate([
+      { $match: { createdAt: { $gte: weekStart }, status: { $nin: ['cancelled', 'returned'] } } },
+      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }, revenue: { $sum: '$total' }, count: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ]).catch(() => []);
+
+    // Top products by order frequency
+    const topProducts = await Order.aggregate([
+      { $match: { status: { $nin: ['cancelled', 'returned'] } } },
+      { $unwind: '$items' },
+      { $group: { _id: '$items.name', totalSold: { $sum: '$items.quantity' }, revenue: { $sum: { $multiply: ['$items.price', '$items.quantity'] } }, image: { $first: '$items.image' }, brand: { $first: '$items.brand' } } },
+      { $sort: { totalSold: -1 } },
+      { $limit: 5 }
+    ]).catch(() => []);
+
+    // Orders by status
+    const ordersByStatus = await Order.aggregate([
+      { $group: { _id: '$status', count: { $sum: 1 } } }
+    ]).catch(() => []);
+
+    // Recent activity (combine recent orders, enquiries, reviews)
+    const recentOrders = await Order.find().sort({ createdAt: -1 }).limit(5).populate('user', 'name');
     const recentEnquiries = await Enquiry.find().sort({ createdAt: -1 }).limit(5);
     const recentProducts = await Product.find().sort({ createdAt: -1 }).limit(5);
     const recentReviews = await Review.find().sort({ createdAt: -1 }).limit(5);
+
+    // Sales by category
+    const salesByCategory = await Order.aggregate([
+      { $match: { status: { $nin: ['cancelled', 'returned'] } } },
+      { $unwind: '$items' },
+      { $lookup: { from: 'products', localField: 'items.product', foreignField: '_id', as: 'productData' } },
+      { $unwind: { path: '$productData', preserveNullAndEmptyArrays: true } },
+      { $group: { _id: '$productData.category', revenue: { $sum: { $multiply: ['$items.price', '$items.quantity'] } } } },
+      { $sort: { revenue: -1 } }
+    ]).catch(() => []);
 
     res.json({
       stats: {
@@ -56,7 +134,26 @@ router.get('/dashboard', async (req, res) => {
         totalReviews,
         pendingReviews,
         totalPosts,
+        totalOrders,
+        todayOrders,
+        weekOrders,
+        monthOrders,
+        totalRevenue,
+        monthRevenue,
+        outOfStockProducts,
+        lowStockProducts,
+        newUsersThisMonth,
       },
+      trends: {
+        revenueChange: lastMonthRevenue > 0 ? Math.round(((monthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100) : 0,
+        ordersChange: lastMonthOrders > 0 ? Math.round(((monthOrders - lastMonthOrders) / lastMonthOrders) * 100) : 0,
+        usersChange: newUsersLastMonth > 0 ? Math.round(((newUsersThisMonth - newUsersLastMonth) / newUsersLastMonth) * 100) : 0,
+      },
+      dailySales,
+      topProducts,
+      ordersByStatus: Object.fromEntries(ordersByStatus.map(o => [o._id, o.count])),
+      salesByCategory,
+      recentOrders,
       recentEnquiries,
       recentProducts,
       recentReviews,
