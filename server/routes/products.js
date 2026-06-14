@@ -1,5 +1,6 @@
 const express = require('express');
 const Product = require('../models/Product');
+const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 // Escape regex special chars to prevent ReDoS
@@ -31,6 +32,8 @@ router.get('/', async (req, res) => {
     let sortOption = { createdAt: -1 };
     if (sort === 'price-asc') sortOption = { price: 1 };
     else if (sort === 'price-desc') sortOption = { price: -1 };
+    else if (sort === 'popular') sortOption = { orderCount: -1, rating: -1 };
+    else if (sort === 'rating') sortOption = { rating: -1 };
 
     const total = await Product.countDocuments(query);
     const products = await Product.find(query)
@@ -63,8 +66,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/products — create product (admin)
-router.post('/', async (req, res) => {
+// POST /api/products — create product (admin only)
+router.post('/', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const product = new Product(req.body);
     const saved = await product.save();
@@ -74,8 +77,8 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/products/:id — update product
-router.put('/:id', async (req, res) => {
+// PUT /api/products/:id — update product (admin only)
+router.put('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!updated) return res.status(404).json({ message: 'Product not found' });
@@ -85,8 +88,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE /api/products/:id
-router.delete('/:id', async (req, res) => {
+// DELETE /api/products/:id (admin only)
+router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
     res.json({ message: 'Product deleted' });

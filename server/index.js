@@ -104,6 +104,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api/newsletter', apiLimiter, require('./routes/newsletter'));
 app.use('/api/promo', require('./routes/promo'));
+app.use('/api/cart', require('./routes/cart'));
 
 // Serve frontend in production
 if (process.env.NODE_ENV === 'production') {

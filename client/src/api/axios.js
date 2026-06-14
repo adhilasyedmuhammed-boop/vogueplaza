@@ -21,8 +21,17 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('vp_token');
-      localStorage.removeItem('vp_user');
+      const path = window.location.pathname;
+      // Don't redirect for login/register pages or already-cleared state
+      if (!path.includes('/login') && !path.includes('/register')) {
+        localStorage.removeItem('vp_token');
+        localStorage.removeItem('vp_user');
+        window.dispatchEvent(new Event('vp-auth-change'));
+        // Only redirect if user was on a protected page
+        if (path.includes('/account') || path.includes('/checkout')) {
+          window.location.href = '/login';
+        }
+      }
     }
     return Promise.reject(error);
   }

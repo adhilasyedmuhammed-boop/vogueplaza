@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 
 const fallbackCategories = [
@@ -35,7 +36,7 @@ export default function CategoryGrid() {
         </div>
         <div className="category-grid">
           {categories.map((category) => (
-            <a key={category.slug} href={`category.html?slug=${category.slug}`} className="category-card">
+            <Link key={category.slug} to={`/products?category=${category.slug}`} className="category-card">
               <div className="category-img-container">
                 <img src={category.image} alt={category.name} className="category-img" loading="lazy" />
               </div>
@@ -43,7 +44,7 @@ export default function CategoryGrid() {
                 <h3 className="category-name">{category.name}</h3>
                 <span className="category-link">View Details →</span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

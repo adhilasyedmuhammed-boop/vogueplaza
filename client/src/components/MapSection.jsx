@@ -9,7 +9,7 @@ export default function MapSection() {
         <div className="map-frame">
           <iframe
             title="Vogue Plaza Location"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.870220519732!2d-122.4194161846813!3d37.77492927975957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808c4b28f0bd%3A0x1fda92e2e2b04f85!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1690000000000"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.5093932811257!2d76.28869687503288!3d9.931232290162766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0868fce7882431%3A0x71c17a8a9baae8e0!2sLulu%20Mall%20Kochi!5e0!3m2!1sen!2sin!4v1690000000000"
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"

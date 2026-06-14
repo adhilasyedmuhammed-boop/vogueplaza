@@ -22,6 +22,14 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, default: '' },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
     addresses: [addressSchema],
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    cart: [
+      {
+        product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+        size: { type: String, default: 'One Size' },
+        quantity: { type: Number, default: 1, min: 1, max: 5 },
+      }
+    ],
     isVerified: { type: Boolean, default: false },
     verificationToken: String,
     verificationExpires: Date,

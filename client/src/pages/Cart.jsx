@@ -100,6 +100,20 @@ export default function Cart() {
             <div className="cart-summary">
               <div className="cart-summary-title">Order Summary</div>
 
+              {/* Free Shipping Progress */}
+              <div className="free-shipping-progress">
+                {afterDiscount >= 5000 ? (
+                  <div className="free-shipping-msg success">✓ You've unlocked FREE shipping!</div>
+                ) : (
+                  <>
+                    <div className="free-shipping-msg">Add {fmtPrice(5000 - afterDiscount)} more for <strong>FREE shipping</strong></div>
+                    <div className="free-shipping-bar">
+                      <div className="free-shipping-bar-fill" style={{ width: `${Math.min((afterDiscount / 5000) * 100, 100)}%` }} />
+                    </div>
+                  </>
+                )}
+              </div>
+
               <div className="cart-promo-row">
                 <input type="text" className="cart-promo-input" placeholder="Promo / Gift Code" value={promoCode} onChange={e => setPromoCode(e.target.value)} />
                 <button className="cart-promo-btn" onClick={handleApplyPromo}>Apply</button>
@@ -119,11 +133,6 @@ export default function Cart() {
                 <span>Shipping</span>
                 <span>{shipping === 0 ? <span style={{ color: '#27AE60' }}>Free</span> : fmtPrice(shipping)}</span>
               </div>
-              {shipping > 0 && (
-                <div style={{ fontSize: '11px', color: '#888', marginBottom: '8px' }}>
-                  Add {fmtPrice(5000 - afterDiscount)} more for free shipping
-                </div>
-              )}
               <div className="cart-summary-row"><span>Tax (GST 18%)</span><span>{fmtPrice(Math.round(afterDiscount * 0.18))}</span></div>
               <div className="cart-summary-row total"><span>Total</span><span>{fmtPrice(total + Math.round(afterDiscount * 0.18))}</span></div>
 

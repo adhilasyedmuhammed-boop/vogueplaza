@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProductCard from '../components/ProductCard';
+import RecentlyViewed, { addToRecentlyViewed } from '../components/RecentlyViewed';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { toast } from 'react-toastify';
@@ -45,8 +46,10 @@ export default function ProductDetail() {
         const res = await axios.get(`/products/${id}`);
         setProduct(res.data);
         setMainImage(res.data.image);
-        const relRes = await axios.get(`/products?category=${res.data.category}&limit=4`);
-        setRelated(relRes.data.filter(p => p._id !== id).slice(0, 4));
+        addToRecentlyViewed(res.data);
+        const relRes = await axios.get(`/products?category=${res.data.category}&limit=5`);
+        const relProducts = Array.isArray(relRes.data?.products) ? relRes.data.products : (Array.isArray(relRes.data) ? relRes.data : []);
+        setRelated(relProducts.filter(p => p._id !== id).slice(0, 4));
       } catch {
         const found = FALLBACK.find(p => p._id === id) || FALLBACK[0];
         setProduct(found);
@@ -119,8 +122,33 @@ export default function ProductDetail() {
                   e.currentTarget.style.setProperty('--zoom-x', `${x}%`);
                   e.currentTarget.style.setProperty('--zoom-y', `${y}%`);
                 }}
+                onTouchStart={(e) => {
+                  if (e.touches.length === 2) {
+                    e.currentTarget.dataset.pinchStart = Math.hypot(
+                      e.touches[0].clientX - e.touches[1].clientX,
+                      e.touches[0].clientY - e.touches[1].clientY
+                    );
+                  }
+                }}
+                onTouchMove={(e) => {
+                  if (e.touches.length === 2) {
+                    e.preventDefault();
+                    const dist = Math.hypot(
+                      e.touches[0].clientX - e.touches[1].clientX,
+                      e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    const start = parseFloat(e.currentTarget.dataset.pinchStart) || dist;
+                    const scale = Math.min(Math.max(dist / start, 1), 3);
+                    const img = e.currentTarget.querySelector('img');
+                    if (img) img.style.transform = `scale(${scale})`;
+                  }
+                }}
+                onTouchEnd={(e) => {
+                  const img = e.currentTarget.querySelector('img');
+                  if (img) img.style.transform = 'scale(1)';
+                }}
               >
-                <img src={mainImage} alt={product.name} />
+                <img src={mainImage} alt={product.name} style={{ transition: 'transform 0.2s ease' }} />
               </div>
               <div className="product-thumbnails">
                 {thumbnails.map((src, i) => (
@@ -178,15 +206,37 @@ export default function ProductDetail() {
                       <button key={s} className={`size-btn${selectedSize === s ? ' selected' : ''}`} onClick={() => setSelectedSize(s)}>{s}</button>
                     ))}
                   </div>
+                  <div style={{ fontSize: '12px', color: '#888', marginTop: '6px', marginBottom: '12px' }}>
+                    👗 This item usually fits true to size. When in doubt, go one size up.
+                  </div>
                 </>
               )}
 
               <div className="product-actions">
-                <button className="btn-add-cart" onClick={handleAddToCart}>Add to Cart</button>
+                {product.inStock === false ? (
+                  <button className="btn-notify-me" onClick={() => {
+                    const email = prompt('Enter your email to get notified when this item is back in stock:');
+                    if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                      toast.success('We\'ll notify you when this item is back!');
+                    } else if (email) {
+                      toast.error('Please enter a valid email');
+                    }
+                  }}>
+                    🔔 Notify Me When Available
+                  </button>
+                ) : (
+                  <button className="btn-add-cart" onClick={handleAddToCart}>Add to Cart</button>
+                )}
                 <button className={`btn-wishlist${wished ? ' active' : ''}`} onClick={() => toggleWishlist(product)}>
                   {wished ? '♥ In Wishlist' : '♡ Add to Wishlist'}
                 </button>
               </div>
+
+              {product.stockQty > 0 && product.stockQty <= 5 && (
+                <div style={{ fontSize: '13px', color: '#e74c3c', fontWeight: 600, marginTop: '-12px', marginBottom: '16px' }}>
+                  ⚡ Hurry! Only {product.stockQty} left in stock
+                </div>
+              )}
 
               <div className="product-detail-divider" />
 
@@ -262,6 +312,23 @@ export default function ProductDetail() {
                 <input type="text" className="review-form-input" placeholder="Your Name" value={reviewForm.name} onChange={e => setReviewForm({...reviewForm, name: e.target.value})} />
                 <input type="text" className="review-form-input" placeholder="Review Title (e.g., Excellent quality!)" value={reviewForm.title} onChange={e => setReviewForm({...reviewForm, title: e.target.value})} />
                 <textarea className="review-form-textarea" placeholder="Write your review here... What did you like? How was the quality? Would you recommend this product?" value={reviewForm.comment} onChange={e => setReviewForm({...reviewForm, comment: e.target.value})} rows={4} />
+                <div className="review-photo-upload">
+                  <label className="review-photo-label">
+                    📷 Add Photos (optional)
+                    <input type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={(e) => {
+                      const files = Array.from(e.target.files).slice(0, 3);
+                      const previews = files.map(f => URL.createObjectURL(f));
+                      setReviewForm({ ...reviewForm, photos: previews });
+                    }} />
+                  </label>
+                  {reviewForm.photos?.length > 0 && (
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                      {reviewForm.photos.map((src, i) => (
+                        <img key={i} src={src} alt="review" style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 6, border: '1px solid #eee' }} />
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <button className="btn-primary" disabled={submittingReview} onClick={async () => {
                   if (!reviewForm.name || !reviewForm.comment) { toast.error('Please fill name and review'); return; }
                   setSubmittingReview(true);
@@ -316,7 +383,29 @@ export default function ProductDetail() {
               </div>
             </div>
           )}
+
+          {/* Complete the Look — cross-sell from complementary category */}
+          {related.length > 0 && (
+            <div style={{ marginTop: '48px', padding: '32px', background: '#faf8f5', borderRadius: '12px' }}>
+              <div className="section-header-center">
+                <span className="section-eyebrow">Style It</span>
+                <h2 className="section-heading">Complete the Look</h2>
+              </div>
+              <div className="product-grid-4">
+                {related.filter(p => p.category !== product.category || p.brand !== product.brand).slice(0, 3).map(p => (
+                  <ProductCard key={p._id} product={p} />
+                ))}
+                {related.filter(p => p.category !== product.category || p.brand !== product.brand).length === 0 &&
+                  related.slice(0, 2).map(p => <ProductCard key={p._id} product={p} />)
+                }
+              </div>
+            </div>
+          )}
         </div>
+      </div>
+
+      <div className="vp-container">
+        <RecentlyViewed excludeId={id} />
       </div>
 
       <Footer />

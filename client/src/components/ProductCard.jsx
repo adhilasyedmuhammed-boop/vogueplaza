@@ -4,7 +4,7 @@ import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
 
-export default function ProductCard({ product, badge }) {
+export default function ProductCard({ product, badge, onQuickView }) {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
 
@@ -18,6 +18,12 @@ export default function ProductCard({ product, badge }) {
     e.stopPropagation();
     addToCart({ ...product, size: product.sizes?.[0] || 'One Size' });
     toast.success('Item added to your bag');
+  };
+
+  const handleQuickView = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onQuickView) onQuickView(product);
   };
 
   const handleWishlist = (e) => {
@@ -54,11 +60,22 @@ export default function ProductCard({ product, badge }) {
         <button className="product-card-quick-add" onClick={handleQuickAdd}>
           Quick Add
         </button>
+        {onQuickView && (
+          <button className="product-card-quick-view" onClick={handleQuickView}>
+            Quick View
+          </button>
+        )}
       </div>
 
       <div className="product-card-info">
         <div className="product-card-brand">{product.brand}</div>
         <div className="product-card-name">{product.name}</div>
+        {(product.rating > 0 || product.reviewCount > 0) && (
+          <div className="product-card-rating">
+            <span className="product-card-stars">★ {product.rating?.toFixed(1) || '4.5'}</span>
+            <span className="product-card-review-count">({product.reviewCount || 0})</span>
+          </div>
+        )}
         <div className="product-card-price">
           {product.originalPrice ? (
             <>
@@ -70,6 +87,12 @@ export default function ProductCard({ product, badge }) {
             <span className="price-current">₹{product.price?.toLocaleString('en-IN')}</span>
           )}
         </div>
+        {product.stockQty > 0 && product.stockQty <= 5 && (
+          <div className="product-card-low-stock">Only {product.stockQty} left!</div>
+        )}
+        {product.inStock === false && (
+          <div className="product-card-out-of-stock">Out of Stock</div>
+        )}
       </div>
     </Link>
   );
