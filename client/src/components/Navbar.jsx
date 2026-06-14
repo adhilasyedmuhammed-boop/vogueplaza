@@ -128,17 +128,17 @@ export default function Navbar() {
       <header className={`tc-header${scrolled ? ' scrolled' : ''}`}>
         {/* ── MAIN BAR ─────────────────────────────────────── */}
         <div className="tc-header-bar">
-          {/* Left: store + phone */}
+          {/* Left: hamburger + logo (mobile) / store+phone (desktop) */}
           <div className="tc-header-left">
             <button className="hamburger-tc" onClick={() => setDrawerOpen(true)} aria-label="Menu">
               <span /><span /><span />
             </button>
-            <Link to="/" className="tc-util-link">
+            <Link to="/" className="tc-util-link tc-store-link">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Stores
             </Link>
             <span className="tc-util-divider"/>
-            <a href="tel:+918001234567" className="tc-util-link">
+            <a href="tel:+918001234567" className="tc-util-link tc-phone-link">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.61 4.5 2 2 0 0 1 3.6 2.32h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l1.77-1.77a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               1800-123-4567
             </a>
