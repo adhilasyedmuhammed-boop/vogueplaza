@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from '../api/axios';
@@ -12,35 +12,65 @@ export default function LoginRegister() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // If user is already logged in, redirect to home
+  useEffect(() => {
+    const token = localStorage.getItem('vp_token');
+    const user = localStorage.getItem('vp_user');
+    if (token && user) {
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!loginData.email || !loginData.password) {
+      toast.error('Please enter email and password');
+      return;
+    }
     setLoading(true);
     try {
-      const res = await axios.post('/auth/login', loginData);
+      const res = await axios.post('/auth/login', {
+        email: loginData.email.trim().toLowerCase(),
+        password: loginData.password,
+      });
       localStorage.setItem('vp_token', res.data.token);
       localStorage.setItem('vp_user', JSON.stringify(res.data.user));
       window.dispatchEvent(new Event('vp-auth-change'));
-      toast.success(`Welcome back, ${res.data.user?.name || 'valued customer'}.`);
+      toast.success(`Welcome back, ${res.data.user?.name || 'valued customer'}!`);
       navigate('/');
     } catch (err) {
-      toast.error(err?.response?.data?.message || 'Login failed. Please check your credentials.');
+      const msg = err?.response?.data?.message || 'Login failed. Please check your credentials.';
+      toast.error(msg);
     }
     setLoading(false);
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    if (!regData.name || !regData.email || !regData.password) {
+      toast.error('Please fill all fields');
+      return;
+    }
+    if (regData.password.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
     if (regData.password !== regData.confirm) { toast.error('Passwords do not match'); return; }
     setLoading(true);
     try {
-      const res = await axios.post('/auth/register', { name: regData.name, email: regData.email, password: regData.password });
+      const res = await axios.post('/auth/register', {
+        name: regData.name.trim(),
+        email: regData.email.trim().toLowerCase(),
+        password: regData.password,
+      });
       localStorage.setItem('vp_token', res.data.token);
       localStorage.setItem('vp_user', JSON.stringify(res.data.user));
       window.dispatchEvent(new Event('vp-auth-change'));
-      toast.success('Your account has been created. Welcome to Vogue Plaza.');
+      toast.success('Your account has been created. Welcome to Vogue Plaza!');
       navigate('/');
     } catch (err) {
-      toast.error(err?.response?.data?.message || 'Registration failed. Please try again.');
+      const msg = err?.response?.data?.message || 'Registration failed. Please try again.';
+      toast.error(msg);
     }
     setLoading(false);
   };
