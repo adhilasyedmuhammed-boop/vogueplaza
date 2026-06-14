@@ -145,9 +145,8 @@ export default function Navbar() {
           </div>
 
           {/* Centre: logo */}
-          <Link to="/" className="tc-logo logo-mark">
-            <span className="logo-mark-icon">VP</span>
-            <span className="logo-mark-text">VOGUE <span>PLAZA</span></span>
+          <Link to="/" className="tc-logo">
+            VOGUE PLAZA
           </Link>
 
           {/* Right: icons */}
@@ -279,9 +278,8 @@ export default function Navbar() {
         <div className="tc-drawer-overlay" onClick={() => { setDrawerOpen(false); setDrawerSub(null); }} />
         <div className="tc-drawer-panel">
           <div className="tc-drawer-head">
-            <Link to="/" className="tc-drawer-logo logo-mark" onClick={() => setDrawerOpen(false)}>
-              <span className="logo-mark-icon">VP</span>
-              <span className="logo-mark-text">VOGUE <span>PLAZA</span></span>
+            <Link to="/" className="tc-drawer-logo" onClick={() => setDrawerOpen(false)}>
+              VOGUE PLAZA
             </Link>
             <button className="tc-drawer-close" onClick={() => { setDrawerOpen(false); setDrawerSub(null); }}>✕</button>
           </div>

@@ -3980,7 +3980,7 @@ input, select, textarea { font-family: var(--font-sans); }
   .tc-header-bar { padding: 0 12px; height: 60px; }
   .tc-header-left .tc-util-link:not(:first-child), .tc-util-divider { display: none; }
   .hamburger-tc { display: flex; }
-  .tc-logo { font-size: 17px; letter-spacing: 0.08em; }
+  .tc-logo { font-size: 17px; letter-spacing: 0.08em; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
   .tc-login-text span { display: none !important; }
   .tc-login-text { padding: 0 !important; width: 34px !important; }
   .tc-user-dropdown { right: -40px; min-width: 220px; }
