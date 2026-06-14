@@ -65,52 +65,50 @@ export default function AdminCategories() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700 }}>Categories ({categories.length})</h1>
+      <div className="admin-page-header">
+        <h1 className="admin-page-title">Categories <span className="admin-page-count">({categories.length})</span></h1>
         <button onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ name: '', slug: '', image: '', isActive: true }); }}
-          style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
+          className={`admin-btn ${showForm ? 'admin-btn-outline' : 'admin-btn-primary'}`}>
           {showForm ? 'Cancel' : '+ Add Category'}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
-            <input placeholder="Category Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={inputStyle} />
-            <input placeholder="Slug (e.g. womenswear)" value={form.slug} onChange={e => setForm({...form, slug: e.target.value})} required style={inputStyle} />
-            <input placeholder="Image URL" value={form.image} onChange={e => setForm({...form, image: e.target.value})} required style={inputStyle} />
+        <form onSubmit={handleSubmit} className="admin-form">
+          <div className="admin-form-grid">
+            <input className="admin-input" placeholder="Category Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required />
+            <input className="admin-input" placeholder="Slug (e.g. womenswear)" value={form.slug} onChange={e => setForm({...form, slug: e.target.value})} required />
+            <input className="admin-input" placeholder="Image URL" value={form.image} onChange={e => setForm({...form, image: e.target.value})} required />
             <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input type="checkbox" checked={form.isActive} onChange={e => setForm({...form, isActive: e.target.checked})} />
               Active
             </label>
           </div>
-          <button type="submit" style={{ marginTop: 16, padding: '10px 24px', background: '#1a1a1a', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
+          <button type="submit" className="admin-btn admin-btn-dark" style={{ marginTop: 16 }}>
             {editing ? 'Update' : 'Create'}
           </button>
         </form>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
+      <div className="admin-grid-cards">
         {categories.map((c) => (
-          <div key={c._id} style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-            <img src={c.image} alt={c.name} style={{ width: '100%', height: 130, objectFit: 'cover' }} />
-            <div style={{ padding: 14 }}>
-              <div style={{ fontWeight: 600, fontSize: 15 }}>{c.name}</div>
-              <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>/{c.slug}</div>
-              <div style={{ fontSize: 12, marginTop: 6, color: c.isActive ? '#27ae60' : '#e74c3c' }}>
+          <div key={c._id} className="admin-visual-card">
+            <img src={c.image} alt={c.name} className="admin-visual-card-img" />
+            <div className="admin-visual-card-body">
+              <div className="admin-visual-card-title">{c.name}</div>
+              <div className="admin-visual-card-sub">/{c.slug}</div>
+              <div style={{ fontSize: 12, marginTop: 4, color: c.isActive ? '#27ae60' : '#e74c3c' }}>
                 {c.isActive ? '● Active' : '● Inactive'}
               </div>
-              <div style={{ marginTop: 10, display: 'flex', gap: 6 }}>
-                <button onClick={() => handleEdit(c)} style={btnStyle}>Edit</button>
-                <button onClick={() => handleDelete(c._id)} style={{ ...btnStyle, background: '#e74c3c' }}>Delete</button>
+              <div className="admin-visual-card-actions">
+                <button onClick={() => handleEdit(c)} className="admin-btn admin-btn-primary admin-btn-sm">Edit</button>
+                <button onClick={() => handleDelete(c._id)} className="admin-btn admin-btn-danger admin-btn-sm">Delete</button>
               </div>
             </div>
           </div>
         ))}
+        {categories.length === 0 && <div className="admin-empty"><div className="admin-empty-icon">📂</div><div className="admin-empty-text">No categories yet</div></div>}
       </div>
     </div>
   );
 }
-
-const inputStyle = { padding: '10px 12px', border: '1px solid #ddd', borderRadius: 6, fontSize: 14, outline: 'none' };
-const btnStyle = { padding: '5px 12px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 };

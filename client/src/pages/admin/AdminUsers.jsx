@@ -46,55 +46,82 @@ export default function AdminUsers() {
 
   return (
     <div>
-      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>Users ({users.length})</h1>
+      <h1 className="admin-page-title">Users <span className="admin-page-count">({users.length})</span></h1>
 
-      <div style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, minWidth: 550 }}>
+      {/* Mobile Card List */}
+      <div className="admin-card-list">
+        {users.map((u) => (
+          <div key={u._id} className="admin-item-card">
+            <div className="admin-item-card-row">
+              <div className="admin-user-avatar" style={{ background: u.role === 'admin' ? '#c9a96e' : '#ddd', color: u.role === 'admin' ? '#fff' : '#555' }}>
+                {(u.name || 'U').charAt(0).toUpperCase()}
+              </div>
+              <div className="admin-item-card-body">
+                <div className="admin-item-card-title">{u.name}</div>
+                <div className="admin-item-card-subtitle">{u.email}</div>
+                <div style={{ display: 'flex', gap: 8, marginTop: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <span style={{
+                    padding: '2px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600,
+                    background: u.role === 'admin' ? '#c9a96e' : '#f0f0f0',
+                    color: u.role === 'admin' ? '#fff' : '#555',
+                  }}>
+                    {u.role}
+                  </span>
+                  <span style={{ fontSize: 11, color: '#999' }}>Joined {new Date(u.createdAt).toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+            <div className="admin-item-card-actions">
+              <button onClick={() => toggleRole(u._id, u.role)} className="admin-btn admin-btn-primary admin-btn-sm" style={{ flex: 1 }}>
+                {u.role === 'admin' ? 'Make User' : 'Make Admin'}
+              </button>
+              <button onClick={() => handleDelete(u._id)} className="admin-btn admin-btn-danger admin-btn-sm" style={{ flex: 1 }}>
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Table */}
+      <div className="admin-table-wrapper">
+        <table className="admin-table">
           <thead>
-            <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
-              <th style={thStyle}>Name</th>
-              <th style={thStyle}>Email</th>
-              <th style={thStyle}>Role</th>
-              <th style={thStyle}>Joined</th>
-              <th style={thStyle}>Actions</th>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Joined</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map((u) => (
-              <tr key={u._id} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                <td style={tdStyle}><strong>{u.name}</strong></td>
-                <td style={tdStyle}>{u.email}</td>
-                <td style={tdStyle}>
+              <tr key={u._id}>
+                <td style={{ fontWeight: 600 }}>{u.name}</td>
+                <td>{u.email}</td>
+                <td>
                   <span style={{
-                    padding: '3px 10px',
-                    borderRadius: 12,
-                    fontSize: 11,
-                    fontWeight: 600,
+                    padding: '3px 10px', borderRadius: 12, fontSize: 11, fontWeight: 600,
                     background: u.role === 'admin' ? '#c9a96e' : '#eee',
                     color: u.role === 'admin' ? '#fff' : '#555',
                   }}>
                     {u.role}
                   </span>
                 </td>
-                <td style={tdStyle}>{new Date(u.createdAt).toLocaleDateString()}</td>
-                <td style={tdStyle}>
-                  <button onClick={() => toggleRole(u._id, u.role)} style={btnStyle}>
+                <td>{new Date(u.createdAt).toLocaleDateString()}</td>
+                <td>
+                  <button onClick={() => toggleRole(u._id, u.role)} className="admin-btn admin-btn-primary admin-btn-sm">
                     {u.role === 'admin' ? 'Make User' : 'Make Admin'}
                   </button>
-                  <button onClick={() => handleDelete(u._id)} style={{ ...btnStyle, background: '#e74c3c', marginLeft: 6 }}>Delete</button>
+                  <button onClick={() => handleDelete(u._id)} className="admin-btn admin-btn-danger admin-btn-sm" style={{ marginLeft: 6 }}>Delete</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        </div>
         {users.length === 0 && <div style={{ padding: 30, textAlign: 'center', color: '#888' }}>No users found</div>}
       </div>
     </div>
   );
 }
-
-const thStyle = { padding: '12px 10px', textAlign: 'left', fontSize: 12, color: '#666', textTransform: 'uppercase' };
-const tdStyle = { padding: '10px' };
-const btnStyle = { padding: '5px 12px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 };

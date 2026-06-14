@@ -30,6 +30,7 @@ export default function AdminReviews() {
       setShowForm(false);
       setForm({ name: '', rating: 5, comment: '', isApproved: true });
       fetchReviews();
+      toast.success('Review created');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Error creating review');
     }
@@ -39,6 +40,7 @@ export default function AdminReviews() {
     try {
       await axios.put(`/admin/reviews/${id}`, { isApproved: !isApproved }, { headers });
       fetchReviews();
+      toast.success(isApproved ? 'Review unapproved' : 'Review approved');
     } catch (err) { toast.error('Error'); }
   };
 
@@ -56,76 +58,94 @@ export default function AdminReviews() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700 }}>Reviews ({reviews.length})</h1>
-        <button onClick={() => setShowForm(!showForm)}
-          style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
+      <div className="admin-page-header">
+        <h1 className="admin-page-title">Reviews <span className="admin-page-count">({reviews.length})</span></h1>
+        <button onClick={() => setShowForm(!showForm)} className={`admin-btn ${showForm ? 'admin-btn-outline' : 'admin-btn-primary'}`}>
           {showForm ? 'Cancel' : '+ Add Review'}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
-            <input placeholder="Reviewer Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={inputStyle} />
-            <select value={form.rating} onChange={e => setForm({...form, rating: e.target.value})} style={inputStyle}>
+        <form onSubmit={handleSubmit} className="admin-form">
+          <div className="admin-form-grid">
+            <input className="admin-input" placeholder="Reviewer Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required />
+            <select className="admin-input" value={form.rating} onChange={e => setForm({...form, rating: e.target.value})}>
               {[5,4,3,2,1].map(r => <option key={r} value={r}>{r} Star{r > 1 ? 's' : ''}</option>)}
             </select>
           </div>
-          <textarea placeholder="Review comment..." value={form.comment} onChange={e => setForm({...form, comment: e.target.value})} required style={{ ...inputStyle, width: '100%', minHeight: 80, marginTop: 16, boxSizing: 'border-box' }} />
-          <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12 }}>
-              <input type="checkbox" checked={form.isApproved} onChange={e => setForm({...form, isApproved: e.target.checked})} />
-              Approved
-            </label>
-          <button type="submit" style={{ marginTop: 16, padding: '10px 24px', background: '#1a1a1a', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
-            Create Review
-          </button>
+          <textarea className="admin-textarea" placeholder="Review comment..." value={form.comment} onChange={e => setForm({...form, comment: e.target.value})} required style={{ marginTop: 16 }} />
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, fontSize: 14 }}>
+            <input type="checkbox" checked={form.isApproved} onChange={e => setForm({...form, isApproved: e.target.checked})} />
+            Approved
+          </label>
+          <button type="submit" className="admin-btn admin-btn-dark" style={{ marginTop: 16 }}>Create Review</button>
         </form>
       )}
 
-      <div style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, minWidth: 600 }}>
+      {/* Mobile Card List */}
+      <div className="admin-card-list">
+        {reviews.map((r) => (
+          <div key={r._id} className="admin-item-card" style={{ borderLeft: `3px solid ${r.isApproved ? '#27ae60' : '#e67e22'}` }}>
+            <div className="admin-item-card-row">
+              <div className="admin-item-card-body">
+                <div className="admin-item-card-title">{r.name}</div>
+                <div style={{ color: '#c9a96e', fontSize: 13, margin: '4px 0' }}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
+                <div className="admin-item-card-subtitle" style={{ WebkitLineClamp: 3, display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{r.comment}</div>
+                <div style={{ display: 'flex', gap: 8, marginTop: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: r.isApproved ? '#27ae60' : '#e67e22' }}>
+                    {r.isApproved ? '✓ Approved' : '⏳ Pending'}
+                  </span>
+                  <span style={{ fontSize: 11, color: '#999' }}>{new Date(r.createdAt).toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+            <div className="admin-item-card-actions">
+              <button onClick={() => toggleApproval(r._id, r.isApproved)} className={`admin-btn admin-btn-sm ${r.isApproved ? 'admin-btn-outline' : 'admin-btn-primary'}`} style={{ flex: 1 }}>
+                {r.isApproved ? 'Unapprove' : 'Approve'}
+              </button>
+              <button onClick={() => handleDelete(r._id)} className="admin-btn admin-btn-danger admin-btn-sm" style={{ flex: 1 }}>Delete</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Table */}
+      <div className="admin-table-wrapper">
+        <table className="admin-table">
           <thead>
-            <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
-              <th style={thStyle}>Name</th>
-              <th style={thStyle}>Rating</th>
-              <th style={thStyle}>Comment</th>
-              <th style={thStyle}>Status</th>
-              <th style={thStyle}>Date</th>
-              <th style={thStyle}>Actions</th>
+            <tr>
+              <th>Name</th>
+              <th>Rating</th>
+              <th>Comment</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {reviews.map((r) => (
-              <tr key={r._id} style={{ borderBottom: '1px solid #f0f0f0', background: r.isApproved ? '#fff' : '#fff8f0' }}>
-                <td style={tdStyle}><strong>{r.name}</strong></td>
-                <td style={tdStyle}>{'⭐'.repeat(r.rating)}</td>
-                <td style={{ ...tdStyle, maxWidth: 250 }}>{r.comment}</td>
-                <td style={tdStyle}>
-                  <span style={{ color: r.isApproved ? '#27ae60' : '#e67e22', fontSize: 12 }}>
+              <tr key={r._id} style={{ background: r.isApproved ? '#fff' : '#fff8f0' }}>
+                <td style={{ fontWeight: 600 }}>{r.name}</td>
+                <td><span style={{ color: '#c9a96e' }}>{'★'.repeat(r.rating)}</span></td>
+                <td style={{ maxWidth: 250, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.comment}</td>
+                <td>
+                  <span style={{ color: r.isApproved ? '#27ae60' : '#e67e22', fontSize: 12, fontWeight: 600 }}>
                     {r.isApproved ? '✓ Approved' : '⏳ Pending'}
                   </span>
                 </td>
-                <td style={tdStyle}>{new Date(r.createdAt).toLocaleDateString()}</td>
-                <td style={tdStyle}>
-                  <button onClick={() => toggleApproval(r._id, r.isApproved)} style={{ ...btnStyle, background: r.isApproved ? '#e67e22' : '#27ae60' }}>
+                <td>{new Date(r.createdAt).toLocaleDateString()}</td>
+                <td>
+                  <button onClick={() => toggleApproval(r._id, r.isApproved)} className={`admin-btn admin-btn-sm ${r.isApproved ? 'admin-btn-outline' : 'admin-btn-primary'}`}>
                     {r.isApproved ? 'Unapprove' : 'Approve'}
                   </button>
-                  <button onClick={() => handleDelete(r._id)} style={{ ...btnStyle, background: '#e74c3c', marginLeft: 6 }}>Delete</button>
+                  <button onClick={() => handleDelete(r._id)} className="admin-btn admin-btn-danger admin-btn-sm" style={{ marginLeft: 6 }}>Delete</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        </div>
         {reviews.length === 0 && <div style={{ padding: 30, textAlign: 'center', color: '#888' }}>No reviews yet</div>}
       </div>
     </div>
   );
 }
-
-const inputStyle = { padding: '10px 14px', border: '1px solid #ddd', borderRadius: 6, fontSize: 14 };
-const thStyle = { padding: '12px 10px', textAlign: 'left', fontSize: 12, color: '#666', textTransform: 'uppercase' };
-const tdStyle = { padding: '10px' };
-const btnStyle = { padding: '5px 12px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 };

@@ -65,63 +65,61 @@ export default function AdminBanners() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700 }}>Hero Banners ({banners.length})</h1>
+      <div className="admin-page-header">
+        <h1 className="admin-page-title">Hero Banners <span className="admin-page-count">({banners.length})</span></h1>
         <button onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ image: '', label: '', title: '', subtitle: '', cta: 'Shop Now', link: '/products', order: 0, isActive: true }); }}
-          style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
+          className={`admin-btn ${showForm ? 'admin-btn-outline' : 'admin-btn-primary'}`}>
           {showForm ? 'Cancel' : '+ Add Banner'}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
-            <input placeholder="Image URL (1800x800 recommended)" value={form.image} onChange={e => setForm({...form, image: e.target.value})} required style={inputStyle} />
-            <input placeholder="Label (e.g. New Season)" value={form.label} onChange={e => setForm({...form, label: e.target.value})} style={inputStyle} />
-            <input placeholder="Title (use \n for line break)" value={form.title} onChange={e => setForm({...form, title: e.target.value})} required style={inputStyle} />
-            <input placeholder="Subtitle" value={form.subtitle} onChange={e => setForm({...form, subtitle: e.target.value})} style={inputStyle} />
-            <input placeholder="CTA Button Text" value={form.cta} onChange={e => setForm({...form, cta: e.target.value})} style={inputStyle} />
-            <input placeholder="Link (e.g. /products)" value={form.link} onChange={e => setForm({...form, link: e.target.value})} style={inputStyle} />
-            <input placeholder="Order (1, 2, 3...)" type="number" value={form.order} onChange={e => setForm({...form, order: Number(e.target.value)})} style={inputStyle} />
+        <form onSubmit={handleSubmit} className="admin-form">
+          <div className="admin-form-grid">
+            <input className="admin-input" placeholder="Image URL (1800x800 recommended)" value={form.image} onChange={e => setForm({...form, image: e.target.value})} required />
+            <input className="admin-input" placeholder="Label (e.g. New Season)" value={form.label} onChange={e => setForm({...form, label: e.target.value})} />
+            <input className="admin-input" placeholder="Title (use \n for line break)" value={form.title} onChange={e => setForm({...form, title: e.target.value})} required />
+            <input className="admin-input" placeholder="Subtitle" value={form.subtitle} onChange={e => setForm({...form, subtitle: e.target.value})} />
+            <input className="admin-input" placeholder="CTA Button Text" value={form.cta} onChange={e => setForm({...form, cta: e.target.value})} />
+            <input className="admin-input" placeholder="Link (e.g. /products)" value={form.link} onChange={e => setForm({...form, link: e.target.value})} />
+            <input className="admin-input" placeholder="Order (1, 2, 3...)" type="number" value={form.order} onChange={e => setForm({...form, order: Number(e.target.value)})} />
             <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input type="checkbox" checked={form.isActive} onChange={e => setForm({...form, isActive: e.target.checked})} />
               Active
             </label>
           </div>
-          <button type="submit" style={{ marginTop: 16, padding: '10px 24px', background: '#1a1a1a', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
+          <button type="submit" className="admin-btn admin-btn-dark" style={{ marginTop: 16 }}>
             {editing ? 'Update' : 'Create'}
           </button>
         </form>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+      <div className="admin-grid-cards">
         {banners.map((b) => (
-          <div key={b._id} style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-            <div style={{ position: 'relative', height: 160, overflow: 'hidden' }}>
-              <img src={b.image} alt={b.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 12, background: 'linear-gradient(transparent, rgba(0,0,0,0.7))', color: '#fff' }}>
-                <div style={{ fontSize: 11, opacity: 0.8 }}>{b.label}</div>
-                <div style={{ fontSize: 16, fontWeight: 700 }}>{b.title?.replace(/\\n/g, ' ')}</div>
+          <div key={b._id} className="admin-visual-card">
+            <div style={{ position: 'relative', height: 140, overflow: 'hidden' }}>
+              <img src={b.image} alt={b.title} className="admin-visual-card-img" style={{ height: '100%' }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 10, background: 'linear-gradient(transparent, rgba(0,0,0,0.7))', color: '#fff' }}>
+                {b.label && <div style={{ fontSize: 10, opacity: 0.8 }}>{b.label}</div>}
+                <div style={{ fontSize: 14, fontWeight: 700 }}>{b.title?.replace(/\\n/g, ' ')}</div>
               </div>
             </div>
-            <div style={{ padding: 14 }}>
-              <div style={{ fontSize: 12, color: '#666' }}>{b.subtitle}</div>
-              <div style={{ fontSize: 12, marginTop: 6, display: 'flex', gap: 10, alignItems: 'center' }}>
+            <div className="admin-visual-card-body">
+              {b.subtitle && <div className="admin-visual-card-sub">{b.subtitle}</div>}
+              <div style={{ fontSize: 11, display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', marginTop: 4 }}>
                 <span style={{ color: b.isActive ? '#27ae60' : '#e74c3c' }}>{b.isActive ? '● Active' : '● Inactive'}</span>
                 <span style={{ color: '#888' }}>Order: {b.order}</span>
                 <span style={{ color: '#888' }}>→ {b.link}</span>
               </div>
-              <div style={{ marginTop: 10, display: 'flex', gap: 6 }}>
-                <button onClick={() => handleEdit(b)} style={btnStyle}>Edit</button>
-                <button onClick={() => handleDelete(b._id)} style={{ ...btnStyle, background: '#e74c3c' }}>Delete</button>
+              <div className="admin-visual-card-actions">
+                <button onClick={() => handleEdit(b)} className="admin-btn admin-btn-primary admin-btn-sm">Edit</button>
+                <button onClick={() => handleDelete(b._id)} className="admin-btn admin-btn-danger admin-btn-sm">Delete</button>
               </div>
             </div>
           </div>
         ))}
+        {banners.length === 0 && <div className="admin-empty"><div className="admin-empty-icon">🖼️</div><div className="admin-empty-text">No banners yet</div></div>}
       </div>
     </div>
   );
 }
-
-const inputStyle = { padding: '10px 12px', border: '1px solid #ddd', borderRadius: 6, fontSize: 14, outline: 'none' };
-const btnStyle = { padding: '5px 12px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 };

@@ -65,70 +65,89 @@ export default function AdminBrands() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700 }}>Brands ({brands.length})</h1>
+      <div className="admin-page-header">
+        <h1 className="admin-page-title">Brands <span className="admin-page-count">({brands.length})</span></h1>
         <button onClick={() => { setShowForm(!showForm); setEditing(null); setForm({ name: '', slug: '', initials: '', logo: '', isActive: true }); }}
-          style={{ padding: '10px 20px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
+          className={`admin-btn ${showForm ? 'admin-btn-outline' : 'admin-btn-primary'}`}>
           {showForm ? 'Cancel' : '+ Add Brand'}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} style={{ background: '#fff', padding: 24, borderRadius: 10, marginBottom: 24, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
-            <input placeholder="Brand Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required style={inputStyle} />
-            <input placeholder="Slug" value={form.slug} onChange={e => setForm({...form, slug: e.target.value})} required style={inputStyle} />
-            <input placeholder="Initials (e.g. GC)" value={form.initials} onChange={e => setForm({...form, initials: e.target.value})} required style={inputStyle} />
-            <input placeholder="Logo URL (optional)" value={form.logo} onChange={e => setForm({...form, logo: e.target.value})} style={inputStyle} />
+        <form onSubmit={handleSubmit} className="admin-form">
+          <div className="admin-form-grid">
+            <input className="admin-input" placeholder="Brand Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required />
+            <input className="admin-input" placeholder="Slug" value={form.slug} onChange={e => setForm({...form, slug: e.target.value})} required />
+            <input className="admin-input" placeholder="Initials (e.g. GC)" value={form.initials} onChange={e => setForm({...form, initials: e.target.value})} required />
+            <input className="admin-input" placeholder="Logo URL (optional)" value={form.logo} onChange={e => setForm({...form, logo: e.target.value})} />
             <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <input type="checkbox" checked={form.isActive} onChange={e => setForm({...form, isActive: e.target.checked})} />
               Active
             </label>
           </div>
-          <button type="submit" style={{ marginTop: 16, padding: '10px 24px', background: '#1a1a1a', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 600 }}>
+          <button type="submit" className="admin-btn admin-btn-dark" style={{ marginTop: 16 }}>
             {editing ? 'Update' : 'Create'}
           </button>
         </form>
       )}
 
-      <div style={{ background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, minWidth: 550 }}>
+      {/* Mobile Card List */}
+      <div className="admin-card-list">
+        {brands.map((b) => (
+          <div key={b._id} className="admin-item-card">
+            <div className="admin-item-card-row">
+              <div style={{ width: 40, height: 40, borderRadius: 8, background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                {b.logo ? <img src={b.logo} alt="" style={{ width: 32, height: 32, objectFit: 'contain' }} /> : <span style={{ fontSize: 14, fontWeight: 700, color: '#c9a96e' }}>{b.initials}</span>}
+              </div>
+              <div className="admin-item-card-body">
+                <div className="admin-item-card-title">{b.name}</div>
+                <div className="admin-item-card-subtitle">/{b.slug} • {b.initials}</div>
+                <span style={{ fontSize: 11, fontWeight: 600, color: b.isActive ? '#27ae60' : '#e74c3c', marginTop: 4, display: 'inline-block' }}>
+                  {b.isActive ? '● Active' : '● Inactive'}
+                </span>
+              </div>
+            </div>
+            <div className="admin-item-card-actions">
+              <button onClick={() => handleEdit(b)} className="admin-btn admin-btn-primary admin-btn-sm" style={{ flex: 1 }}>Edit</button>
+              <button onClick={() => handleDelete(b._id)} className="admin-btn admin-btn-danger admin-btn-sm" style={{ flex: 1 }}>Delete</button>
+            </div>
+          </div>
+        ))}
+        {brands.length === 0 && <div className="admin-empty"><div className="admin-empty-icon">🏷️</div><div className="admin-empty-text">No brands yet</div></div>}
+      </div>
+
+      {/* Desktop Table */}
+      <div className="admin-table-wrapper">
+        <table className="admin-table">
           <thead>
-            <tr style={{ background: '#fafafa', borderBottom: '2px solid #eee' }}>
-              <th style={thStyle}>Logo</th>
-              <th style={thStyle}>Name</th>
-              <th style={thStyle}>Slug</th>
-              <th style={thStyle}>Initials</th>
-              <th style={thStyle}>Status</th>
-              <th style={thStyle}>Actions</th>
+            <tr>
+              <th>Logo</th>
+              <th>Name</th>
+              <th>Slug</th>
+              <th>Initials</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {brands.map((b) => (
-              <tr key={b._id} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                <td style={tdStyle}>
-                  {b.logo ? <img src={b.logo} alt="" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 4 }} /> : <span style={{ fontSize: 18, fontWeight: 700 }}>{b.initials}</span>}
+              <tr key={b._id}>
+                <td>
+                  {b.logo ? <img src={b.logo} alt="" style={{ width: 36, height: 36, objectFit: 'contain', borderRadius: 4 }} /> : <span style={{ fontSize: 16, fontWeight: 700 }}>{b.initials}</span>}
                 </td>
-                <td style={tdStyle}>{b.name}</td>
-                <td style={tdStyle}>{b.slug}</td>
-                <td style={tdStyle}>{b.initials}</td>
-                <td style={tdStyle}><span style={{ color: b.isActive ? '#27ae60' : '#e74c3c' }}>{b.isActive ? '● Active' : '● Inactive'}</span></td>
-                <td style={tdStyle}>
-                  <button onClick={() => handleEdit(b)} style={btnStyle}>Edit</button>
-                  <button onClick={() => handleDelete(b._id)} style={{ ...btnStyle, background: '#e74c3c', marginLeft: 6 }}>Delete</button>
+                <td style={{ fontWeight: 600 }}>{b.name}</td>
+                <td>{b.slug}</td>
+                <td>{b.initials}</td>
+                <td><span style={{ color: b.isActive ? '#27ae60' : '#e74c3c' }}>{b.isActive ? '● Active' : '● Inactive'}</span></td>
+                <td>
+                  <button onClick={() => handleEdit(b)} className="admin-btn admin-btn-primary admin-btn-sm">Edit</button>
+                  <button onClick={() => handleDelete(b._id)} className="admin-btn admin-btn-danger admin-btn-sm" style={{ marginLeft: 6 }}>Delete</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        </div>
       </div>
     </div>
   );
 }
-
-const inputStyle = { padding: '10px 12px', border: '1px solid #ddd', borderRadius: 6, fontSize: 14, outline: 'none' };
-const thStyle = { padding: '12px 10px', textAlign: 'left', fontSize: 12, color: '#666', textTransform: 'uppercase' };
-const tdStyle = { padding: '10px' };
-const btnStyle = { padding: '5px 12px', background: '#c9a96e', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 };
