@@ -19,11 +19,23 @@ const menuItems = [
 
 // Bottom nav shows 4 main items + More
 const bottomNavItems = [
-  { path: '/admin', label: 'Home', icon: '📊' },
-  { path: '/admin/products', label: 'Products', icon: '👗' },
-  { path: '/admin/enquiries', label: 'Enquiries', icon: '💬' },
-  { path: '/admin/orders', label: 'Orders', icon: '📦' },
+  { path: '/admin', label: 'Home', icon: 'home' },
+  { path: '/admin/products', label: 'Products', icon: 'products' },
+  { path: '/admin/enquiries', label: 'Enquiries', icon: 'enquiries' },
+  { path: '/admin/orders', label: 'Orders', icon: 'orders' },
 ];
+
+const BottomNavIcon = ({ name, active }) => {
+  const color = active ? '#c9a96e' : '#888';
+  const icons = {
+    home: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+    products: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>,
+    enquiries: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+    orders: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>,
+    more: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>,
+  };
+  return icons[name] || null;
+};
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -106,12 +118,16 @@ export default function AdminLayout() {
         <div className="admin-bottom-nav-inner">
           {bottomNavItems.map(item => (
             <Link key={item.path} to={item.path} className={`admin-bottom-nav-item${isBottomNavActive(item.path) ? ' active' : ''}`}>
-              <span className="admin-bottom-nav-icon">{item.icon}</span>
+              <span className="admin-bottom-nav-icon">
+                <BottomNavIcon name={item.icon} active={isBottomNavActive(item.path)} />
+              </span>
               <span className="admin-bottom-nav-label">{item.label}</span>
             </Link>
           ))}
           <button onClick={() => setMoreOpen(true)} className={`admin-bottom-nav-item${isMoreActive ? ' active' : ''}`} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-            <span className="admin-bottom-nav-icon">⋯</span>
+            <span className="admin-bottom-nav-icon">
+              <BottomNavIcon name="more" active={isMoreActive} />
+            </span>
             <span className="admin-bottom-nav-label">More</span>
           </button>
         </div>
