@@ -41,6 +41,12 @@ const wishlistRoutes = require('../server/routes/wishlist');
 const bannerRoutes = require('../server/routes/banners');
 const homeDataRoutes = require('../server/routes/homedata');
 const adminRoutes = require('../server/routes/admin');
+const orderRoutes = require('../server/routes/orders');
+const userRoutes = require('../server/routes/user');
+const cartRoutes = require('../server/routes/cart');
+const uploadRoutes = require('../server/routes/upload');
+const newsletterRoutes = require('../server/routes/newsletter');
+const promoRoutes = require('../server/routes/promo');
 
 // Connect to DB before handling requests
 app.use(async (req, res, next) => {
@@ -61,6 +67,12 @@ app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/homedata', homeDataRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/promo', promoRoutes);
 
 app.get('/api', (req, res) => {
   res.json({ message: 'Vogue Plaza API is running' });

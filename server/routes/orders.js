@@ -39,14 +39,14 @@ router.post('/', async (req, res) => {
     for (const item of items) {
       const pid = (item._id || item.product || '').toString();
       const dbPrice = priceMap[pid];
-      if (!dbPrice) {
+      if (dbPrice === undefined) {
         return res.status(400).json({ message: `Product not found: ${item.name || pid}` });
       }
       verifiedSubtotal += dbPrice * (item.quantity || 1);
     }
 
-    const verifiedShipping = verifiedSubtotal >= 500000 ? 0 : 9900; // Free shipping over ₹5000
-    const verifiedTax = Math.round(verifiedSubtotal * 0.05);
+    const verifiedShipping = verifiedSubtotal >= 5000 ? 0 : 499; // Free shipping over ₹5000
+    const verifiedTax = Math.round(verifiedSubtotal * 0.18);
     const verifiedTotal = verifiedSubtotal + verifiedShipping + verifiedTax;
 
     const allowedPayments = ['cod', 'upi', 'card', 'netbanking', 'emi'];
