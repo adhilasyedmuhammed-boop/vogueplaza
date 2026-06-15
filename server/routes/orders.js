@@ -30,8 +30,17 @@ router.post('/', async (req, res) => {
     }
 
     // Server-side price verification
-    const productIds = items.map(i => i._id || i.product);
-    const dbProducts = await Product.find({ _id: { $in: productIds } });
+    const productIds = items.map(i => i._id || i.product).filter(Boolean);
+    if (productIds.length !== items.length) {
+      return res.status(400).json({ message: 'Invalid product data in order' });
+    }
+
+    let dbProducts;
+    try {
+      dbProducts = await Product.find({ _id: { $in: productIds } });
+    } catch (findErr) {
+      return res.status(400).json({ message: 'Invalid product reference in order' });
+    }
     const priceMap = {};
     dbProducts.forEach(p => { priceMap[p._id.toString()] = p.price; });
 

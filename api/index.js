@@ -11,20 +11,21 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 
 app.use(cors({ origin: true, credentials: true }));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // MongoDB connection (cached for serverless)
 let isConnected = false;
 const connectDB = async () => {
   if (isConnected) return;
+  if (mongoose.connection.readyState === 1) { isConnected = true; return; }
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
+    await mongoose.connect(process.env.MONGO_URI, {
       serverSelectionTimeoutMS: 30000,
     });
     isConnected = true;
-    console.log(`MongoDB connected: ${conn.connection.host}`);
   } catch (error) {
     console.error('MongoDB connection error:', error.message);
+    throw error;
   }
 };
 
@@ -50,8 +51,12 @@ const promoRoutes = require('../server/routes/promo');
 
 // Connect to DB before handling requests
 app.use(async (req, res, next) => {
-  await connectDB();
-  next();
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(503).json({ message: 'Database connection failed. Please try again.' });
+  }
 });
 
 // Mount routes
@@ -76,6 +81,12 @@ app.use('/api/promo', promoRoutes);
 
 app.get('/api', (req, res) => {
   res.json({ message: 'Vogue Plaza API is running' });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err.message);
+  res.status(err.status || 500).json({ message: err.message || 'Internal server error' });
 });
 
 module.exports = app;
