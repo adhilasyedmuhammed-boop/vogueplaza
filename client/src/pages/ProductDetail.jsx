@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -38,6 +38,48 @@ export default function ProductDetail() {
   const [submittingReview, setSubmittingReview] = useState(false);
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const zoomRef = useRef(null);
+
+  // Pinch-to-zoom with non-passive touch listeners
+  useEffect(() => {
+    const el = zoomRef.current;
+    if (!el) return;
+    let pinchStart = 0;
+
+    const onTouchStart = (e) => {
+      if (e.touches.length === 2) {
+        pinchStart = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+      }
+    };
+    const onTouchMove = (e) => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        const scale = Math.min(Math.max(dist / (pinchStart || dist), 1), 3);
+        const img = el.querySelector('img');
+        if (img) img.style.transform = `scale(${scale})`;
+      }
+    };
+    const onTouchEnd = () => {
+      const img = el.querySelector('img');
+      if (img) img.style.transform = 'scale(1)';
+    };
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    el.addEventListener('touchend', onTouchEnd, { passive: true });
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+      el.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [mainImage]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -114,6 +156,7 @@ export default function ProductDetail() {
             {/* Images */}
             <div>
               <div
+                ref={zoomRef}
                 className="product-images-main product-zoom-container"
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -121,31 +164,6 @@ export default function ProductDetail() {
                   const y = ((e.clientY - rect.top) / rect.height) * 100;
                   e.currentTarget.style.setProperty('--zoom-x', `${x}%`);
                   e.currentTarget.style.setProperty('--zoom-y', `${y}%`);
-                }}
-                onTouchStart={(e) => {
-                  if (e.touches.length === 2) {
-                    e.currentTarget.dataset.pinchStart = Math.hypot(
-                      e.touches[0].clientX - e.touches[1].clientX,
-                      e.touches[0].clientY - e.touches[1].clientY
-                    );
-                  }
-                }}
-                onTouchMove={(e) => {
-                  if (e.touches.length === 2) {
-                    e.preventDefault();
-                    const dist = Math.hypot(
-                      e.touches[0].clientX - e.touches[1].clientX,
-                      e.touches[0].clientY - e.touches[1].clientY
-                    );
-                    const start = parseFloat(e.currentTarget.dataset.pinchStart) || dist;
-                    const scale = Math.min(Math.max(dist / start, 1), 3);
-                    const img = e.currentTarget.querySelector('img');
-                    if (img) img.style.transform = `scale(${scale})`;
-                  }
-                }}
-                onTouchEnd={(e) => {
-                  const img = e.currentTarget.querySelector('img');
-                  if (img) img.style.transform = 'scale(1)';
                 }}
               >
                 <img src={mainImage} alt={product.name} style={{ transition: 'transform 0.2s ease' }} />
