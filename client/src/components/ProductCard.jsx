@@ -11,7 +11,8 @@ export default function ProductCard({ product, badge, onQuickView }) {
   const wished = isInWishlist(product._id);
   const [isHovered, setIsHovered] = useState(false);
 
-  const altImg = product.image2 || product.hoverImage || getAltImage(product.image);
+  // Only use alt image if product has its own image2, don't use random stock images
+  const altImg = product.image2 || product.image;
 
   const handleQuickAdd = (e) => {
     e.preventDefault();

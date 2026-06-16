@@ -141,10 +141,7 @@ export default function ProductDetail() {
     toast.success('Item added to your bag');
   };
 
-  const thumbnails = [product.image, 
-    'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=300',
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=300',
-  ];
+  const thumbnails = [product.image, product.image2, product.image3, product.image4].filter(Boolean);
 
   return (
     <>

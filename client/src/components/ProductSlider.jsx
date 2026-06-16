@@ -136,8 +136,8 @@ function SliderCard({ product, badge }) {
     setShowSecondary(prev => !prev);
   };
 
-  // secondary hover image — pick a contrasting unsplash image
-  const hoverImg = product.image2 || product.hoverImage || getAltImage(product.image);
+  // secondary hover image — only use product's own image2
+  const hoverImg = product.image2 || product.image;
 
   return (
     <Link
