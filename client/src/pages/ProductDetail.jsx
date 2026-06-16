@@ -82,6 +82,13 @@ export default function ProductDetail() {
   }, [mainImage]);
 
   useEffect(() => {
+    // Reset state when navigating to a different product
+    setSelectedSize('');
+    setMainImage('');
+    setProduct(null);
+    setReviews([]);
+    setShowReviewForm(false);
+
     const fetchProduct = async () => {
       setLoading(true);
       try {
