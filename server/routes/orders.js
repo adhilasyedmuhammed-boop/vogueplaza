@@ -61,17 +61,29 @@ router.post('/', async (req, res) => {
     const allowedPayments = ['cod', 'upi', 'card', 'netbanking', 'emi'];
     const cleanPayment = allowedPayments.includes(paymentMethod) ? paymentMethod : 'cod';
 
+    // Build image map from DB products (Cloudinary URLs)
+    const imageMap = {};
+    dbProducts.forEach(p => { imageMap[p._id.toString()] = p.image; });
+
     const order = await Order.create({
       user: req.user._id,
-      items: items.map(i => ({
-        product: i._id || i.product,
-        name: String(i.name || '').slice(0, 200),
-        brand: String(i.brand || '').slice(0, 100),
-        size: String(i.size || 'One Size').slice(0, 20),
-        quantity: Math.min(Math.max(Number(i.quantity) || 1, 1), 10),
-        price: priceMap[(i._id || i.product || '').toString()] || 0,
-        image: String(i.image || '').slice(0, 500),
-      })),
+      items: items.map(i => {
+        const pid = (i._id || i.product || '').toString();
+        const imgSrc = i.image || '';
+        // Only store proper HTTP URLs — skip base64 (too large / gets truncated)
+        const safeImage = (imgSrc.startsWith('http://') || imgSrc.startsWith('https://'))
+          ? imgSrc.slice(0, 500)
+          : (imageMap[pid] || '');
+        return {
+          product: i._id || i.product,
+          name: String(i.name || '').slice(0, 200),
+          brand: String(i.brand || '').slice(0, 100),
+          size: String(i.size || 'One Size').slice(0, 20),
+          quantity: Math.min(Math.max(Number(i.quantity) || 1, 1), 10),
+          price: priceMap[pid] || 0,
+          image: safeImage,
+        };
+      }),
       shippingAddress: {
         fullName: String(shippingAddress.fullName).trim().slice(0, 100),
         phone: String(shippingAddress.phone).trim().slice(0, 15),

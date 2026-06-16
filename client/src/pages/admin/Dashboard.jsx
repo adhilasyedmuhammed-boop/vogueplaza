@@ -26,6 +26,13 @@ function formatCurrency(amount) {
   return `₹${amount?.toLocaleString('en-IN') || 0}`;
 }
 
+function isValidImageUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  if (url.startsWith('data:')) return false; // Skip base64 — too large / often truncated
+  if (url.startsWith('http://') || url.startsWith('https://')) return true;
+  return false;
+}
+
 // Bar Chart Component
 function BarChart({ data, height = 100 }) {
   if (!data || data.length === 0) return <div className="dash-empty-text">No data available</div>;
@@ -303,7 +310,11 @@ export default function Dashboard() {
               {topProducts.map((p, i) => (
                 <div key={i} className="dash-top-item">
                   <span className="dash-top-rank">#{i + 1}</span>
-                  {p.image && <img src={p.image} alt="" className="dash-top-img" />}
+                  {isValidImageUrl(p.image) ? (
+                    <img src={p.image} alt="" className="dash-top-img" />
+                  ) : (
+                    <div className="dash-top-img-placeholder">{p._id?.charAt(0) || '?'}</div>
+                  )}
                   <div className="dash-top-info">
                     <div className="dash-top-name">{p._id}</div>
                     <div className="dash-top-meta">{p.totalSold} sold • {formatCurrency(p.revenue)}</div>
