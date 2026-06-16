@@ -10,6 +10,11 @@ export default function LoginRegister() {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [regData, setRegData] = useState({ name: '', email: '', password: '', confirm: '' });
   const [loading, setLoading] = useState(false);
+  const [forgotMode, setForgotMode] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [resetToken, setResetToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [resetStep, setResetStep] = useState(1); // 1=email, 2=token+password
   const navigate = useNavigate();
 
   // If user is already logged in, redirect to home
@@ -75,6 +80,43 @@ export default function LoginRegister() {
     setLoading(false);
   };
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    if (!forgotEmail) { toast.error('Please enter your email'); return; }
+    setLoading(true);
+    try {
+      const res = await axios.post('/auth/forgot-password', { email: forgotEmail.trim().toLowerCase() });
+      toast.success('Reset link sent! Check your email.');
+      // In dev mode, token may be returned directly
+      if (res.data.resetToken) {
+        setResetToken(res.data.resetToken);
+      }
+      setResetStep(2);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to send reset email');
+    }
+    setLoading(false);
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (!resetToken || !newPassword) { toast.error('Please fill all fields'); return; }
+    if (newPassword.length < 6) { toast.error('Password must be at least 6 characters'); return; }
+    setLoading(true);
+    try {
+      await axios.post('/auth/reset-password', { token: resetToken, password: newPassword });
+      toast.success('Password reset successfully! Please sign in.');
+      setForgotMode(false);
+      setResetStep(1);
+      setForgotEmail('');
+      setResetToken('');
+      setNewPassword('');
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Reset failed. Token may be expired.');
+    }
+    setLoading(false);
+  };
+
   return (
     <>
       <Navbar />
@@ -88,6 +130,46 @@ export default function LoginRegister() {
           </div>
 
           {tab === 'login' ? (
+            forgotMode ? (
+              <div>
+                <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px', textAlign: 'center' }}>
+                  {resetStep === 1 ? 'Reset Your Password' : 'Enter New Password'}
+                </h3>
+                <p style={{ fontSize: '13px', color: '#666', marginBottom: '20px', textAlign: 'center' }}>
+                  {resetStep === 1
+                    ? 'Enter your email and we\'ll send you a reset link.'
+                    : 'Enter the reset token from your email and your new password.'}
+                </p>
+                {resetStep === 1 ? (
+                  <form onSubmit={handleForgotPassword}>
+                    <div className="form-field">
+                      <label className="form-label">Email Address</label>
+                      <input className="form-input" type="email" placeholder="your@email.com" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)} required />
+                    </div>
+                    <button type="submit" className="btn-primary" disabled={loading}>
+                      {loading ? 'Sending...' : 'Send Reset Link →'}
+                    </button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleResetPassword}>
+                    <div className="form-field">
+                      <label className="form-label">Reset Token</label>
+                      <input className="form-input" type="text" placeholder="Paste token from email" value={resetToken} onChange={e => setResetToken(e.target.value)} required />
+                    </div>
+                    <div className="form-field">
+                      <label className="form-label">New Password</label>
+                      <input className="form-input" type="password" placeholder="At least 6 characters" value={newPassword} onChange={e => setNewPassword(e.target.value)} required minLength={6} />
+                    </div>
+                    <button type="submit" className="btn-primary" disabled={loading}>
+                      {loading ? 'Resetting...' : 'Reset Password →'}
+                    </button>
+                  </form>
+                )}
+                <div className="auth-footer-text">
+                  <a onClick={() => { setForgotMode(false); setResetStep(1); }} style={{ cursor: 'pointer' }}>← Back to Sign In</a>
+                </div>
+              </div>
+            ) : (
             <form onSubmit={handleLogin}>
               <div className="form-field">
                 <label className="form-label">Email Address</label>
@@ -98,7 +180,7 @@ export default function LoginRegister() {
                 <input className="form-input" type="password" placeholder="Enter your password" value={loginData.password} onChange={e => setLoginData({...loginData, password: e.target.value})} required />
               </div>
               <div style={{ textAlign: 'right', marginBottom: '20px' }}>
-                <span style={{ fontSize: '12px', color: '#888', textDecoration: 'underline', cursor: 'pointer' }}>Forgot Password?</span>
+                <span onClick={() => { setForgotMode(true); setForgotEmail(loginData.email); }} style={{ fontSize: '12px', color: '#888', textDecoration: 'underline', cursor: 'pointer' }}>Forgot Password?</span>
               </div>
               <button type="submit" className="btn-primary" disabled={loading}>
                 {loading ? 'Signing in...' : 'Sign In →'}
@@ -107,6 +189,7 @@ export default function LoginRegister() {
                 New to Vogue Plaza? <a onClick={() => setTab('register')} style={{ cursor: 'pointer' }}>Create an account</a>
               </div>
             </form>
+            )
           ) : (
             <form onSubmit={handleRegister}>
               <div className="form-field">
