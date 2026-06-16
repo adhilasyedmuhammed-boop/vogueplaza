@@ -8,7 +8,9 @@ export default function VideoHero() {
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => {
+        setVideoError(true);
+      });
     }
   }, [videoError]);
 

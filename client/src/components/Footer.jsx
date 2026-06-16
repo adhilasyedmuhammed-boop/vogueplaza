@@ -68,12 +68,12 @@ export default function Footer() {
         <div>
           <div className="footer-col-title">Customer Care</div>
           <div className="footer-links-list">
-            <Link to="/products" className="footer-link-v2">Track Order</Link>
-            <Link to="/products" className="footer-link-v2">Returns & Exchanges</Link>
+            <Link to="/account" className="footer-link-v2">Track Order</Link>
+            <Link to="/account" className="footer-link-v2">Returns & Exchanges</Link>
             <Link to="/products" className="footer-link-v2">Size Guide</Link>
-            <Link to="/" className="footer-link-v2">Contact Us</Link>
-            <Link to="/" className="footer-link-v2">Store Locator</Link>
-            <Link to="/" className="footer-link-v2">FAQs</Link>
+            <Link to="/#contact" className="footer-link-v2">Contact Us</Link>
+            <Link to="/#map" className="footer-link-v2">Store Locator</Link>
+            <Link to="/#contact" className="footer-link-v2">FAQs</Link>
           </div>
         </div>
 
@@ -91,7 +91,7 @@ export default function Footer() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <button className="footer-email-btn" onClick={handleNewsletter}>Join</button>
+            <button type="button" className="footer-email-btn" onClick={handleNewsletter}>Join</button>
           </div>
           <div style={{ marginTop: '24px' }}>
             <div className="footer-col-title" style={{ marginBottom: '12px' }}>Download App</div>
@@ -120,7 +120,7 @@ export default function Footer() {
         <p className="footer-copy">© {year} Vogue Plaza Pvt. Ltd. All rights reserved.</p>
         <div className="footer-legal-links">
           {policyLinks.map(link => (
-            <span key={link} className="footer-legal-link" style={{ cursor: 'pointer' }}>{link}</span>
+            <Link key={link} to={`/policy/${link.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`} className="footer-legal-link">{link}</Link>
           ))}
         </div>
       </div>

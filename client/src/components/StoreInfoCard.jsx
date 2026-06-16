@@ -3,8 +3,8 @@ import api from '../api/axios';
 
 const fallbackStore = {
   storeName: 'Vogue Plaza — Flagship City Mall',
-  address: '123 Galleria Mall, Premium Avenue, Galleria District, NY 10001',
-  phone: '+1 (555) 019-2834',
+  address: 'Ground Floor, Lulu Mall, Edapally, Kochi, Kerala 682024',
+  phone: '+91 98765 43210',
   businessHours: [
     { day: 'Monday', open: '10:00', close: '22:00' },
     { day: 'Tuesday', open: '10:00', close: '22:00' },

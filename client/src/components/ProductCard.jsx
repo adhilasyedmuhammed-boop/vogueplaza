@@ -46,6 +46,7 @@ export default function ProductCard({ product, badge, onQuickView }) {
           alt={product.name}
           loading="lazy"
           className="product-card-img"
+          onError={(e) => { e.target.src = '/placeholder.svg'; }}
         />
 
         {badge && <span className={`product-card-badge ${badge}`}>{badge === 'new' ? 'New' : badge === 'sale' ? 'Sale' : badge}</span>}

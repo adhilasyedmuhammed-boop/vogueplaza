@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
@@ -32,6 +32,18 @@ function PageLoader() {
 }
 
 function App() {
+  const [toastPosition, setToastPosition] = useState(
+    window.innerWidth < 768 ? 'top-center' : 'top-right'
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setToastPosition(window.innerWidth < 768 ? 'top-center' : 'top-right');
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <CartProvider>
       <WishlistProvider>
@@ -56,7 +68,7 @@ function App() {
         <BottomNav />
         <BackToTop />
         <ToastContainer
-          position={window.innerWidth < 768 ? 'top-center' : 'top-right'}
+          position={toastPosition}
           autoClose={2500}
           hideProgressBar={false}
           newestOnTop

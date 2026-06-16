@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const SIZE_DATA = {
   womenswear: {
@@ -54,6 +54,12 @@ const SIZE_DATA = {
 export default function SizeGuideModal({ category, onClose }) {
   const [activeTab, setActiveTab] = useState(category && SIZE_DATA[category] ? category : 'womenswear');
   const data = SIZE_DATA[activeTab];
+
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
