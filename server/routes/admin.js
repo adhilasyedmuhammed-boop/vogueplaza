@@ -511,7 +511,7 @@ router.put('/homedata', async (req, res) => {
   }
 });
 
-// ==================== RESEED PRODUCTS ====================
+// ==================== RESEED PRODUCTS ===================
 router.post('/reseed-products', async (req, res) => {
   try {
     const { products } = require('../seed');

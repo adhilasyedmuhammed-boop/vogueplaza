@@ -67,13 +67,12 @@ const productSchema = new mongoose.Schema({
 });
 
 // Auto-generate productCode before save
-productSchema.pre('save', async function(next) {
+productSchema.pre('save', async function() {
   if (!this.productCode) {
     const count = await mongoose.model('Product').countDocuments();
     const prefix = this.category ? this.category.substring(0, 3).toUpperCase() : 'VP';
     this.productCode = `${prefix}-${String(count + 1).padStart(5, '0')}`;
   }
-  next();
 });
 
 module.exports = mongoose.model('Product', productSchema);
